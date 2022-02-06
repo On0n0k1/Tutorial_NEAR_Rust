@@ -95,7 +95,7 @@ impl StructExample{
     pub fn set_a_string(
         &mut self, 
         // important detail: since there's no reference & for the String, we are taking ownership of it.
-        // Which means this function now owns this piece of memory. The processor didn't spent time and memory creating another String with this value.
+        // Which means this function now owns this piece of memory.
         // Owning a_string_arg means that the code block that called it won't use this String again.
         //
         // That's one of rust's superpowers. We can create code that create the least number of copies possible.
