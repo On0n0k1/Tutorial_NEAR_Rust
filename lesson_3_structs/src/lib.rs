@@ -1,5 +1,3 @@
-//!
-
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 #[allow(unused_imports)]
 use near_sdk::{env, near_bindgen};
@@ -8,11 +6,11 @@ use near_sdk::{env, near_bindgen};
 near_sdk::setup_alloc!();
 
 
-// derive implements a macro for the given traits
-// We implement this because the Contract needs BorshDeserialize and BorshSerialize
-// StructExample is used in Contract, so we declare it here too.
+// derive usa um macro para aplicar as traits no tipo StructExample.
+// Implementamos isso porque o contrato precisa de BorshDeserialize e BorshSerialize.
+// StructExample é um state do Contract, então declaramos derive aqui também.
 #[derive(BorshDeserialize, BorshSerialize)]
-// A struct with some primitive types
+// Um struct com tipos primitivos
 pub struct StructExample{
     an_integer: u32,
     another_integer: i32,
@@ -21,12 +19,12 @@ pub struct StructExample{
 }
 
 
-// default is used when the code is first deployed
-// It can be called manually to create a new instance with these default values
+// default é executado quando o codigo é carregado ao contrato e não é inicializado.
+// Pode ser chamado manualmente para criar uma instância com valores padrão.
 impl Default for StructExample{
     fn default() -> Self {
-        // we can set the value with name: value
-        // or we can declare a variable with the same name and the value
+        // Cada atributo do StructExample é setado da forma Nome: Valor,
+        // Não é preciso setar da forma nome: nome,
         let an_integer: u32 = 1;
         let a_floating: f32 = 0.5;
 
@@ -40,16 +38,16 @@ impl Default for StructExample{
     }
 }
 
-// Clone is just a way to manually create a copy of this struct.
+// Clone é uma forma de criar uma copia desse struct manualmente.
 impl Clone for StructExample{
-    // self is the instance of StructExample, Self (Capital letter) is the type StructExample.
+    // self é uma instancia de StructExample, Self (Letra maiúscula) é o Tipo StructExample.
     fn clone(&self) -> Self {
         let an_integer: u32 = self.get_an_integer();
         let another_integer: i32 = self.get_another_integer();
         let a_floating: f32 = self.get_a_floating();
         let a_string: String = self.get_a_string();
 
-        // Self and StructExample are the same thing (In any impl for StructExample)
+        // Self e StructExample são a mesma coisa (Em qualquer impl de StructExample)
         Self {
             an_integer,
             another_integer,
@@ -61,29 +59,29 @@ impl Clone for StructExample{
 }
 
 
-// This is where methods and functions for struct are implemented
+// Aqui que métodos e funcões para o struct são implementados.
 impl StructExample{
-    // This method returns a copy of a_string
-    // &self means it will borrow the StructExample instance, but will not mutate it.
+
+    // &self quer dizer que irá emprestar uma instância de StructExample, mas não irá alterá-la
+    /// Retorna a copia de a_string
     pub fn get_a_string(&self) -> String {
 
-        // Strings implement the trait Clone but doesn't implement Copy
-        // Copy creates a copy of the instance automatically
-        // Clone creates a copy of the instance when the code calls clone()
+        // Strings implementam a trait Clone mas não implementam Copy
+        // Copy cria uma cópia da instância automaticamente quando ha uma instrução a = b
+        // Clone cria uma cópia da instância quando o código chama clone()
         let a_string: String = self.a_string.clone();
 
         return a_string;
     }
 
     pub fn get_a_floating(&self) -> f32 {
-        // f32 implements copy, so this line 
-        // will automatically create a copy of a_floating
+        // f32 implementa Copy, então esta linha irá automaticamente criar uma copia de a_floating
         return self.a_floating;
     }
 
     pub fn get_another_integer(&self) -> i32 {
-        // We don't need to type "return" all the time
-        // If the instruction doesn't end with semi-colon ";" returns the expression
+        // Não precisamos escrever "return" sempre.
+        // Se a expressão não termina com ponto e virgula ";" retorna a expressão
         self.another_integer
     }
 
@@ -91,17 +89,17 @@ impl StructExample{
         self.an_integer
     }
 
-    // &mut self means that it will borrow this instance of StructExample and make changes to it
+    // &mut self quer dizer que irá emprestar uma instância de StructExample e fazer modificações a este.
     pub fn set_a_string(
         &mut self, 
-        // important detail: since there's no reference & for the String, we are taking ownership of it.
-        // Which means this function now owns this piece of memory.
-        // Owning a_string_arg means that the code block that called it won't use this String again.
+        // detalhe importante: como não há referência & para a String, estamos tomando possessão (ownership) desta.
+        // Quer dizer que a função é dona desta parte de memória.
+        // Possessão de a_string_arg quer dizer que o código que o chamou não precisará usar a String novamente.
         //
-        // That's one of rust's superpowers. We can create code that create the least number of copies possible.
+        // Este é um dos superpoderes de Rust. Podemos criar código que cria o menor número de cópias possivel.
         a_string_arg: String,
     ) {
-        // since we borrowed mutable, we can change internal values
+        // como emprestamos self mutavel, podemos alterar os valores internos
         self.a_string = a_string_arg;
     }
 
@@ -110,24 +108,25 @@ impl StructExample{
     }
 
     pub fn set_an_integer(&mut self, an_integer: u32) {
-        // u32 is unsigned, only positive values
+        // u32 é unsigned, apenas valores positivos
         self.an_integer = an_integer;
     }
 
     pub fn set_another_integer(&mut self, another_integer: i32){
         // i32 is signed, can be positive and negative. Half the max range though.
+        // i32 é signed, pode ser positivo e negativo. Mas apenas metade do alcance máximo.
         self.another_integer = another_integer;
     }
 
-    // if the method doesn't have self, it's just a regular function associated to the type
+    // Se o método não possui self, é apenas uma função comum associada ao tipo.
     pub fn just_a_function() {
         env::log(b"You just called this function");
         env::log(format!("1 + 1 = {}", 1 + 1).as_bytes());
     }
 
-    // If self is in the arguments, the function is taking ownership of the type.
-    // Which means the struct will be deleted at the end of the function (unless we return it).
-    // This is just to explain how it works. You will almost never want to implement a function like this.
+    // Se self está nos argumentos, a função toma possessão do tipo.
+    // Quer dizer que o struct será deletado no fim da função (a não ser que retornemos ela).
+    // É só um exemplo. Quase nunca terá que implementar uma função dessa forma.
     pub fn take_ownership(self) -> u32{
         env::log(b"Taking ownership of itself");
 
@@ -136,26 +135,26 @@ impl StructExample{
 
         self.an_integer
 
-        // self will be freed from memory here
+        // self será liberado da memória aqui
     }
 }
 
 
-//#[near_bindgen] Tells near-sdk that this represents the main state of the contract
-// We could name this struct anything, Contract is just easier to tell.
+// #[near_bindgen] instrui near-sdk que esta struct representa o state principal do contrato.
+// Podemos usar qualquer nome. Contract é só mais facil de entender.
 #[near_bindgen]
-// derive implements a macro for the given traits
-// We implement this because the Contract needs BorshDeserialize and BorshSerialize
-// BorshSerialize converts our return types into json
-// BorshDeserialize converts the input args into the types we need for our function calls.
+// derive usa um macro para aplicar as traits no tipo StructExample.
+// Implementamos isso porque o contrato precisa de BorshDeserialize e BorshSerialize.
+// BorshSerialize converte o nosso tipo de retorno para json.
+// BorshDeserialize converte os parâmetros em json para os tipos que nossa função chama.
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
     struct_example: StructExample,
 }
 
 
-// In regular rust we don't have to implement default
-// But in Near we do because it's run when the contract is deployed (and not initialized)
+// Em rust normalmente não é preciso implementar default
+// Em Near é necessário porque o contrato executa isso quando o contrato é carregado a conta (e não inicializado).
 impl Default for Contract{
     fn default() -> Self{
         let struct_example = StructExample::default();
@@ -167,10 +166,10 @@ impl Default for Contract{
 
 #[near_bindgen]
 impl Contract{
-    // The following are the same functions from the struct being called here
-    // The difference being that these are how we interact with the contract.
+    // Abaixo são as mesmas funções do struct sendo chamadas aqui.
+    // A diferença sendo que estas são como interagimos com o contrato.
     //
-    // The method for get_a_string requires &self, so we can use &self or &mut self
+    // O método para get_a_string precisa de &self, então usamos &self ou &mut self
     pub fn get_a_string(&self) -> String {
         self.struct_example.get_a_string()
     }
@@ -187,7 +186,7 @@ impl Contract{
         self.struct_example.get_an_integer()
     }
 
-    // The method for set_a_string requires &mut self, so we can only use &mut self
+    // O método para set_a_string precisa de &mut self, então só podemos usar &mut self
     pub fn set_a_string(&mut self, a_string_arg: String) {
         self.struct_example.set_a_string(a_string_arg);
     }
@@ -204,32 +203,34 @@ impl Contract{
         self.struct_example.set_another_integer(another_integer);
     }
 
-    // Just_a_function doesn't have &self, &mut self or even self
-    // It's just a function in the namespace of that struct. We don't need to use self as well.
+    // just_a_function não tem &self, &mut self nem self
+    // É apenas uma função no namespace da struct. Não precisamos de usar self também.
     pub fn just_a_function(){
-        // :: is used for referencing to namespaces. It's not an instance method, just a function.
+        // :: é usado para referenciar namespaces. Não é um metodo de uma instância de struct, apenas uma função.
         StructExample::just_a_function();
     }
 
     pub fn take_ownership(&self) -> u32 {
-        // The function take_ownership frees the object from the memory.
+        // A função take_ownership libera o objeto da memória.
         // The compiler will not let us call it directly when the owner is Contract.
+        // O compilador não irá nos deixar chamar isso diretamente enquanto o dono for Contract.
         // Most of the issues of ownership can be solved by just cloning the object.
+        // A maioria dos problemas de possessão (ownership) podem ser resolvidos apenas clonando objetos
         let a_copy: StructExample = self.struct_example.clone();
 
-        // a_copy will be removed at the end
+        // a_copy será removido no fim dessa função abaixo.
         let result = a_copy.take_ownership();
 
-        // Uncomment the line below and a move error will show up.
-        // That's because we called a function from an instance that doesn't exist anymore.
-        // env::log(format!("This line of code will generate an error warning {}", a_copy.get_a_floating()).as_bytes());
+        // Descomente a linha abaixo e um erro de "move" irá aparecer.
+        // Isso é porque chamamos uma função de uma instância que não existe mais.
+        // env::log(format!("Essa linha de código irá gerar um erro {}", a_copy.get_a_floating()).as_bytes());
 
         result
     }
 }
 
 
-// cfg tells the compiler to only consider this module in a test environment. It doesn't exist otherwise.
+// cfg diz ao compilador para considerar esse modulo apenas em um ambiente de teste. Este não existe fora dessas condições.
 #[cfg(test)]
 mod tests{
     use super::*;
@@ -245,7 +246,7 @@ mod tests{
     fn env_setup(){
         let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-        // attributes we can set with the builder:
+        // atributos que podemos alterar com esse builder
         //
         // current_account_id
         // signer_account_id
@@ -288,7 +289,7 @@ mod tests{
     
         let contract: Contract = Contract::default();
     
-        // This value is the one from default implementation,
+        // Este valor é da implementação padrão.
         assert_eq!(
             contract.get_a_string(),
             "A default string"
@@ -301,7 +302,7 @@ mod tests{
     
         let contract: Contract = Contract::default();
     
-        // This value is the one from default implementation,
+        // Este valor é da implementação padrão.
         assert_eq!(
             contract.get_a_floating(),
             0.5,
@@ -315,7 +316,7 @@ mod tests{
     
         let contract: Contract = Contract::default();
     
-        // This value is the one from default implementation,
+        // Este valor é da implementação padrão.
         assert_eq!(
             contract.get_another_integer(),
             -1,
@@ -329,7 +330,7 @@ mod tests{
     
         let contract: Contract = Contract::default();
     
-        // This value is the one from default implementation,
+        // Este valor é da implementação padrão.
         assert_eq!(
             contract.get_an_integer(),
             1,
@@ -396,16 +397,16 @@ mod tests{
     pub fn just_a_function(){
         env_setup();
 
-        // We declare this to start the contract, but we don't need to use it's state here
-        // Start the variable with _ if you never intend to use it.
+        // Declaramos isso no início do contrato, mas não precisamos de usa-lo aqui
+        // Começar a variável com _ se não tiver intenção de usá-la
         let _contract: Contract = Contract::default();
 
-        // Notice the :: due to the function not needing any state.
+        // Note o :: devido a função não precisar de um state.
         Contract::just_a_function();
     }
 
     #[test]
-    // take_ownership is just an example for a gimmick in rust. Not much use to it.
+    // take_ownership é só um exemplo de uma gambiarra em rust. Não ha muito uso aqui.
     pub fn take_ownership(){
         env_setup();
 

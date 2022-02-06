@@ -3,11 +3,13 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
 
-// Hint about documentation:
-// comments with // doesn't show in generated docs.
-// comments with /// show as description to the following mod, fn, struct, enum, trait...
+// Dicas sobre documentação:
+// comentarios com // não aparecem na documentação.
+// comentarios com /// aparecem como descrição para o que estiver a seguir (mod, fn, struct, enum, trait...)
 // comments with //! can only be at the start of the file, and represents the description of the entire module.
+// comentarios com //! podem apenas existir no inicio do arquivo, representam a descrição de todo o módulo.
 
+// Macro que gera codigo boilerplate para o projeto. Vai ser deprecado nas proximas versões.
 near_sdk::setup_alloc!();
 
 
@@ -19,7 +21,7 @@ pub struct Contract {
 
 impl Default for Contract{
     fn default() -> Self {
-        // Giving it a starting string just as example
+        // Dar um String inicial como exemplo
         return Contract {
             name: String::from("A default string"),
         };
@@ -29,68 +31,69 @@ impl Default for Contract{
 
 #[near_bindgen]
 impl Contract{
-    // &str is a reference to a string
-    // strings with comma " " are 'static &str
-    // so having &str in args accepts both &String and "any static string like this"
-    /// Returns the length of a String.
+    // &str é uma referencia para uma string
+    // strings entre aspas " " são 'static &str
+    // então ter &str como parâmetro permite ter tanto &String como "uma string estatica como essa"
+    /// Retorna o tamanho da string.
     fn this_takes_a_reference(name: &str) -> usize { 
         return name.len();
     }
 
-    // This does the same as above, but takes a String as arg
-    // If we wanted to use a static string like "this one",
-    // we would have to convert it to a String like this: String::from("this one")
-    /// Returns the length of a String.
+    // Essa função faz o mesmo que o de cima, mas recebe uma String como parâmetro.
+    // Teriamos que converter para uma String dessa forma: String::from("essa")
+    /// Retorna o tamanho da string.
     fn this_takes_the_ownership(name: String) -> usize {
-        // returns usize, usize is u32 in 32 bit systems and u64 in 64 bit systems
+        // retorna usize, usize é u32 em sistemas 32 bit, u64 em sistemas 64 bit
         name.len()
     }
 
-    /// Return the length of stored String.
+    /// Retona o tamanho da string armazenada.
     pub fn get_length(&self) -> u32 {
-        // will call both methods to show both do the same thing.
+        // Irá chamar ambos os métodos para mostrar que ambos fazem a mesma coisa.
         //
-        // Adding & before the arg variable name is the same as saying: 
-        // "I'm giving permission for this function to look at this value, but I am not giving permission for it to be changed".
+        // Adicionando & antes de cada parametro é o mesmo que dizer:
+        // "Estou dando permissão para esta função olhar o valor dessa variável, mas não estou dando permissão para modificá-lo".
         let length_reference: usize = Self::this_takes_a_reference(&self.name);
 
-        // this_takes_the_ownership wants to own a String, so we have to create a new copy for it.
+        // this_takes_the_ownership quer ter possessão de uma String, então precisamos criar uma cópia para essa.
         let length_ownership: usize = Self::this_takes_the_ownership(self.name.clone());
 
-        // Calling assert_eq to prove that both values are the same,
-        // if values are different, panic
+        // Chamando assert_eq para provar que ambas são iguais.
+        // Se os valores são diferentes, o código entra em pânico.
         assert_eq!(
-            // first arg to compare
+            // primeiro parâmetro para comparar
             length_reference, 
-            // second arg to compare
+            // segundo parâmetro para comparar
             length_ownership, 
-            // if both are not equal, panic with this error message
-            "Both lengths are not the same {} and {}", length_reference, length_ownership,
+            // Se ambas não são iguais, entra em pânico com a mensagem de erro abaixo
+            "Ambos tamanhos não são o mesmo {} e {}", length_reference, length_ownership,
         );
 
-        // lets return a u32 because it will be converted to json automatically
-        // types can be converted using the into and from traits too
+        // Converter para u32 porque é um formato simples para json
+        // tipos podem ser convertidos usando as traits "into" e "from" também
         length_reference as u32
     }
 
-    /// Return the length of stored String. Changes stored name to "Changed name"
+
+    /// Retorna o tamanho da String armazenada. Também muda o nome para "Changed name"
     pub fn get_length_again(&mut self) -> u32 {
-        // we can also declare variables that store references to a value elsewhere
+        // podemos declarar variaveis que armazenam referencias para um outro valor.
         let a_reference: &String = &self.name;
         let _another_reference: &String = &self.name;
         let _yet_another_reference: &String = &self.name;
 
-        // We can have several immutable references at the same time.
-        // But we can't mutate the variable while immutable references exist
-        // If we need to get a mutable reference, there must be no immutable references existing.
 
-        // Uncomment the following line to get an error due to existing references.
+        // Podemos ter varias referencias imutaveis ao mesmo tempo.
+        // Mas não podemos alterar uma variavel enquanto referencias imutáveis existirem.
+        // Se precisarmos tirar uma referencia mutavel, não devem haver referencias imutaveis existindo.
+
+        // Descomente a linha adiante para receber um erro devido a referencias existentes.
         // self.name = String::from("Changed name");
 
         let length = Self::this_takes_a_reference(a_reference);
 
-        // The following line is ok though, because the references above are not used again.
-        // So the compiler knows it can free them back there.
+        // A linha adiante é ok porém, porque as referências acima não são usadas novamente.
+        // Como não são usadas novamente, o compilador sabe que pode liberá-las da memória.
         self.name = String::from("Changed name");
 
         length as u32
@@ -112,7 +115,7 @@ mod tests{
     fn env_setup(){
         let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-        // attributes we can set with the builder:
+        // atributos que podemos modificar com o builder
         // current_account_id
         // signer_account_id
         // signer_account_pk
@@ -141,7 +144,7 @@ mod tests{
         assert_eq!(
             env::current_account_id(),
             account_id, 
-            "Assert Error. env: {} account: {}", 
+            "Erro assert. env: {} account: {}", 
             env::current_account_id(), 
             &account_id,
         );
@@ -153,13 +156,13 @@ mod tests{
     
         let mut contract: Contract = Contract::default();
     
-        // both functions do the same thing, so both should return the same value
+        // Ambas funções fazem a mesma coisa, então ambas devem retornar o mesmo valor.
         assert_eq!(
             contract.get_length(),
             contract.get_length_again()
         );
 
-        // get_length_again also changes the stored string
+        // get_length_again também modifica a string armazenada.
         assert_eq!(
             contract.name,
             "Changed name"

@@ -1,5 +1,6 @@
-//! Sourced from https://github.com/near-examples/rust-counter
-//! For more details check the above link, this example is just for the near-in-minutes video.
+//! Fonte https://github.com/near-examples/rust-counter
+//! Para mais detalhes cheque o link acima, este exemplo é para o video de near-in-minutes
+//! 
 
 use near_sdk::{borsh::{
     self,
@@ -55,7 +56,7 @@ mod tests{
     fn env_setup(){
         let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-        // attributes we can set with the builder:
+        // atributos que podem ser editados com o builder:
         // current_account_id
         // signer_account_id
         // signer_account_pk
@@ -84,7 +85,7 @@ mod tests{
         assert_eq!(
             env::current_account_id(),
             account_id, 
-            "Assert Error.\n env: {}\naccount: {}\n", 
+            "Erro assert.\n env: {}\naccount: {}\n", 
             env::current_account_id(), 
             &account_id,
         );
