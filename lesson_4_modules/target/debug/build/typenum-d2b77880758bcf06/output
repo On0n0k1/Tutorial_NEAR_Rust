@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/clarund/Projects/classes/portuguese/Tutorial_NEAR_Rust/lesson_4_modules/target/debug/build/typenum-d2b77880758bcf06/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/clarund/Projects/classes/portuguese/Tutorial_NEAR_Rust/lesson_4_modules/target/debug/build/typenum-d2b77880758bcf06/out/op.rs

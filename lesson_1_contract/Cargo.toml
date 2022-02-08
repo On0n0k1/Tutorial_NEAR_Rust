@@ -1,7 +1,6 @@
 [package]
 name = "lesson_1_contract"
 version = "0.1.0"
-authors = ["Lucas Lemos <stiltztinkerstein@gmail.com>"]
 license = "MIT"
 edition = "2021"
 
