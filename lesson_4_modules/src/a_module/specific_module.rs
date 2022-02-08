@@ -1,25 +1,27 @@
-// Having (crate) after pub makes the function (or module, or trait, ...) available for local modules, but not for outside crates.
+// Ter (crate) após pub torna a função (ou módulo, trait, ...) disponivel 
+// para módulos locais, mas não para crates externos.
 pub(crate) fn hello() -> String{
     String::from("Hello from crate::a_module::specific_module")
 }
 
-/// panic is when something goes wrong and everything has to stop now. We can panic on demand when some unexpected behavior and it mo
+/// panic é quando algo de errado acontece e tudo deve parar imediatamente.
+/// Podemos causar panic sob demanda.
 pub fn this_will_panic() {
     panic!("A panic has just happened");
 }
 
 
-// cfg(test) tells the compiler this only exist in testing environments
+// cfg(test) diz ao compilador que isto apenas existe em ambientes de teste.
 #[cfg(test)]
 mod tests{
-    // load everything inside this file, outside "tests" module
+    // carrega tudo que está neste arquivo, fora deste módulo.
     use super::*;
 
     #[test]
     fn hello_test(){
-        // Hello is public only for modules in this crate.
-        // We will try importing it in the tests folder, and it will cause an error.
-        // Because tests folder acts as it's own crate.
+        // Hello é público apenas para módulos desta crate.
+        // Tentaremos importá-lo no diretório de tests, o que causará um erro.
+        // Pois o diretório de testes atua como a própria crate.
         assert_eq!(
             hello(),
             "Hello from crate::a_module::specific_module",
@@ -28,6 +30,8 @@ mod tests{
 
 
     #[test]
+    // Podemos testar em situações que causam panic.
+    // expected garante que entraremos em pânico pelo motivo correto.
     #[should_panic(expected = "A panic has just happened")]
     fn this_will_panic_test() {
         this_will_panic();

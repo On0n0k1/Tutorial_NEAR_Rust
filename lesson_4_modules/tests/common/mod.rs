@@ -1,5 +1,3 @@
-// use lesson_4_modules::Contract;
-
 use near_sdk::{
     AccountId,
     env,

@@ -1,8 +1,8 @@
-// internal_module is private for outside modules
+// internal_module é privado para módulos externos.
 mod internal_module;
 
-// but we make a_deep_function public for others as if it was declared here.
-// that's great for organizing code.
+// Mas fizemos a_deep_function publico para outros na declaração aqui.
+// Bom para organizar código.
 pub use internal_module::a_deep_module::a_deep_function;
 
 pub fn hello() -> String {

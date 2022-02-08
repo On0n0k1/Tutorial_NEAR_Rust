@@ -1,5 +1,7 @@
-//! Between using mod.rs or a rust file with same name. It's all a matter of keeping the rust file in the parent or child folder.
-
+//! Entre usar mod.rs ou um arquivo rust com mesmo nome. 
+//! É apenas uma questão de manter o arquivo rust no diretorio pai ou filho.
+//! 
+//! 
 
 pub mod specific_module;
 

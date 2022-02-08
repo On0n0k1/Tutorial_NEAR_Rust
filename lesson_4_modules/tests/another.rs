@@ -1,13 +1,11 @@
-//! Any rust file in the tests folder is tested individually.
-//! No need to include them with mod.
+//! Cada arquivo rusts no diretório tests é testado individualmente.
+//! Não há necessidade de incluí-los usando mod.
 
-// Uncomment the line below and you'l get a "private" error warning.
-// That's because it's only public within the module. And tests acts like it's own module.
+// Descomente a linha abaixo e verá um aviso de erro "privado".
+// Isso é porque é público apenas dentro da crate. E "tests" age como a própria crate.
 // use lesson_4_modules::a_module::specific_module::hello;
-
 
 #[test]
 fn oneplusone() {
     assert_eq!(1 + 1, 2);
 }
-

@@ -1,11 +1,12 @@
-//! This module will test contract functionality.
+//! Este módulo irá testar a funcionalidade do contrato.
 
-// common will be a crate with functions useful for all the other crates
+// common será um módulo com funções úteis para todos outros testes.
 mod common;
 
-// tests folder behaves like it's own crate.
+// Diretório tests age como a própria crate.
 // So when we import our own modules, 
-// we refer to it as "lesson_4_modules::" instead of "crate::"
+// Então quando importamos nossos próprios módulos,
+// referimos a estes como "lesson_4_modules::" em vez de "crates::"
 use lesson_4_modules::Contract;
 
 use common::env_setup;
@@ -17,12 +18,13 @@ pub fn get_phrase() {
 
     let contract: Contract = Contract::default();
 
-    // We used derive(Default) for contract.
-    // derived default set Strings as an empty String.
+    // Usamos derive(Default) para Contract.
+    // o padrão derivado para String é uma string vazia.
     assert_eq!(contract.get_phrase(), "");
 }
 
-/// This function will set "Hello from crate::a_module".
+
+/// Esta função irá atribuir "Hello from crate::a_module".
 #[test]
 pub fn hello() {
     env_setup();
@@ -37,7 +39,8 @@ pub fn hello() {
     );
 }
 
-/// This function will set "Hello from crate::a_module::specific_module".
+
+/// Esta função irá atribuir "Hello from crate::a_module::specific_module".
 #[test]
 pub fn hello1() {
     env_setup();
@@ -52,7 +55,8 @@ pub fn hello1() {
     );
 }
 
-/// This function will set "Hello from another_module".
+
+/// Esta função irá atribuir "Hello from another_module".
 #[test]
 pub fn hello2() {
     env_setup();
@@ -67,7 +71,8 @@ pub fn hello2() {
     );
 }
 
-/// This function will set "Hello from yet_another_module".
+
+/// Esta função irá atribuir "Hello from yet_another_module".
 #[test]
 pub fn hello3() {
     env_setup();
@@ -82,7 +87,8 @@ pub fn hello3() {
     );
 }
 
-/// This function will set "Called a deep function".
+
+/// Esta função irá atribuir "Called a deep function".
 #[test]
 pub fn hello4() {
     env_setup();
@@ -97,15 +103,16 @@ pub fn hello4() {
     );
 }
 
-/// This function will panic with message "A panic has just happened" when called.
-// We can also test situations that should panic.
-// expected makes sure we are panicking for the right reason.
+
+/// Esta função entrará em panico com a messagem "A panic has just happened" quando chamado.
+// Podemos testar situações que causam pânico.
+// expected garante que estamos entrando em pânico pelo motivo certo.
 #[test]
 #[should_panic(expected = "A panic has just happened")]
 pub fn this_will_panic() {
     env_setup();
 
-    // Even though we don't use the state, it's good to initialize it before every test.
+    // Embora não utilizemos o state, é bom inicializar antes de cada teste.
     let _contract: Contract = Contract::default();
 
     Contract::this_will_panic();
