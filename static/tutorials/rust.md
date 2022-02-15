@@ -19,4 +19,45 @@ Uma analogia para desenvolvedores javascript:
 
 Recomendaremos duas alternativas para instalação de Rust. A primeira é recomendada para estudo, a segunda é recomendada para quem simplesmente quer instalar rustup.
 
- - 
+ - rustlings: Instala rust e instala a ferramenta rustlings, que possui exercicios para desenvolvedores praticarem seu entendimento.
+ - rust: Instala rust e todas as ferramentas necessárias para desenvolvimento.
+
+### Rustlings
+
+Acesse o [repositório](https://github.com/rust-lang/rustlings) e siga as instruções de instalação.
+
+![Pagina de web rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/static/images/rustlings.png)
+
+#### Rustlings para MacOS/Linux
+
+```bash
+curl -L https://git.io/install-rustlings | bash
+# Ou se quiser escolher o diretorio de instalação
+curl -L https://git.io/install-rustlings | bash -s mypath/
+```
+
+#### Rustlings para Windows
+
+Executar em um powershell com permissões de administrador.
+
+```bash
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+E depois executar:
+
+```bash
+Start-BitsTransfer -Source https://git.io/JTL5v -Destination $env:TMP/install_rustlings.ps1; Unblock-File $env:TMP/install_rustlings.ps1; Invoke-Expression $env:TMP/install_rustlings.ps1
+```
+
+### Rust
+
+Acesse a [pagina oficial](https://www.rust-lang.org/tools/install) e execute o script. 
+
+![Pagina de web rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/static/images/rust.png)
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Este comando detecta o sistema e instala todas as ferramentas necessárias.

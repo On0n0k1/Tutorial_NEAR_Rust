@@ -58,4 +58,9 @@ O foco da linguagem Rust não é o resultado final dessa execução. E sim, o ca
  - "O processador irá pedir pra liberar um espaço de memória nessa linha e criar uma cópia dessa variável aqui.";
  - "Essa função irá pegar esse endereço emprestado, usar este valor nessa parte, e retornar o endereço para o dono ao fim.";
 
+## Instalação
 
+Antes de começarmos, devemos realizar os seguintes passos:
+
+ - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md) para interagir com a plataforma NEAR.
+ - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/rust.md) para compilar e testar os projetos.
