@@ -64,3 +64,9 @@ Antes de começarmos, devemos realizar os seguintes passos:
 
  - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md) para interagir com a plataforma NEAR.
  - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/rust.md) para compilar e testar os projetos.
+
+## Lições
+ - [Lição 1: Contratos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_1_contract)
+ - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_2_ownership)
+ - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs)
+ - [Lição 4: Módulos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_4_modules)

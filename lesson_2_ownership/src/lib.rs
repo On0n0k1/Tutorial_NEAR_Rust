@@ -47,7 +47,7 @@ impl Contract{
         name.len()
     }
 
-    /// Retona o tamanho da string armazenada.
+    /// Retorna o tamanho da string armazenada.
     pub fn get_length(&self) -> u32 {
         // Irá chamar ambos os métodos para mostrar que ambos fazem a mesma coisa.
         //
@@ -83,11 +83,11 @@ impl Contract{
         let _yet_another_reference: &String = &self.name;
 
 
-        // Podemos ter varias referencias imutaveis ao mesmo tempo.
-        // Mas não podemos alterar uma variavel enquanto referencias imutáveis existirem.
-        // Se precisarmos tirar uma referencia mutavel, não devem haver referencias imutaveis existindo.
+        // Podemos ter varias referências imutaveis ao mesmo tempo.
+        // Mas não podemos alterar uma variavel enquanto referências imutáveis existirem.
+        // Se precisarmos tirar uma referência mutavel, não devem haver referências imutaveis existindo.
 
-        // Descomente a linha adiante para receber um erro devido a referencias existentes.
+        // Descomente a linha adiante para receber um erro devido a referências existentes.
         // self.name = String::from("Changed name");
 
         let length = Self::this_takes_a_reference(a_reference);
