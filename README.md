@@ -35,11 +35,11 @@ Um desenvolvedor Rust pode:
 
 ## Aprendendo a linguagem Rust
 
-No meu ponto de vista, aprender a linguagem rust é semelhante a idéia de domar um dragão em um mundo de fantasia. É demorado, é dificil, existem muitas alternativas diferentes e mais fáceis do que essa. Mas, se conseguir, você vai ter um terrível dragão ao seu lado.
+No meu ponto de vista, aprender a linguagem rust é semelhante a idéia de domar um dragão em um mundo de fantasia. É demorado, é dificil, existem muitas alternativas diferentes e mais simples do que essa. Mas, se conseguir, você vai ter um terrível dragão ao seu lado.
 
 Existem estudos que destacaram que o tempo para escrever uma certa quantidade de linhas de código em linguagens de baixo nível (como c) é até 30 vezes mais devagar do que as de alto nível (como python e javascript). Pela minha prática, é mais demorado ainda para uma pessoa aprendendo Rust escrever código do que c. 
 
-Mas, com prática, ficamos mais ágeis em tudo. Com o tempo acostumamos com tudo o que o compilador precisa e espera de nós. Podemos também configurar snippets para gerar códigos de "boilerplate" (forma) automaticamente. Então, é apenas uma questão de entendimento, memorização e paciência para o desenvolvedor. Houveram vezes em que eu escrevi 800 linhas de código Rust em 2 dias.
+Mas, com prática, ficamos mais ágeis em tudo. Com o tempo acostumamos com o que o compilador precisa e espera de nós. Podemos também configurar snippets para gerar códigos de "boilerplate" (forma) automaticamente. Então, é apenas uma questão de entendimento, memorização e paciência para o desenvolvedor. Houveram vezes em que eu escrevi 800 linhas de código Rust em 2 dias.
 
 Quase sempre teremos que dar pausas para estudar o nosso método e garantir que estamos fazendo as decisões corretas. Porém, cada tentativa seguinte será mais fácil que a anterior.
 

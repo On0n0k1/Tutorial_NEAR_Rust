@@ -26,7 +26,7 @@ Recomendaremos duas alternativas para instalação de Rust. A primeira é recome
 
 Acesse o [repositório](https://github.com/rust-lang/rustlings) e siga as instruções de instalação.
 
-![Pagina de web rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/static/images/rustlings.png)
+![Pagina de web rust](/static/images/rustlings.png)
 
 #### Rustlings para MacOS/Linux
 
@@ -54,7 +54,7 @@ Start-BitsTransfer -Source https://git.io/JTL5v -Destination $env:TMP/install_ru
 
 Acesse a [pagina oficial](https://www.rust-lang.org/tools/install) e execute o script. 
 
-![Pagina de web rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/static/images/rust.png)
+![Pagina de web rust](/static/images/rust.png)
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
