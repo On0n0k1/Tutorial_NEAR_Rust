@@ -20,7 +20,8 @@ Instale NPM de acordo com as descrições do [link](https://github.com/near/near
 ### Instalar NodeJs (versão 12+)
 
 ```bash
-npm install node12
+nvm install 12
+nvm use 12
 ```
 
 ### Instalar NEAR CLI Globalmente
@@ -43,7 +44,8 @@ sudo apt install nodejs npm
 ### Instalar NodeJs (versão 12+)
 
 ```bash
-npm install node12
+nvm install 12
+nvm use 12
 ```
 
 ### Instalar NEAR CLI Globalmente
