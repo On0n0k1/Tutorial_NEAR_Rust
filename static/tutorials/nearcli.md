@@ -13,7 +13,7 @@ Os passos são descritos e detalhados a seguir:
 
 ## Windows
 
-### Instalar NPM
+### Instalar NVM e NPM
 
 Instale NPM de acordo com as descrições do [link](https://github.com/near/near-cli). Vou incluir os detalhes mais tarde. Agradeceria um pull request com o passo-a-passo para desenvolvedores Windows.
 
@@ -32,7 +32,7 @@ npm install -g near-cli
 
 ## Ubuntu
 
-### Instalar NPM
+### Instalar NVM e NPM
 
 [Link com Detalhes](https://linuxize.com/post/how-to-install-node-js-on-ubuntu-20-04/)
 
