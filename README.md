@@ -62,7 +62,7 @@ O foco da linguagem Rust não é o resultado final dessa execução. E sim, o ca
 
 Antes de começarmos, devemos realizar os seguintes passos:
 
- - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md) para interagir com a plataforma NEAR.
+ - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/setup-nearcli.md) para interagir com a plataforma NEAR.
  - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/rust.md) para compilar e testar os projetos.
 
 ## Lições

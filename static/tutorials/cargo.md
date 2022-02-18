@@ -53,7 +53,10 @@ cargo build --release --target wasm32-unknown-unknown
  - ```release``` corta todas as partes da compilação feitas para auxiliar o debug e otimiza o código para produção
  - ```target``` determina a arquitetura alvo para o projeto. Escolhemos webassembly.
 
-**Aviso**: Essa instrução irá resultar em **erro** se não instalarmos ```wasm32-unknown-unknown``` na lista de alvos da linguagem rust. Para isto, basta executar a seguinte instrução (apenas uma vez para cada instalação).
+O arquivo webassembly estará no caminho '/target/wasm32-unknown-unknown/release/'.
+
+
+**Aviso**: Essa instrução irá resultar em **erro** se não instalarmos ```wasm32-unknown-unknown``` na lista de alvos da linguagem rust. Para isto, basta executar a seguinte instrução (apenas uma vez para cada instalação de rust).
 
 ```bash
 rustup target add wasm32-unknown-unknown
@@ -101,6 +104,22 @@ Este é um exemplo da "lição 4 - módulos". A função ```this_will_panic()```
 
 Isso é tudo sobre testes para contrato. Para simular a comunicação entre contratos, precisamos de utilizar workspaces-rs.
 
+### Cargo doc
+
+Gera uma página de web com a documentação do projeto. Muito fácil de compartilhar. A pagina de web estará no caminho "/target/doc/nome_da_crate/".
+
+```bash
+cargo doc --open
+```
+Irá abrir a pagina de web no navegador padrão.
+
+![](../images/cargodoc.png)
+
+Clique em Contract para ver as funções implementadas:
+
+![](../images/cargodoccontract.png)
+
+Comentários com ```//``` não aparecem na documentação.
 
 [Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)
 
