@@ -61,3 +61,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 Este comando detecta o sistema e instala todas as ferramentas necessárias.
+
+
+[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)

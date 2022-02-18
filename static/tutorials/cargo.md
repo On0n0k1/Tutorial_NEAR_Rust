@@ -61,4 +61,47 @@ rustup target add wasm32-unknown-unknown
 
 ### Cargo test
 
+Realiza todos os testes de unidade no projeto. Se uma função possui o marcador ```#[test]```, essa função será executada.
+
+Testes de unidade simplesmente procuram por situações de pânico. Se um pânico inesperado acontece, ou um pânico esperado não acontece, o teste falha.
+
+Macros como panic, assert e assert_eq são usados para garantir nossas condições.
+ - ```panic!("Mensagem");```: Causa pânico com a dada mensagem.
+ - ```assert!(condicao, "Mensagem");```: Causa pânico se a condição for falsa. Está "garantindo" que a condição será verdadeira.
+ - ```assert_eq!(primeiro, segundo, "Mensagem");```: Compara ```primeiro == segundo```. Se forem diferentes, causa pânico com a dada mensagem.
+
+Exemplo de situação em que não esperamos panic:
+
+```rust
+#[test]
+fn oneplusone() {
+    assert_eq!(1 + 1, 2);
+}
+```
+
+1+1 é sempre igual a 2. Então nunca haverá panic.
+
+Exemplo de situação em que esperamos panic:
+
+```rust
+#[test]
+#[should_panic(expected = "A panic has just happened")]
+pub fn this_will_panic() {
+    env_setup();
+
+    let _contract: Contract = Contract::default();
+
+    Contract::this_will_panic();
+}
+```
+
+Este é um exemplo da "lição 4 - módulos". A função ```this_will_panic()``` é uma função que eu criei que sempre causa pânico.
+
+```#[should_panic]``` significa que o teste vai falhar se não entrar em panic. ```expected``` especifica qual a mensagem de pânico esperada.
+
+Isso é tudo sobre testes para contrato. Para simular a comunicação entre contratos, precisamos de utilizar workspaces-rs.
+
+
+[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)
+
 
