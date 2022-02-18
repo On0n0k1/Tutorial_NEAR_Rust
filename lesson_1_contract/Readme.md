@@ -2,8 +2,9 @@
 
 Nesta primeira lição serão discutidos os seguintes tópicos.
  - Estrutura de um contrato NEAR.
- - Usos da ferramenta cargo.
- - Usos da ferramenta near-cli.
+ - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md).
+ - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/near-cli.md).
+
 
 ## Estrutura de um contrato NEAR
 
