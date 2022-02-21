@@ -205,10 +205,65 @@ Acima importamos as dependências usadas nos testes abaixo.
             &account_id,
         );
     }
-
 ```
 
+Antes de cada teste, precisamos iniciar uma simulação do ambiente de blockchain. Uma das formas de fazer isso é utilizando ```VMContextBuilder```. Basta criar uma instância desse tipo, alterar os atributos que queremos, e usar o builder como argumento para o macro ```testing_env```.
 
+Para não termos que escrever estas linhas em cada teste, criamos uma função para ser usada.
+
+```assert_eq``` não é necessário. Só mostrando que o atributo de ambiente ```env::current_account_id``` é o mesmo id de conta que escolhi para o builder.
+
+A seguir teremos os três testes: 
+
+```rust
+    #[test]
+    pub fn get() {
+        env_setup();
+
+        let contract: Contract = Contract::default();
+        
+        assert_eq!(
+            contract.get(),
+            0
+        );
+    }
+
+    #[test]
+    pub fn increment() {
+        env_setup();
+
+        let mut contract: Contract = Contract::default();
+
+        contract.increment();
+
+        assert_eq!(
+            contract.get(),
+            1
+        );
+    }
+
+    #[test]
+    pub fn decrement() {
+        env_setup();
+
+        let mut contract: Contract = Contract::default();
+
+        contract.decrement();
+
+        assert_eq!(
+            contract.get(),
+            -1
+        );
+    }
+```
+
+Percebe-se um padrão em cada um dos testes:
+ - Inicializar o ambiente;
+ - Inicializar o contrato;
+ - Executar a função que queremos testar;
+ - Confirmar que a função deu o resultado que esperamos;
+
+A função ```get``` foi testada primeiro. Isto porque esta será usada nos testes seguidos. Se esta função não funcionasse da forma que esperassemos, temos que ver este erro primeiro na lista. Bom para evitar confusões nos testes. 
 
 
 
