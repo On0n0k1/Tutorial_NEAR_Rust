@@ -10,6 +10,7 @@ use near_sdk::{
         BorshDeserialize,
         BorshSerialize,
     },
+    env,
     // Cria o boilerplate necessário para máquinas virtuais NEAR
     near_bindgen,
 };
@@ -22,7 +23,7 @@ near_sdk::setup_alloc!();
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract{
     /// Contador.
-    counter: i32,
+    counter: i32
 }
 
 // Default é executado quando o contrato não inicializado manualmente.
@@ -37,6 +38,7 @@ impl Contract{
 
     /// Retorna o contador.
     pub fn get(&self) -> i32 {
+        // return self.counter;
         self.counter
     }
 
@@ -112,6 +114,7 @@ mod tests{
             ).unwrap()
         );
 
+        // inicializa simulação
         testing_env!(builder.build());
 
         // Se os dois primeiros parametros não são iguais, 
