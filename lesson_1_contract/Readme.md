@@ -1,10 +1,16 @@
 # Lição 1: Contrato
 
-Nesta primeira lição serão discutidos os seguintes tópicos.
- - Estrutura de um contrato NEAR.
+Veja também:
  - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md).
  - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/near-cli.md).
 
+## Tópicos
+ - [Estrutura de um contrato NEAR](#estrutura-de-um-contrato-near)
+ - [Importar Dependências](#importar-depend%C3%AAncias)
+ - [Macro de Alocação](#macro-de-aloca%C3%A7%C3%A3o)
+ - [Declaração de Contrato](#declara%C3%A7%C3%A3o-de-contrato)
+ - [Declaração de API do Contrato](#declara%C3%A7%C3%A3o-de-api-do-contrato)
+ - [Testes de Unidade](#testes-de-unidade)
 
 ## Estrutura de um contrato NEAR
 
@@ -117,7 +123,7 @@ default é uma função da trait Default que retorna um struct do mesmo tipo Sel
 
 Se implementarmos este contrato em uma conta NEAR, e depois executarmos uma primeira função que não seja de inicialização. A máquina irá inicializar o contrato com  default antes de executar nossa função.
 
-### Declaração de api do contrato
+### Declaração de API do contrato
 
 A seguir se encontram as funções do smart contract.
 

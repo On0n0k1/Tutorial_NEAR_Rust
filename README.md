@@ -6,6 +6,16 @@ Tutorial em etapas para desenvolvimento de contratos inteligentes em rust. Neste
 
 Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0n0k1#3800. Se este tutorial facilitar a sua vida, considere comprar um café para mim enviando uma fração de NEAR para stiltztinkerstein.near .
 
+## Tópicos
+
+ - [O Que é a linguagem Rust](#o-que-é-a-linguagem-rust)
+ - [Usos da linguagem Rust](#usos-da-linguagem-rust)
+ - [Aprendendo a Linguagem Rust](#aprendendo-a-linguagem-rust)
+ - [Comparações com Javascript e Python](#compara%C3%A7%C3%B5es-com-javascript-e-python)
+ - [Instalação](#instala%C3%A7%C3%A3o)
+ - [Lições](#li%C3%A7%C3%B5es)
+
+
 ## O que é a linguagem Rust
 
 De forma bem resumida, é uma linguagem de programação de baixo nível com as seguintes características:

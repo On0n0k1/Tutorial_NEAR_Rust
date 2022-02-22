@@ -2,6 +2,10 @@
 
 Este tutorial descreve a instalação das ferramentas recomendadas para criação de projetos NEAR em Rust.
 
+ - [Scripts de Instalação](#scripts-de-instala%C3%A7%C3%A3o)
+ - [Rustlings](#rustlings)
+ - [Rust](#rust)
+
 Instalaremos várias ferramentas diferentes com uma única linha de comando. Às que destacaremos nesse tutorial são: **rustup**, **cargo** e **rustc**.
 
  - **rustc**: compila o código rust para linguagem de máquina;
@@ -22,7 +26,7 @@ Recomendaremos duas alternativas para instalação de Rust. A primeira é recome
  - rustlings: Instala rust e instala a ferramenta rustlings, que possui exercicios para desenvolvedores praticarem seu entendimento.
  - rust: Instala rust e todas as ferramentas necessárias para desenvolvimento.
 
-### Rustlings
+## Rustlings
 
 Acesse o [repositório](https://github.com/rust-lang/rustlings) e siga as instruções de instalação.
 
@@ -36,7 +40,7 @@ curl -L https://git.io/install-rustlings | bash
 curl -L https://git.io/install-rustlings | bash -s mypath/
 ```
 
-#### Rustlings para Windows
+### Rustlings para Windows
 
 Executar em um powershell com permissões de administrador.
 
@@ -50,7 +54,7 @@ E depois executar:
 Start-BitsTransfer -Source https://git.io/JTL5v -Destination $env:TMP/install_rustlings.ps1; Unblock-File $env:TMP/install_rustlings.ps1; Invoke-Expression $env:TMP/install_rustlings.ps1
 ```
 
-### Rust
+## Rust
 
 Acesse a [pagina oficial](https://www.rust-lang.org/tools/install) e execute o script. 
 
@@ -61,6 +65,3 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 Este comando detecta o sistema e instala todas as ferramentas necessárias.
-
-
-[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)

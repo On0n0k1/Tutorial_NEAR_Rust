@@ -2,6 +2,14 @@
 
 Cargo é a ferramenta que usamos para administrar nossos projetos da linguagem rust. Documentação completa sobre Cargo no [livro Cargo](https://doc.rust-lang.org/cargo/).
 
+ - [Cargo.toml](#cargotoml)
+ - [O que é crate](#o-que-%C3%A9-crate)
+   - [crates.io](#cratesio)
+ - [Comandos Cargo](#comandos-cargo)
+   - [cargo build](#cargo-build)
+   - [cargo test](#cargo-test)
+   - [cargo doc](#cargo-doc)
+
 ## Cargo.toml
 
 Semelhante a ```package.json``` para ```node.js```, este arquivo possui todas as informações meta sobre este diretório. Características como nome e versão, mas também configurações sobre como o projeto deve ser compilado.

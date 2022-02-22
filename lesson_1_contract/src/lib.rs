@@ -10,7 +10,7 @@ use near_sdk::{
         BorshDeserialize,
         BorshSerialize,
     },
-    env,
+    // env,
     // Cria o boilerplate necessário para máquinas virtuais NEAR
     near_bindgen,
 };

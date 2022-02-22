@@ -23,7 +23,7 @@ Discutiremos alguns comandos a seguir:
  - [Executar Funções de Contrato](#executando-funções-do-contrato)
    - [View](#view)
    - [Call](#call)
- - [Deletar Conta](#deletar-sub-conta)
+ - [Deletar Sub-Conta](#deletar-sub-conta)
 
 ## Login
 
