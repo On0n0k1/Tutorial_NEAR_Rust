@@ -23,6 +23,7 @@ Discutiremos alguns comandos a seguir:
  - [Executar Funções de Contrato](#executando-funções-do-contrato)
    - [View](#view)
    - [Call](#call)
+ - [Deletar Conta](#deletar-sub-conta)
 
 ## Login
 
@@ -241,3 +242,11 @@ Podemos chamar a função da seguinte forma:
 ```bash
 near call minha-subconta.minha-conta.testnet increment '{}' --account-id minha-conta.testnet
 ```
+
+## Deletar Sub-Conta
+
+```bash
+near delete minha-subconta.minha-conta.testnet minha-conta.testnet
+```
+
+O primeiro argumento é o nome da sub-conta a deletar. O segundo argumento é o nome da conta que irá receber todo o NEAR armazenado.
