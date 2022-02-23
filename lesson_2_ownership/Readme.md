@@ -201,3 +201,38 @@ Ambas as funções ```this_takes_a_reference``` e ```this_takes_the_ownership```
 Por isso, é boa prática usar ```&str``` em vez de ```String``` nas declarações de função.
 
 Eu lamento ter que adicionar mais um detalhe nessa explicação, mas funções de contrato, aquelas em que precisamos de marcar com ```#[near_bindgen]``` precisam de receber String como parâmetro. Isso é porque as traits de deserialização são implementadas para String, mas não são implementadas para referências de string.
+
+A função:
+
+```rust
+pub fn get_length(&self) -> u32 {
+    let length_reference: usize = Self::this_takes_a_reference(&self.name);
+    let length_ownership: usize = Self::this_takes_the_ownership(self.name.clone());
+
+    assert_eq!(
+        length_reference, 
+        length_ownership, 
+        "Ambos tamanhos não são o mesmo {} e {}", length_reference, length_ownership,
+    );
+}
+```
+
+Chama ```this_takes_a_reference``` e ```this_takes_the_ownership```, garantindo que ambas retornam o mesmo valor antes de retorná-lo. Como ```this_takes_the_ownership``` não pega o valor emprestado, criamos uma cópia para ser usada como necessário.
+
+A função:
+
+```rust
+pub fn get_length_again(&mut self) -> u32 {
+    let a_reference: &String = &self.name;
+    let _another_reference: &String = &self.name;
+    let _yet_another_reference: &String = &self.name;
+    let length = Self::this_takes_a_reference(a_reference);
+    self.name = String::from("Changed name");
+
+    length as u32
+}
+```
+
+Simplesmente chama ```this_takes_a_reference``` e altera o "nome" armazenado no contrato. Este exemplo mostra que podem haver várias referências para uma variável. Faça as alterações recomendadas nos comentários para ver as reações do compilador.
+
+A [próxima Lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs) será sobre structs.

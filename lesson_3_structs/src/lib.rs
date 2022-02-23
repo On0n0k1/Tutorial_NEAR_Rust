@@ -113,7 +113,6 @@ impl StructExample{
     }
 
     pub fn set_another_integer(&mut self, another_integer: i32){
-        // i32 is signed, can be positive and negative. Half the max range though.
         // i32 é signed, pode ser positivo e negativo. Mas apenas metade do alcance máximo.
         self.another_integer = another_integer;
     }
@@ -147,22 +146,10 @@ impl StructExample{
 // Implementamos isso porque o contrato precisa de BorshDeserialize e BorshSerialize.
 // BorshSerialize converte o nosso tipo de retorno para json.
 // BorshDeserialize converte os parâmetros em json para os tipos que nossa função chama.
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(BorshDeserialize, BorshSerialize, Default)]
 pub struct Contract {
     struct_example: StructExample,
 }
-
-
-// Em rust normalmente não é preciso implementar default
-// Em Near é necessário porque o contrato executa isso quando o contrato é carregado a conta (e não inicializado).
-impl Default for Contract{
-    fn default() -> Self{
-        let struct_example = StructExample::default();
-
-        Contract { struct_example }
-    }
-}
-
 
 #[near_bindgen]
 impl Contract{
