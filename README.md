@@ -3,10 +3,12 @@
 Tutorial em etapas para desenvolvimento de contratos inteligentes em rust. Neste conjunto de tutoriais serão discutidos todas as principais características da linguagem, assim como seu uso na plataforma NEAR.
 
 ## Contato
+[topo](#tutorial_near_rust)
 
 Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0n0k1#3800. Se este tutorial facilitar a sua vida, considere comprar um café para mim enviando uma fração de NEAR para stiltztinkerstein.near .
 
 ## Tópicos
+[topo](#tutorial_near_rust)
 
  - [O Que é a linguagem Rust](#o-que-é-a-linguagem-rust)
  - [Usos da linguagem Rust](#usos-da-linguagem-rust)
@@ -17,6 +19,7 @@ Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0
 
 
 ## O que é a linguagem Rust
+[topo](#tutorial_near_rust)
 
 De forma bem resumida, é uma linguagem de programação de baixo nível com as seguintes características:
 
@@ -30,6 +33,7 @@ De forma bem resumida, é uma linguagem de programação de baixo nível com as 
  - Ganhou repetidos anos consecutivos como a linguagem mais popular do stackoverflow.
 
 ## Usos da linguagem Rust
+[topo](#tutorial_near_rust)
 
 Um desenvolvedor Rust pode:
 
@@ -44,6 +48,7 @@ Um desenvolvedor Rust pode:
  - Competir em um mercado de trabalho que possui 1 ou 2 inscritos por vaga (incluindo internacional).
 
 ## Aprendendo a linguagem Rust
+[topo](#tutorial_near_rust)
 
 No meu ponto de vista, aprender a linguagem rust é semelhante a idéia de domar um dragão em um mundo de fantasia. É demorado, é dificil, existem muitas alternativas diferentes e mais simples do que essa. Mas, se conseguir, você vai ter um terrível dragão ao seu lado.
 
@@ -54,6 +59,7 @@ Mas, com prática, ficamos mais ágeis em tudo. Com o tempo acostumamos com o qu
 Quase sempre teremos que dar pausas para estudar o nosso método e garantir que estamos fazendo as decisões corretas. Porém, cada tentativa seguinte será mais fácil que a anterior.
 
 ## Comparações com javascript e Python
+[topo](#tutorial_near_rust)
 
 Porém uma pessoa astuta perguntaria "Porque eu iria aprender uma linguagem dessas se eu ja posso resolver os mesmos problemas com as linguagens que sei?" . É uma ótima pergunta, se eu ja posso conseguir o resultado escrevendo algumas linhas de código em python no terminal, porque eu iria querer aprender Rust?
 
@@ -69,6 +75,7 @@ O foco da linguagem Rust não é o resultado final dessa execução. E sim, o ca
  - "Essa função irá pegar esse endereço emprestado, usar este valor nessa parte, e retornar o endereço para o dono ao fim.";
 
 ## Instalação
+[topo](#tutorial_near_rust)
 
 Antes de começarmos, devemos realizar os seguintes passos:
 
@@ -76,6 +83,8 @@ Antes de começarmos, devemos realizar os seguintes passos:
  - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/rust.md) para compilar e testar os projetos.
 
 ## Lições
+[topo](#tutorial_near_rust)
+
  - [Lição 1: Contratos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_1_contract)
  - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_2_ownership)
  - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs)
