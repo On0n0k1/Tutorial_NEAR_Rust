@@ -20,6 +20,7 @@ Uma analogia para desenvolvedores javascript:
 É apenas uma analogia, existem algumas diferenças que serão encontradas em pratica.
 
 ## Scripts de instalação
+[topo](#instala%C3%A7%C3%A3o-rust)
 
 Recomendaremos duas alternativas para instalação de Rust. A primeira é recomendada para estudo, a segunda é recomendada para quem simplesmente quer instalar rustup.
 
@@ -27,12 +28,14 @@ Recomendaremos duas alternativas para instalação de Rust. A primeira é recome
  - rust: Instala rust e todas as ferramentas necessárias para desenvolvimento.
 
 ## Rustlings
+[topo](#instala%C3%A7%C3%A3o-rust)
 
 Acesse o [repositório](https://github.com/rust-lang/rustlings) e siga as instruções de instalação.
 
 ![Pagina de web rust](/static/images/rustlings.png)
 
 #### Rustlings para MacOS/Linux
+[topo](#instala%C3%A7%C3%A3o-rust)
 
 ```bash
 curl -L https://git.io/install-rustlings | bash
@@ -41,6 +44,7 @@ curl -L https://git.io/install-rustlings | bash -s mypath/
 ```
 
 ### Rustlings para Windows
+[topo](#instala%C3%A7%C3%A3o-rust)
 
 Executar em um powershell com permissões de administrador.
 
@@ -55,6 +59,7 @@ Start-BitsTransfer -Source https://git.io/JTL5v -Destination $env:TMP/install_ru
 ```
 
 ## Rust
+[topo](#instala%C3%A7%C3%A3o-rust)
 
 Acesse a [pagina oficial](https://www.rust-lang.org/tools/install) e execute o script. 
 

@@ -26,6 +26,7 @@ Discutiremos alguns comandos a seguir:
  - [Deletar Sub-Conta](#deletar-sub-conta)
 
 ## Login
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 ```bash
 near login
@@ -38,6 +39,7 @@ Não é a nossa máquina que executa as funções de contrato descentralizadas. 
 **testnet**: é uma plataforma de teste NEAR. Os tokens não tem valor e não é possivel comercializá-los. A plataforma oficial é a **mainnet**. Garanta que não há riscos no contrato antes de implementar para produção.
 
 ## Checar State (Estado)
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 ```bash
 near state stiltztinkerstein.testnet
@@ -61,6 +63,7 @@ Lembrar que esta é uma conta **testnet**. Não é dinheiro de verdade. Os atrib
 *: Quem tiver mais informações sobre os detalhes com *, agradeceria um pull-request.
 
 ## Criar sub-conta
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 Podemos criar uma subconta com um comando semelhante a este:
 
@@ -76,6 +79,7 @@ near create-account minha-subconta.minha-conta.testnet --masterAccount minha-con
 Para criar uma conta de topo nível, use [near-api-js](https://docs.near.org/docs/api/naj-cookbook#create-account).
 
 ## Implantar Contrato
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 ```bash
 near deploy --accountId minha-subconta.minha-conta.testnet --wasmFile ./compilado.wasm
@@ -106,6 +110,7 @@ near deploy --accountId minha-subconta.minha-conta.testnet --wasmFile ./compilad
 ```
 
 ### Evitando inicialização sem argumentos
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 A trait ```Default``` é um requisito para o funcionamento do contrato, mesmo se não pretendermos utilizá-la. Se a inicialização com argumentos for essencial para o funcionamento do contrato, podemos fazer com que o processo entre em pânico caso o sistema tente inicializar com ```Default```.
 
@@ -131,12 +136,14 @@ pub struct Contract{
 Ambas as alternativas fazem exatamente a mesma coisa.
 
 ## Executar funções do contrato
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 Existem dois tipos de funções de contrato:
  - **view**: Não realiza computação e não altera estado do contrato. Não consome gás. Ou seja, é de graça.
  - **call**: Todos os outros tipos de função. Consomem gás. Podem necessitar um pagamento. A implementação da função pode incluir outras restrições, como restrições de chave, restrições de usuário, et cetera.
 
 ### View
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 Para facilitar o entendimento, vale lembrar que o estado de todos os contratos são publicos.
 
@@ -204,12 +211,14 @@ pub fn um_numero() -> i32 {
 Embora a função simplesmente retorna um número, é ainda considerada computação. Relembrando, funções view apenas retornam o valor de um estado do contrato (que é informação pública).
 
 #### Executando uma função view
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 ```bash
 near view minha-subconta.minha-conta.testnet get_counter '{}'
 ```
 
 ### Call
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 Qualquer outro tipo de função que não é ```view```, é ```call```.
 
@@ -244,6 +253,7 @@ near call minha-subconta.minha-conta.testnet increment '{}' --account-id minha-c
 ```
 
 ## Deletar Sub-Conta
+[topo](#introdu%C3%A7%C3%A3o-a-near-cli)
 
 ```bash
 near delete minha-subconta.minha-conta.testnet minha-conta.testnet

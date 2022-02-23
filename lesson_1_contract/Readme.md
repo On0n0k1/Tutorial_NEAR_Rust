@@ -2,7 +2,7 @@
 
 Veja também:
  - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md).
- - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/near-cli.md).
+ - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md).
 
 ## Tópicos
  - [Estrutura de um contrato NEAR](#estrutura-de-um-contrato-near)
@@ -13,6 +13,7 @@ Veja também:
  - [Testes de Unidade](#testes-de-unidade)
 
 ## Estrutura de um contrato NEAR
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 Um contrato NEAR na linguagem Rust pode ser resumido aos seguintes passos:
  - Importar crates, módulos e outras dependências necessárias.
@@ -24,6 +25,7 @@ Um contrato NEAR na linguagem Rust pode ser resumido aos seguintes passos:
 O desenvolvedor é livre para adicionar o que julgar necessário ao projeto. Os passos acima são apenas para acelerar a memorização.
 
 ### Importar Dependências
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 Isto é explicado em detalhes na "lição 4 - módulos". Só precisamos saber sobre as diferenças entre mod e use. Por exemplo:
 
@@ -80,6 +82,7 @@ Estamos acessando a crate "near_sdk" declarado em "Cargo.toml". Importando self,
  - **near_bindgen**: Isso é um marcador para um struct que diz **"Este é o contrato principal do nosso projeto"**. Damos o nome "Contract" apenas para facilitar o entendimento, não é obrigatório. Porém deve-se ter pelo menos um struct com **near_bindgen** em cada contrato.
 
 ### Macro de alocação
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 ```rust
 near_sdk::setup_alloc!();
@@ -92,6 +95,7 @@ Neste caso, "setup_alloc" gera o código "boilerplate" (forma) para o funcioname
 Aviso: Nas próximas versões esta instrução será deprecada. Não será necessário usar mais.
 
 ### Declaração de contrato
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 ```rust
 #[near_bindgen]
@@ -124,6 +128,7 @@ default é uma função da trait Default que retorna um struct do mesmo tipo Sel
 Se implementarmos este contrato em uma conta NEAR, e depois executarmos uma primeira função que não seja de inicialização. A máquina irá inicializar o contrato com  default antes de executar nossa função.
 
 ### Declaração de API do contrato
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 A seguir se encontram as funções do smart contract.
 
@@ -156,6 +161,7 @@ impl Contract{
 Com estes detalhes, vemos que a função ```get``` retorna o valor atual de counter armazenado no struct do contrato. ```increment``` incrementa o valor de counter em 1. ```decrement``` reduz o valor de counter em 1.
 
 ### Testes de unidade
+[topo](#li%C3%A7%C3%A3o-1-contrato)
 
 Descrito com mais detalhes na lição 4 - módulos, não é necessário ter todos os testes do projeto aqui. Podemos incluir testes no fim de cada módulo rust. Podemos também criar um diretório ```tests```. Todos os arquivos ".rs" na pasta ```tests``` será considerado um módulo de testes.
 

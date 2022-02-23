@@ -11,6 +11,7 @@ Cargo é a ferramenta que usamos para administrar nossos projetos da linguagem r
    - [cargo doc](#cargo-doc)
 
 ## Cargo.toml
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Semelhante a ```package.json``` para ```node.js```, este arquivo possui todas as informações meta sobre este diretório. Características como nome e versão, mas também configurações sobre como o projeto deve ser compilado.
 
@@ -24,6 +25,7 @@ Não é necessário saber tudo sobre essas configurações. As configurações q
 
 
 ## O que é crate?
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 **Crate** (caixa) representa um diretório com um arquivo "Cargo.toml".
 
@@ -32,6 +34,7 @@ Geralmente, cada crate gera um diretório "target" com o arquivo compilado. Mas 
 Podemos publicar nossas crates no site [crates.io](https://crates.io/).
 
 ### Crates.io
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Dependências como ```near_sdk``` são baixadas deste site. Qualquer desenvolvedor rust pode compartilhar projetos neste site, com **uma condição**: Deve ser open-source.
 
@@ -42,6 +45,7 @@ O site intencionalmente não disponibiliza opção para compartilhar crates de f
 Para impedir que projetos quebrem de forma inesperada, se retirarmos uma versão do registry usando o comando "yank", projetos não poderão mais baixar a versão, mas ainda continuarão funcionando se tiverem a versão baixada.
 
 ## Comandos Cargo
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Segue uma lista simplificada de comandos cargo que podemos utilizar durante desenvolvimento de contratos NEAR.
 
@@ -51,6 +55,7 @@ Segue uma lista simplificada de comandos cargo que podemos utilizar durante dese
 Só isso. Existem vários outros comandos que podemos executar com cargo. Mas não são necessários para novos desenvolvedores. Cheque o [livro Cargo](https://doc.rust-lang.org/cargo/).
 
 ### Cargo build
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Precisamos compilar o projeto para webassembly, sem uma arquitetura especificada. Para isso usamos:
 
@@ -63,7 +68,6 @@ cargo build --release --target wasm32-unknown-unknown
 
 O arquivo webassembly estará no caminho '/target/wasm32-unknown-unknown/release/'.
 
-
 **Aviso**: Essa instrução irá resultar em **erro** se não instalarmos ```wasm32-unknown-unknown``` na lista de alvos da linguagem rust. Para isto, basta executar a seguinte instrução (apenas uma vez para cada instalação de rust).
 
 ```bash
@@ -71,6 +75,7 @@ rustup target add wasm32-unknown-unknown
 ```
 
 ### Cargo test
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Realiza todos os testes de unidade no projeto. Se uma função possui o marcador ```#[test]```, essa função será executada.
 
@@ -113,6 +118,7 @@ Este é um exemplo da "lição 4 - módulos". A função ```this_will_panic()```
 Isso é tudo sobre testes para contrato. Para simular a comunicação entre contratos, precisamos de utilizar workspaces-rs.
 
 ### Cargo doc
+[topo](#introdu%C3%A7%C3%A3o-a-cargo)
 
 Gera uma página de web com a documentação do projeto. Muito fácil de compartilhar. A pagina de web estará no caminho "/target/doc/nome_da_crate/".
 

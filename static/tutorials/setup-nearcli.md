@@ -53,5 +53,3 @@ nvm use 12
 ```bash
 npm install -g near-cli
 ```
-
-[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)
