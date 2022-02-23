@@ -3,12 +3,6 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
 
-// Dicas sobre documentação:
-// comentarios com // não aparecem na documentação.
-// comentarios com /// aparecem como descrição para o que estiver a seguir (mod, fn, struct, enum, trait...)
-// comments with //! can only be at the start of the file, and represents the description of the entire module.
-// comentarios com //! podem apenas existir no inicio do arquivo, representam a descrição de todo o módulo.
-
 // Macro que gera codigo boilerplate para o projeto. Vai ser deprecado nas proximas versões.
 near_sdk::setup_alloc!();
 
@@ -21,7 +15,7 @@ pub struct Contract {
 
 impl Default for Contract{
     fn default() -> Self {
-        // Dar um String inicial como exemplo
+        // Inicializar com a String "A default string" como exemplo
         return Contract {
             name: String::from("A default string"),
         };

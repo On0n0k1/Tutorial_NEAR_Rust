@@ -1,6 +1,13 @@
 //! Fonte <https://github.com/near-examples/rust-counter>
 //! 
 //! 
+//! 
+
+// Dicas sobre documentação:
+// comentarios com // não aparecem na documentação.
+// comentarios com /// aparecem como descrição para o que estiver a seguir (mod, fn, struct, enum, trait...)
+// comentarios com //! podem apenas existir no inicio do arquivo, representam a descrição de todo o módulo.
+
 
 // módulos importados
 use near_sdk::{
