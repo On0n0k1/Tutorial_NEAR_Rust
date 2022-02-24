@@ -15,7 +15,6 @@
 //! 
 //! "pub mod" quer dizer que outros módulos podem usar dito módulo, senão é privado.
 //! "pub use" pode ser usado para o mesmo propósito.
-//! 
 //! A diferença sendo que arquivos podem ser organizados de certa forma, e módulos de library em outra, mais conveniente.
 //! 
 

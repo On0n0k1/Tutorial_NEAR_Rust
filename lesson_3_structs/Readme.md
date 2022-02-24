@@ -181,6 +181,8 @@ Acho esse exemplo interessante.
  - Imprime o valor de ```an_integer``` no contrato. 
  - E retorna o valor de ```an_integer```.
 
-Mas como declaramos ```self``` em vez de ```&self``` ou ```&mut self``` como argumento, o método tomará possessão (ownership) de si mesmo e se auto-destruira após. Um usuário iniciante provavelmente receberá um aviso de erro muito confuso se tentar escrever o método dessa forma.
+Mas como declaramos ```self``` em vez de ```&self``` ou ```&mut self``` como argumento, o método tomará possessão (ownership) de si mesmo e se auto-destruira no fim. 
+
+Um usuário iniciante provavelmente receberá um aviso de erro muito confuso se tentar escrever o método dessa forma. Um erro similar a "valor não pode ser usado pois um move aconteceu aqui.".
 
 A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_4_modules) será sobre módulos.
