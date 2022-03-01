@@ -73,38 +73,45 @@ impl Contract{
         self.stored_phrase.clone()
     }
 
-    /// Esta função irá atribuir "Hello from crate::a_module".
+    /// A função irá imprimir "Hello from crate::a_module" e 
+    /// atribuir essa string ao valor armazenado.
     pub fn hello(&mut self) {        
         self.stored_phrase = hello();
         log(&hello());
     }
 
-    /// Esta função irá atribuir "Hello from crate::a_module::specific_module".
+    /// A função irá imprimir "Hello from 
+    /// crate::a_module::specific_module" e atribuir essa string ao 
+    /// valor armazenado.
     pub fn hello1(&mut self) {
         self.stored_phrase = hello1();
         log(&hello1());
     }
 
-    /// Esta função irá atribuir "Hello from another module".
+    /// A função irá imprimir "Hello from another module" e 
+    /// atribuir essa string ao valor armazenado.
     pub fn hello2(&mut self) {
         self.stored_phrase = hello2();
         log(&hello2());
     }
 
-    /// A função irá atribuir "Hello from yet_another_module".
+    /// A função irá imprimir "Hello from yet_another_module" 
+    /// e atribuir essa string ao valor armazenado.
     pub fn hello3(&mut self) {
         self.stored_phrase = hello3();
         log(&hello3());
     }
 
-    /// A função irá atribuir "Called a deep function".
+    /// A função irá imprimir "Called a deep function" e 
+    /// atribuir essa string ao valor armazenado.
     pub fn hello4(&mut self) {
         self.stored_phrase = hello4();
         log(&hello4());
     }
 
-    /// Esta função irá entrar em pânico com a mensagem "A panic just happened" quando chamado.
-    pub fn this_will_panic() {
+    /// Esta função irá entrar em pânico com a mensagem "A panic 
+    /// just happened" quando chamado.
+    pub fn this_will_panic() {    
         this_will_panic();
     }
 }
