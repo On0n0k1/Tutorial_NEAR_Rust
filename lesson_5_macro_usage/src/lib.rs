@@ -46,7 +46,7 @@ impl Contract{
     /// This is a function to show the differences between println and env:log.
     /// Run it with ```cargo test -- --nocapture``` then deploy and run it from near.
     /// Notice which messages show and which doesn't.
-    pub fn print_examples(&self) {
+    pub fn print_examples() {
         log("\n\nprint_examples:\n");
         println!("This is a println! It doesn't show in Virtual Machine.");
         let a = String::from("something");
@@ -64,10 +64,12 @@ impl Contract{
             "6",
             format!("7"),
         ));
+        
+        log("\n\n---------------------------------------------------------------------------------\n\n");
     }
 
 
-    pub fn format_examples(&self) {
+    pub fn format_examples() {
         log("\n\nformat_examples:\n");
         let message: String = format!("format returns a formatted String.");
         log(&message);
@@ -102,6 +104,36 @@ impl Contract{
 
         let message = format!("Same as above: {first:2.2}, {second:04.4}, {third:6.6}");
         log(&message);
+
+        log("\n\n----------------------------------------------------------------------\n\n");
+    }
+
+    pub fn panic_example() {
+        log("\n\npanic_example:\n\n\n");
+
+        log("Panic macros are written in the same way as println and format.");
+
+        let second = 2;
+        panic!("Panicking with a few args: {} {} {}", 1, second, 3);
+
+    }
+
+    pub fn vec_examples() {
+        log("\n\nvec_examples:\n");
+
+        let example = vec![1, 2, 3, 4];
+
+        log(&format!("We can print vectors in debug mode:\n{:?}\n\n", example));
+        
+        log(&format!("We can print vectors in \"pretty debug mode\":\n{:#?}\n\n", example));
+
+        log(&format!("We can do the same for tuples too:\n{:#?}\n\n", (1, 2, 3)));
+
+        log(&format!("We can create vectors with default values:\n{:?}\n\n", vec![0; 5]));
+
+        log("More information in \"collections\" lesson");
+
+        log("\n\n-------------------------------------------------------------------------------\n\n");
     }
 }
 
@@ -153,6 +185,9 @@ mod tests{
 
         testing_env!(builder.build());
 
+        // We're not using contract in this project. It's stateless.
+        let _contract: Contract = Contract::default();
+
         assert_eq!(
             env::current_account_id(),
             account_id, 
@@ -166,17 +201,28 @@ mod tests{
     pub fn print_examples() {
         env_setup();
     
-        let contract: Contract = Contract::default();
-
-        contract.print_examples();
+        Contract::print_examples();
     }
 
     #[test]
     pub fn format_examples() {
         env_setup();
     
-        let contract: Contract = Contract::default();
+        Contract::format_examples();
+    }
 
-        contract.format_examples();
+    #[test]
+    pub fn vec_examples() {
+        env_setup();
+    
+        Contract::vec_examples();
+    }
+
+    #[test]
+    #[should_panic(expected = "Panicking with a few args: 1 2 3")]
+    pub fn panic_example() {
+        env_setup();
+
+        Contract::panic_example();
     }
 }
