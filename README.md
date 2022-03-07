@@ -89,3 +89,7 @@ Antes de começarmos, devemos realizar os seguintes passos:
  - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_2_ownership)
  - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs)
  - [Lição 4: Módulos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_4_modules)
+ - Licão 5: Usando Macros
+ - Lição 6: Enums
+ - Lição 7: Traits
+ - Lição 8: Coleções
