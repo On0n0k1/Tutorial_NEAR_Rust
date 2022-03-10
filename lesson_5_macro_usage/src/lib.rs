@@ -40,9 +40,6 @@ pub struct Contract {
 
 #[near_bindgen]
 impl Contract{
-
-
-
     /// This is a function to show the differences between println and env:log.
     /// Run it with ```cargo test -- --nocapture``` then deploy and run it from near.
     /// Notice which messages show and which doesn't.
