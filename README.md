@@ -1,13 +1,13 @@
-# Tutorial_NEAR_Rust
+# NEAR Rust Tutorial
 
 Tutorial em etapas para desenvolvimento de contratos inteligentes em rust. Neste conjunto de tutoriais serão discutidos todas as principais características da linguagem, assim como seu uso na plataforma NEAR.
 
-## Contato
+## Contact
 [topo](#tutorial_near_rust)
 
 Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0n0k1#3800. Se este tutorial facilitar a sua vida, considere comprar um café para mim enviando uma fração de NEAR para stiltztinkerstein.near .
 
-## Tópicos
+## Topics
 [topo](#tutorial_near_rust)
 
  - [O Que é a linguagem Rust](#o-que-é-a-linguagem-rust)
@@ -18,7 +18,7 @@ Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0
  - [Lições](#li%C3%A7%C3%B5es)
 
 
-## O que é a linguagem Rust
+## What is Rust
 [topo](#tutorial_near_rust)
 
 De forma bem resumida, é uma linguagem de programação de baixo nível com as seguintes características:
