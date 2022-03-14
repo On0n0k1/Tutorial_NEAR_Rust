@@ -1,4 +1,4 @@
-//!
+//! Exemplos para os seguintes macros:
 //! - format!
 //! - println!
 //! - panic!
@@ -72,6 +72,7 @@ impl Contract{
     }
 
 
+    /// Exemplos de format. Compare o output com a implementação.
     pub fn format_examples() {
         log("\n\nformat_examples:\n");
         let message: String = format!("format retorna um String formatado");
@@ -115,6 +116,7 @@ impl Contract{
         log("\n\n----------------------------------------------------------------------\n\n");
     }
 
+    /// Exemplo de panico.
     pub fn panic_example() {
         log("\n\npanic_example:\n\n\n");
 
@@ -125,6 +127,7 @@ impl Contract{
 
     }
 
+    /// Exemplo de usos de vec.
     pub fn vec_examples() {
         log("\n\nvec_examples:\n");
 

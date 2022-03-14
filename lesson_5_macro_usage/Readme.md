@@ -4,6 +4,24 @@
 
 Macros são a ferramenta principal para a utilização efetiva da linguagem rust. Não é necessário saber como criar macros. Mas é essencial entender o que são e como usá-los.
 
+## API de Contrato
+
+```rust
+/// Esta função mostra as diferenças entre println e env::log
+/// Execute com ```cargo test -- --nocapture```, compile, implante e execute em Near.
+/// Note como algumas mensagens aparecem e outras não.
+pub fn print_examples();
+
+/// Exemplos de format. Compare o output com a implementação.
+pub fn format_examples();
+
+/// Exemplo de panico.
+pub fn panic_example();
+
+/// Exemplo de usos de vec.
+pub fn vec_examples();
+```
+
 ## Tópicos
 
  - [O que são macros](#o-que-são-macros)
@@ -271,6 +289,6 @@ Lembrar:
  - Sempre que for precisar de uma referência para uma ```String``` em uma função, use ```&str```. Não use ```&String```.
  - "Strings como essa" são do tipo ```&'static str```. Mais detalhes na seção sobre lifetimes. Teoricamente, são strings que nunca são removidas da memória, mas isso depende da otimização do compilador.
 
-A [proxima lição]((https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums)) será sobre enums.
+A [proxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums) será sobre enums.
 
 
