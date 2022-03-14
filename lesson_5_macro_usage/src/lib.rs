@@ -16,16 +16,16 @@ use near_sdk::{env, near_bindgen};
 near_sdk::setup_alloc!();
 
 
-/// This is used in ```print_examples```.
-/// This function is only compiled in testing environments.
+/// Esta função é usada em ```print_examples```.
+/// É compilada em ambientes de teste.
 #[cfg(test)]
 pub fn log(message: &str) {
     println!("{}", message);
 }
 
 
-/// This is used in ```print_examples```.
-/// This function is only compiled outside of testing environments.
+/// Esta função é usada em ```print_examples```.
+/// É compilada fora de ambientes de teste.
 #[cfg(not(test))]
 pub fn log(message: &str) {
     env::log(message.as_bytes());
@@ -35,32 +35,38 @@ pub fn log(message: &str) {
 #[near_bindgen]
 #[derive(Clone, Default, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-    // This contract is stateless
+    // Este contrato não possui estado
 }
 
 #[near_bindgen]
 impl Contract{
-    /// This is a function to show the differences between println and env:log.
-    /// Run it with ```cargo test -- --nocapture``` then deploy and run it from near.
-    /// Notice which messages show and which doesn't.
+
+    /// Esta função mostra as diferenças entre println e env::log
+    /// Execute com ```cargo test -- --nocapture```, compile, implante e execute em Near.
+    /// Note como algumas mensagens aparecem e outras não.
     pub fn print_examples() {
         log("\n\nprint_examples:\n");
-        println!("This is a println! It doesn't show in Virtual Machine.");
-        let a = String::from("something");
-        println!("This is another println with several arguments, {}, {}, {}", 1 , "thingy", a);
-        env::log(b"This is a log. It doesn't show in tests.");
-        env::log("This is another log".as_bytes());
+        println!("Isto é um println! Não aparece na máquina virtual");
+        let a = String::from("algo");
+        println!("Isso é outro println com diversos argumentos, {}, {}, {}", 1, "thingy", a);
+
+        env::log(b"Isso e um log. Nao aparece em testes.");
+        env::log("Isso é outro log".as_bytes());
+
         env::log(
-            format!("This is another log with several arguments: {}, {}, {}", 1, 2, "3")
+            format!("Isso é outro log com diversos argumentos: {}, {}, {}", 1, 2, "3")
             .as_bytes()
         );
 
-        log("This is a message that shows in tests and the virtual machine.");
-        log(&format!("This is another message with arguments, {}, {}, {}.",
-            5,
-            "6",
-            format!("7"),
-        ));
+        log("Isso é uma mensagem que aparecem em testes e na máquina virtual.");
+
+        log(
+            &format!("Isso é outra mensagem com argumentos, {}, {}, {}.",
+                5,
+                "6",
+                format!("7"),
+            )
+        );
         
         log("\n\n---------------------------------------------------------------------------------\n\n");
     }
@@ -68,38 +74,42 @@ impl Contract{
 
     pub fn format_examples() {
         log("\n\nformat_examples:\n");
-        let message: String = format!("format returns a formatted String.");
+        let message: String = format!("format retorna um String formatado");
         log(&message);
 
-        let an_arg = "third";
-        let message = format!("format can take arguments using {{}}: {}, {}, {}.", 1, "second", an_arg);
+        let an_arg ="terceiro";
+        let message = format!("format pode receber argumentos usando {{}}: {}, {}, {}.", 1, "second", an_arg);
+    
         log(&message);
 
-        let (first, second, third) = (1, "second", an_arg);
-        let message = format!("We can specify format arguments this way: {first}, {second}, {third}.");
+        let (first, second, third) = (1, "segundo", an_arg);
+        let message = format!("Podemos especificar argumentos format da seguinte forma: {first}, {second}, {third}.");
+
         log(&message);
 
-        let message = format!("We can specify the order of format args: {1}, {2}, {0}.", third, first, second);
+        let message = format!("Podemos especificar a ordem dos argumentos format: {1}, {2}, {0}.", third, first, second);
+
         log(&message);
 
         let (first, second, third) = (1, 2, 3);
-        let message = format!("We can make integers show an arbitrary number of digits: {:02}, {:04}, {:6}.", first, second, third);
+        let message = format!("Podemos fazer inteiros mostrarem um número arbitrário de digitos: {:02}, {:04}, {:6}.", first, second, third);
         log(&message);
 
-        let message = format!("Choosing number of digits and order: {2:02}, {0:4}, {1:06}.", second, third, first);
+        let message = format!("Escolhendo um número de digitos e ordem: {2:02}, {0:4}, {1:06}.", second, third, first);
         log(&message);
 
         let (first, second, third) = (0.1, 1.23, -2.45);
-        let message = format!("We can choose the precision of rational numbers: {:.2}, {:.4}, {:.6}", first, second, third);
+        let message = format!("Podemos escolher a precisão de números racionais: {:.2}, {:.4}, {:.6}", first, second, third);
         log(&message);
 
-        let message = format!("We can choose the precision and the number of digits: {:2.2}, {:04.4}, {:06.6}", first, second, third);
+        let message = format!("Podemos escolher a precisão e o número de digitos: {:2.2}, {:04.4}, {:06.6}", first, second, third);
         log(&message);
 
-        let message = format!("We can choose the precision, the number of digits and the order of arguments: {1:02.2}, {2:4.4}, {0:06.6}", third, first, second);
+        let message = format!("Podemos escolher a precisão, o número de digitos e a ordem dos argumentos: {1:02.2}, {2:4.4}, {0:06.6}", third, first, second);
         log(&message);
 
-        let message = format!("Same as above: {first:2.2}, {second:04.4}, {third:6.6}");
+        let message = format!("Mesmo que acima: {first:2.2}, {second:04.4}, {third:6.6}");
+
         log(&message);
 
         log("\n\n----------------------------------------------------------------------\n\n");
@@ -108,10 +118,10 @@ impl Contract{
     pub fn panic_example() {
         log("\n\npanic_example:\n\n\n");
 
-        log("Panic macros are written in the same way as println and format.");
+        log("Macros de pânico são escritos da mesma forma que println e format.");
 
         let second = 2;
-        panic!("Panicking with a few args: {} {} {}", 1, second, 3);
+        panic!("Pânico com alguns argumentos: {} {} {}", 1, second, 3);
 
     }
 
@@ -120,26 +130,26 @@ impl Contract{
 
         let example = vec![1, 2, 3, 4];
 
-        log(&format!("We can print vectors in debug mode:\n{:?}\n\n", example));
+        log(&format!("Podemos imprimir vetores com modo debug:\n{:?}\n\n", example));
         
-        log(&format!("We can print vectors in \"pretty debug mode\":\n{:#?}\n\n", example));
+        log(&format!("Podemos imprimir vetores em \"formato legivel\":\n{:#?}\n\n", example));
 
-        log(&format!("We can do the same for tuples too:\n{:#?}\n\n", (1, 2, 3)));
+        log(&format!("Podemos fazer o mesmo com tuplas:\n{:#?}\n\n", (1, 2, 3)));
 
-        log(&format!("We can create vectors with default values:\n{:?}\n\n", vec![0; 5]));
+        log(&format!("Podemos criar vetores com valores padrão:\n{:?}\n\n", vec![0;5]));
 
-        log("More information in \"collections\" lesson");
+        log("Mais informações na lição de coleções (\"collections\").");
 
         log("\n\n-------------------------------------------------------------------------------\n\n");
     }
 }
 
-// Run tests with the following command:
+// Execute testes com o comando a seguir:
 // cargo test -- --nocapture --test-threads=1
 //
 //
-// --nocapture makes it prints all output, even in successful tests.
-// without --test-threads arg, all the tests will run async. Which means the output will be a mess.
+// --nocapture faz imprimir todo o output, incluindo testes sucedidos.
+// Sem o argumento --test-threads, todos os testes serão async. O que significa que o output será uma bagunça.
 //
 #[cfg(test)]
 mod tests{
@@ -154,7 +164,7 @@ mod tests{
         let builder: VMContextBuilder = VMContextBuilder::new();
         testing_env!(builder.build());
 
-        // We're not using contract in this project. It's stateless.
+        // O contrato é stateless. Declaramos, mas não usamos.
         let _contract: Contract = Contract::default();
     }
 
@@ -180,7 +190,7 @@ mod tests{
     }
 
     #[test]
-    #[should_panic(expected = "Panicking with a few args: 1 2 3")]
+    #[should_panic(expected = "Pânico com alguns argumentos: 1 2 3")]
     pub fn panic_example() {
         env_setup();
 
