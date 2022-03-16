@@ -9,7 +9,7 @@ mod model;
 #[near_bindgen]
 #[derive(Clone, Default, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-
+    
 }
 
 #[near_bindgen]

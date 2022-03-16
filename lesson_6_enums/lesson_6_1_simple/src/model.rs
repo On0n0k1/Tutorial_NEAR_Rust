@@ -1,10 +1,12 @@
 use near_sdk::borsh::{BorshDeserialize, BorshSerialize};
 use near_sdk::{env};
 
+
 // As duas funções a seguir são declaradas para
 // termos duas implementações diferentes de uma mesma função "log".
 // As mensagens chamadas com essa função log aparecerão 
 // em testes e na máquina virtual.
+
 
 #[cfg(test)]
 pub fn log(message: &str){
@@ -17,7 +19,6 @@ pub fn log(message: &str){
 }
 
 
-
 /// Um struct possui varios valores diferentes simultâneos, um enum só pode possuir um valor.
 /// Os possiveis valores de um enum são descritos em sua declaração.
 /// 
@@ -28,7 +29,7 @@ pub fn log(message: &str){
 ///  - Example0::FOURTH
 ///  - Example0::FIFTH
 /// 
-pub enum Exemplo0{
+pub enum Example0{
     First,
     Second,
     Third,
@@ -38,7 +39,7 @@ pub enum Exemplo0{
 
 
 // Semelhante a structs, implementamos métodos no namespace de Exemplo0 a seguir:
-impl Exemplo0{
+impl Example0{
 
     /// Observa o valor de si mesmo e retorna um número entre 1 e 5.
     /// 
@@ -47,11 +48,11 @@ impl Exemplo0{
     pub fn get_number(&self) -> u32 {
         // Instruções match são semelhantes a uma 
         match self {
-            Exemplo0::First => {1},
-            Exemplo0::Second => {2},
-            Exemplo0::Third => {3},
-            Exemplo0::Fourth => {4},
-            Exemplo0::Fifth => {5},
+            Example0::First => {1},
+            Example0::Second => {2},
+            Example0::Third => {3},
+            Example0::Fourth => {4},
+            Example0::Fifth => {5},
         }
     }
 
@@ -67,7 +68,7 @@ impl Exemplo0{
         // Devido a isso, _ sempre será "matched", as alternativas
         // abaixo nunca serão acessadas.
         match self {
-            Exemplo0::Third => true,
+            Example0::Third => true,
             _ => false,
             // Exemplo0::SECOND => {
             //     // Descomente esse bloco e receberá um aviso
@@ -79,6 +80,7 @@ impl Exemplo0{
     }
 }
 
+
 /// Um enum permite um objeto representar vários tipos diferentes:
 /// 
 /// Este exemplo possui o objetivo de mostrar que usar um enum como conteiner de valores não é uma boa ideia.
@@ -89,7 +91,7 @@ impl Exemplo0{
 /// Use enums para agrupar tipos diferentes que compartilham uma funcionalidade semelhante.
 /// 
 /// 
-pub enum Exemplo1{
+pub enum Example1{
     NoValue,
     AnInteger(i32),
     AFloat(f32),
@@ -98,7 +100,8 @@ pub enum Exemplo1{
     ACLikeStruct{first: u32, second: String},
 }
 
-impl Exemplo1{
+
+impl Example1{
     // Porem, vale lembrar que um método ou função deve retornar apenas um tipo de resultado especificado.
     //
     // Um desenvolvedor pode tentar criar uma função get que retorna o valor armazenado.
@@ -109,21 +112,20 @@ impl Exemplo1{
     //  - Retornar o valor como String
     //  - Usar Borsh ou serde para serializar o valor para bytes, deserializando após o recebimento.
     //  - Implementar genéricos. serão explicados em outra lição.
-    //  - Retornar um ponteiro? A possibilidade disso ser necessário é quase nula. O custo de complexidade é muito alto.
+    //  - Retornar um ponteiro? A possibilidade disso ser necessário é baixa. O custo de complexidade é muito alto.
     // 
 
     // O método a seguir retorna apenas um tipo, isso é aceitável para o compilador.
     pub fn get(&self) -> String {
         match self{
-            Exemplo1::NoValue => String::from(""),
-            Exemplo1::AnInteger(valor) => format!("{}", valor),
-            Exemplo1::AFloat(valor) => format!("{}", valor),
-            Exemplo1::AString(valor) => format!("{}", valor),
-            Exemplo1::ATuple(valor0, valor1) => format!("({}, {})", valor0, valor1),
-            Exemplo1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: {},\n}}\n", first, second),
+            Example1::NoValue => String::from(""),
+            Example1::AnInteger(valor) => format!("{}", valor),
+            Example1::AFloat(valor) => format!("{}", valor),
+            Example1::AString(valor) => format!("{}", valor),
+            Example1::ATuple(valor0, valor1) => format!("({}, {})", valor0, valor1),
+            Example1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: {},\n}}\n", first, second),
         }
     }
-
 
 
     // Também pode-se criar uma função para retornar cada tipo.
@@ -131,10 +133,11 @@ impl Exemplo1{
     /// true se o valor do enum
     pub fn is_no_value(&self) -> bool{
         match self{
-            Exemplo1::NoValue => true,
+            Example1::NoValue => true,
             _ => false,
         }
     }
+
 
     /// Retorna um inteiro, se o enum for essa alternativa.
     ///
@@ -146,7 +149,7 @@ impl Exemplo1{
     pub fn get_an_integer(&self) -> Option<i32>{
         // valor será uma referência, clonamos o valor para não retornar uma referência.
         match self{
-            Exemplo1::AnInteger(valor) => Some(valor.clone()),
+            Example1::AnInteger(valor) => Some(valor.clone()),
             _ => None
         }
     }
@@ -155,24 +158,134 @@ impl Exemplo1{
     /// Retorna true se possui algum numero inteiro impar,
     pub fn has_an_odd_number(&self) -> bool {
         match self {
-            Exemplo1::NoValue => false,
-            Exemplo1::AnInteger(valor) => {
+            Example1::NoValue => false,
+            Example1::AnInteger(valor) => {
                 if valor%2 == 1{
                     return true;
                 }
                     
                 return false;
             },
-            Exemplo1::AFloat(_valor) => false,
-            Exemplo1::AString(_valor) => false,
-            Exemplo1::ATuple(valor0, valor1) => {
+            Example1::AFloat(_valor) => false,
+            Example1::AString(_valor) => false,
+            Example1::ATuple(valor0, valor1) => {
                 return (valor0%2 == 1) || (valor1%2 == 1);
             },
-            Exemplo1::ACLikeStruct { first, second: _ } => {
+            Example1::ACLikeStruct { first, second: _ } => {
+                // Não temos interesse no segundo valor que é String
                 first%2 == 1
             },
         }
     }
-
 }
 
+
+/// Tipo criado para o exemplo abaixo.
+/// 
+/// Criado apenas para mostrar um exemplo de implementação de struct em match.
+/// 
+pub struct Employee{
+    pub name: String,
+    pub id: u32,
+    pub pass: String,
+    pub permissions: Vec<String>,
+    pub actions: Vec<String>,
+}
+
+/// Exemplo mais prático. 
+/// 
+/// Representa o Usuário de um aplicativo.
+/// 
+/// Digamos que um usuário possa ser os seguintes tipos:
+///  - Cliente
+///  - Funcionario
+///  - Administrador
+/// 
+/// Podemos controlar as permissões de cada com um enum.
+/// 
+/// Seria melhor termos tipos struct pra cada valor, mas estamos com pressa.
+/// 
+/// Todos possuem nome e id, alem disso, cada um possui:
+///  - Admin: passe (codificado, claro) para acesso. Lista de ações no sistema.
+///  - Employee: passe (codificado) para acesso. Lista de ações. Lista de permissões no sistema.
+///  - Client: apenas lista de pedidos.
+/// 
+pub enum Example2User{
+    Admin{ name: String, id: u32, pass: String, actions: Vec<String> },
+    Client{ name: String, id: u32, orders: Vec<String> },
+    Employee( Employee ),
+}
+
+
+impl Example2User{
+
+    /// Retorna nome do usuário.
+    /// 
+    /// O bloco que chama o método não precisa de saber o que o usuário é.
+    pub fn get_name(&self) -> String {
+        match self {
+            Example2User::Admin { name, id: _, pass: _, actions: _ } => { name.clone() },
+            Example2User::Client { name, id: _, orders: _ } => { name.clone() },
+            Example2User::Employee( employee ) => { employee.name.clone() },
+        }
+    }
+
+    /// Checa se usuário possui permissão para ação.
+    /// 
+    /// Não é uma boa ideia usar String para permissões. Devido a possivel erros de caracteres, etc. Enums seriam melhor.
+    /// 
+    /// Mas o código ja está complexo o suficiente.
+    /// 
+    /// Neste exempĺo:
+    ///  - Clientes não possuem permissão. Sempre retorna falso.
+    ///  - Administradores sempre possuem permissão. Sempre retorna true.
+    ///  - Empregados podem ou não possuir permissão. Checa por permissões.
+    /// 
+    pub fn has_permission(&self, permission: String) -> bool{
+
+        match self{
+            Example2User::Client { name: _, id: _, orders: _ } => { false },
+            Example2User::Admin { name: _, id: _, pass: _, actions: _ } => { true },
+            Example2User::Employee(employee) => {
+
+                // Vec implementa a trait IntoIterator.
+                // Isso disponibiliza o método .iter ao vetor.
+                // Este método nos permite iterar referencias de String.
+                // Nenhuma cópia de String é feita.
+                for employee_permission in employee.permissions.iter(){
+                    if permission.eq_ignore_ascii_case(employee_permission){
+                        return true;
+                    }
+                }
+
+                false
+            }
+        }
+    }
+
+    /// Retorna a lista de ações se for Admin ou Employee.
+    /// 
+    /// Como exemplo, digamos que o design de projeto necessita de retornar
+    /// um erro, se o usuário for um Client.
+    /// 
+    /// Result é semelhante a Option. Mas é usado para representar ações que podem causar erros.
+    /// Explicado na proxima sub-seção.
+    pub fn get_actions(&self) -> Result<Vec<String>, String> {
+        
+        // Se for client, retorna um erro (Como exemplo).
+        // Se for admin ou employee, retorna referencia para o Vec.
+        let actions = match self{
+            Example2User::Client { name: _, id: _, orders: _ } => { return Err(format!("O usuário é cliente")); },
+            Example2User::Admin { name: _, id: _, pass: _, actions, } => { actions },
+            Example2User::Employee( employee ) => { &employee.actions },
+        };
+
+        let mut result: Vec<String> = Vec::new();
+        // Usa a referência para criar uma cópia do Vec.
+        for action in actions{
+            result.push(action.clone());
+        }
+
+        Ok(result)
+    }
+}
