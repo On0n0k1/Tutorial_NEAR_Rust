@@ -1,14 +1,6 @@
-name = "lesson_6_enums"
-version = "0.1.0"
-authors = ["Lucas Lemos <stiltztinkerstein@gmail.com>"]
-license = "MIT"
-edition = "2021"
+[workspace]
+members=["lesson_6_1_simple"]
 
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[dependencies]
-near-sdk = "3.1.0"
 
 [profile.release]
 codegen-units = 1
