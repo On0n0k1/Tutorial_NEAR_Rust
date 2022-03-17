@@ -12,6 +12,8 @@ Podemos ter todo nosso código implementado no arquivo ```lib.rs```. Mas percebe
  - Controlar o caminho para cada módulo público;
  - Também podemos organizar nossos testes no diretório ```./tests/```.
 
+---
+
 ## API de Contrato
 
 ```rust
@@ -44,6 +46,8 @@ pub fn hello4(&mut self);
 pub fn this_will_panic();
 ```
 
+---
+
 ## Tópicos
  - [Como declarar um módulo externo](#como-declarar-um-m%C3%B3dulo-externo)
  - [Como declarar e usar diretórios](#como-declarar-e-usar-diret%C3%B3rios)
@@ -55,6 +59,8 @@ pub fn this_will_panic();
    - [Testes de integração Rust](#testes-de-integra%C3%A7%C3%A3o-rust)
   - [Desativar avisos de compilador](#desativar-avisos-de-compilador)
   - [Testando Falhas](#testando-falhas)
+
+---
 
 ## Como declarar um módulo externo
 
@@ -84,6 +90,8 @@ pub(crate) fn hello() -> String{
 
 ```pub(crate)``` significa que esta função é pública apenas nessa crate. Ou seja, se ```lesson_4_modules``` for dependência de um outro projeto rust, o crate externo não terá acesso a essa função.
 
+---
+
 ## Como declarar e usar diretórios
 
 [topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
@@ -107,6 +115,8 @@ A segunda forma é:
 
 O arquivo rust fica dentro ou fora do diretório? Essa é a questão.
 
+---
+
 ## Usando/Importando módulos
 
 [topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
@@ -121,6 +131,8 @@ use near_sdk::{env, near_bindgen};
 
 Não é necessário usar a instrução use. Porém, se quiséssemos acessar o módulo ```env```, teriamos que escrever ```near_sdk::env``` todas as vezes.
 
+---
+
 ### Apelidos
 
 [topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
@@ -132,6 +144,8 @@ use a_module::specific_module::hello as hello1;
 ```
 
 Existem várias funções ```hello``` neste exemplo. Então alteramos o nome de cada uma com o operador ```as```. Ou seja, importando dessa forma, a instrução ```hello1()``` é o mesmo que ```a_module::specific_module::hello()```.
+
+---
 
 ### Usos públicos
 
@@ -158,6 +172,8 @@ Organize módulos e diretórios de acordo com as necessidades do seu projeto. Us
 
 **Detalhe**: ```pub use``` e ```pub mod``` são usados para módulos públicos e crates feitos para serem importados (library) por outros projetos rust. Não possui nenhuma interação no contexto de contratos NEAR.
 
+---
+
 ## Testes de Integração
 
 [topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
@@ -165,6 +181,8 @@ Organize módulos e diretórios de acordo com as necessidades do seu projeto. Us
 A linguagem rust tem um formato para testes de integração, e o formato NEAR possui outro.
 
 Isso porque testes de integração em NEAR consistem na interação entre diversos contratos em uma simulação de estrutura blockchain.
+
+---
 
 ### Testes de Integração NEAR
 
@@ -175,6 +193,8 @@ Para isso usamos uma ferramenta chamada [workspaces-rs](https://github.com/near/
 Agora, como se ja não estivesse confuso o suficiente, workspaces em rust e workspaces-rs são duas coisas diferentes. [Workspaces](https://doc.rust-lang.org/cargo/reference/workspaces.html) em rust são uma forma de organizar várias crates em um único pacote, todas compartilhando um diretório ```./target/``` e um arquivo ```Cargo.lock```. [workspaces-rs](https://github.com/near/workspaces-rs) é uma forma de realizar testes de integração de contratos NEAR utilizando a linguagem rust.
 
 Testes de integração eram feitos com a crate [near-sdk-sim](https://www.near-sdk.io/testing/simulation-tests), mas esta ferramenta será deprecada pela [sandbox](https://docs.near.org/docs/develop/contracts/sandbox). Use a ferramenta que lhe servir melhor.
+
+---
 
 ### Testes de integração Rust
 
@@ -216,6 +236,8 @@ Para importarmos módulos na crate principal, referimos à essa pelo nome da cra
 use lesson_4_modules::Contract;
 ```
 
+---
+
 ## Desativar avisos de compilador
 
 [topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
@@ -244,6 +266,7 @@ use near_sdk::{env, near_bindgen};
 
 Repetindo, avisos existem para nos ajudar. O recomendado é **corrigir** os avisos, não escondê-los.
 
+---
 
 ## Testando falhas
 

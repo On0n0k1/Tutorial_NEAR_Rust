@@ -4,6 +4,8 @@
 
 Macros são a ferramenta principal para a utilização efetiva da linguagem rust. Não é necessário saber como criar macros. Mas é essencial entender o que são e como usá-los.
 
+---
+
 ## API de Contrato
 
 ```rust
@@ -33,6 +35,8 @@ pub fn vec_examples();
    - [vec](#vec)
    - [setup_alloc](#setup_alloc)
  - [Extra: String e str](#extra-string-e-str) 
+
+---
 
 ## O que são macros
 
@@ -79,6 +83,8 @@ testing_env!(builder.build());
 
 ``` 
 
+---
+
 ## Macros "function-like"
 
 [topo](#lição-5---uso-de-macros)
@@ -95,12 +101,16 @@ vec![1, 2, 3, 4];
 
 Esta implementação vec é demarcada com ``` [ ] ``` em vez de ``` ( ) ```, macros também podem ser demarcados com ``` { } ```. Macros podem ter literalmente qualquer tipo de texto dentro dos demarcadores. Um desenvolvedor pode escrever qualquer coisa como argumento macro, contanto que a implementação entenda os parâmetros.
 
+---
+
 ## Vantagens
 
 [topo](#lição-5---uso-de-macros)
 
  - Simplifica o código.
  - É executado durante compilação. Se bem implementado, macros podem ser eficientes com pouco ou nenhum overhead.
+
+---
 
 ## Desvantagens
 
@@ -111,9 +121,13 @@ Esta implementação vec é demarcada com ``` [ ] ``` em vez de ``` ( ) ```, mac
  - Aumentam o tempo de compilação.
  - Podem "inflar" o código com implementação "invisivel".
 
+---
+
 ## Exemplos
 
 A seguir recomendamos alguns macros "function-like" úteis.
+
+---
 
 ### format, println e panic
 
@@ -181,6 +195,8 @@ let message = format!("Podemos escolher a precisão, o número de digitos e a or
 let message = format!("Mesmo que o acima: {first:2.2}, {second:04.4}, {third:6.6}");
 
 ```
+
+---
 
 ### vec
 
@@ -264,6 +280,7 @@ Formatação ```{:#?}``` é "formatação pretty print". É o mesmo que o acima,
 
 Para implementar formatação debug em um struct ou enum, cheque o [link sobre formatação](https://doc.rust-lang.org/std/fmt/trait.Debug.html).
 
+---
 
 ### setup_alloc
 
@@ -277,6 +294,7 @@ near_sdk::setup_alloc!();
 
 É necessário na versão de near_sdk atual (```3.1.0```). Nas versões seguintes, será deprecado.
 
+---
 
 ## Extra: String e str
 

@@ -4,6 +4,8 @@
 
 Esta lição discute sobre o formato de structs e como ownership é usada nos métodos.
 
+---
+
 ## Tópicos
 
  - [Descrição](#descri%C3%A7%C3%A3o)
@@ -15,6 +17,8 @@ Esta lição discute sobre o formato de structs e como ownership é usada nos m�
    - [macros](#macros)
    - [take_ownership](#take_ownership)
 
+---
+
 ## Descrição
 [voltar](#li%C3%A7%C3%A3o-3---structs)
 
@@ -23,6 +27,8 @@ Structs são um pouco semelhantes a classes em algumas linguagens orientadas a o
 Aprofundaremos o conceito de traits em uma lição adiante. Mas considere traits como um conjunto de funções representando uma característica que vários tipos diferentes podem implementar. A trait ```Clone``` permite usar o método ```.clone()``` para criar uma cópia do elemento. A trait ```BorshDeserialize``` permite tentar construir uma instância do tipo utilizando um string no formato json.
 
 Mais adiante aprenderemos a criar funções que aplicam a qualquer tipo de variável que implementa uma trait especifica. Porém, essa lição será apenas sobre structs.
+
+---
 
 ## Funções de Contrato
 [voltar](#li%C3%A7%C3%A3o-3---structs)
@@ -54,7 +60,10 @@ pub fn take_ownership(&self) -> u32;
 
 Cheque a implementação para mais detalhes.
 
+---
+
 ## Projeto
+
 [voltar](#li%C3%A7%C3%A3o-3---structs)
 
 Criamos um tipo de nome ```StructExample```.
@@ -75,7 +84,10 @@ O tipo possui os seguintes valores internos:
 
 Em muitas linguagens teriamos que escrever algo como ```long int``` para i32, ```long long int``` para i64. Em rust e assemblyscript, simplesmente usamos i para "signed" (positivo e negativo) e u para "unsigned" (positivo). u8, u16, u32, u64 e u128 são todos tipos válidos de inteiros "unsigned".
 
+---
+
 ### Estrutura de Contrato
+
 [voltar](#li%C3%A7%C3%A3o-3---structs)
 
 O contrato possui a seguinte estrutura:
@@ -107,7 +119,10 @@ impl Default for StructExample{
 
 Escolhemos alguns valores aleatórios para servir de exemplo. Vemos que não é necessário escrever algo como ```an_integer: an_integer``` ou ```a_floating: a_floating``` quando os nomes são iguais.
 
+---
+
 ### Trait Clone
+
 [voltar](#li%C3%A7%C3%A3o-3---structs)
 
 Implementamos a trait Clone para o tipo:
@@ -136,7 +151,10 @@ impl Clone for StructExample{
 
 Não há muito o que adicionar sobre as implementações dos ```get```s e ```set```s. Recomendo checar os comentários. Mas discutiremos sobre ```just_a_function``` e ```take_ownership``` a seguir:
 
+---
+
 ### just_a_function
+
 [voltar](#li%C3%A7%C3%A3o-3---structs)
 
 ```rust

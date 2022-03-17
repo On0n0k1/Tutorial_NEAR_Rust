@@ -6,6 +6,8 @@ Veja também:
  - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md).
  - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md).
 
+---
+
 ## Tópicos
  - [Estrutura de um contrato NEAR](#estrutura-de-um-contrato-near)
  - [Importar Dependências](#importar-depend%C3%AAncias)
@@ -13,6 +15,8 @@ Veja também:
  - [Declaração de Contrato](#declara%C3%A7%C3%A3o-de-contrato)
  - [Declaração de API do Contrato](#declara%C3%A7%C3%A3o-de-api-do-contrato)
  - [Testes de Unidade](#testes-de-unidade)
+
+---
 
 ## Estrutura de um contrato NEAR
 [topo](#li%C3%A7%C3%A3o-1-contrato)
@@ -25,6 +29,8 @@ Um contrato NEAR na linguagem Rust pode ser resumido aos seguintes passos:
  - Testes de unidade.
 
 O desenvolvedor é livre para adicionar o que julgar necessário ao projeto. Os passos acima são apenas para acelerar a memorização.
+
+---
 
 ### Importar Dependências
 [topo](#li%C3%A7%C3%A3o-1-contrato)
@@ -83,6 +89,8 @@ Estamos acessando a crate "near_sdk" declarado em "Cargo.toml". Importando self,
  - **BorshSerialize**: Caminho inverso do BorshDeserialize. Quando vamos retornar um resultado para o usuário, devemos transformar aquele valor para um json em texto.
  - **near_bindgen**: Isso é um marcador para um struct que diz **"Este é o contrato principal do nosso projeto"**. Damos o nome "Contract" apenas para facilitar o entendimento, não é obrigatório. Porém deve-se ter pelo menos um struct com **near_bindgen** em cada contrato.
 
+---
+
 ### Macro de alocação
 [topo](#li%C3%A7%C3%A3o-1-contrato)
 
@@ -95,6 +103,8 @@ Macros parecem com funções. Mas são executadas antes da compilação. São fe
 Neste caso, "setup_alloc" gera o código "boilerplate" (forma) para o funcionamento do nosso contrato. Só deve ser executado uma vez, antes da declaração do contrato.
 
 Aviso: Nas próximas versões esta instrução será deprecada. Não será necessário usar mais.
+
+---
 
 ### Declaração de contrato
 [topo](#li%C3%A7%C3%A3o-1-contrato)
@@ -129,6 +139,8 @@ default é uma função da trait Default que retorna um struct do mesmo tipo Sel
 
 Se implementarmos este contrato em uma conta NEAR, e depois executarmos uma primeira função que não seja de inicialização. A máquina irá inicializar o contrato com  default antes de executar nossa função.
 
+---
+
 ### Declaração de API do contrato
 [topo](#li%C3%A7%C3%A3o-1-contrato)
 
@@ -162,6 +174,8 @@ impl Contract{
 
 Com estes detalhes, vemos que a função ```get``` retorna o valor atual de counter armazenado no struct do contrato. ```increment``` incrementa o valor de counter em 1. ```decrement``` reduz o valor de counter em 1.
 
+---
+
 ### Testes de unidade
 [topo](#li%C3%A7%C3%A3o-1-contrato)
 
@@ -174,7 +188,7 @@ mod tests{
 
 ```mod tests``` é simplesmente um módulo local com nome tests. Nada de especial.
 
-```#[cfg(test)]``` este é bem interessante. ```cfg``` é uma instrução que diz o compilador "Compile o módulo abaixo de mim apenas se a condição entre parenteses for verdadeira.". ```(test)``` é verdadeiro quando executamos ```cargo test```. Se não estivermos realizando testes de unidade, este módulo não existe.
+```#[cfg(test)]``` este é bem interessante. ```cfg``` é uma instrução que diz ao compilador "Compile o módulo abaixo de mim apenas se a condição entre parenteses for verdadeira.". ```(test)``` é verdadeiro quando executamos ```cargo test```. Se não estivermos realizando testes de unidade, este módulo não existe.
 
 Se em vez de ```#[cfg(test)]``` tivéssemos:
 
@@ -186,89 +200,89 @@ mod another_module{
 Teriamos a situação oposta, este módulo não seria compilado durante testes de unidade.
 
 ```rust
-    use super::*;
-    use near_sdk::{
-        AccountId,
-        env,
-        MockedBlockchain,
-        testing_env,
-        test_utils::VMContextBuilder,
-        json_types::ValidAccountId,
-    };
+use super::*;
+use near_sdk::{
+    AccountId,
+    env,
+    MockedBlockchain,
+    testing_env,
+    test_utils::VMContextBuilder,
+    json_types::ValidAccountId,
+};
 ```
 Acima importamos as dependências usadas nos testes abaixo.
 
 ```rust
-    fn env_setup(){
-        let mut builder: VMContextBuilder = VMContextBuilder::new();
-        let account_id: AccountId = String::from("stiltztinkerstein");
+fn env_setup(){
+    let mut builder: VMContextBuilder = VMContextBuilder::new();
+    let account_id: AccountId = String::from("stiltztinkerstein");
 
-        builder.current_account_id(
-            ValidAccountId::try_from(
-                account_id.clone()
-            ).unwrap()
-        );
+    builder.current_account_id(
+        ValidAccountId::try_from(
+            account_id.clone()
+        ).unwrap()
+    );
 
-        testing_env!(builder.build());
+    testing_env!(builder.build());
 
-        assert_eq!(
-            env::current_account_id(),
-            account_id, 
-            "Erro assert.\n env: {}\naccount: {}\n", 
-            env::current_account_id(), 
-            &account_id,
-        );
-    }
+    assert_eq!(
+        env::current_account_id(),
+        account_id, 
+        "Erro assert.\n env: {}\naccount: {}\n", 
+        env::current_account_id(), 
+        &account_id,
+    );
+}
 ```
 
 Antes de cada teste, precisamos iniciar uma simulação do ambiente de blockchain. Uma das formas de fazer isso é utilizando ```VMContextBuilder```. Basta criar uma instância desse tipo, alterar os atributos que queremos, e usar o builder como argumento para o macro ```testing_env```.
 
 Para não termos que escrever estas linhas em cada teste, criamos uma função para ser usada.
 
-```assert_eq``` não é necessário. Só mostrando que o atributo de ambiente ```env::current_account_id``` é o mesmo id de conta que escolhi para o builder.
+```assert_eq``` não é necessário. Só mostra que o atributo de ambiente ```env::current_account_id``` é o mesmo id de conta que escolhi para o builder.
 
 A seguir teremos os três testes: 
 
 ```rust
-    #[test]
-    pub fn get() {
-        env_setup();
+#[test]
+pub fn get() {
+    env_setup();
 
-        let contract: Contract = Contract::default();
-        
-        assert_eq!(
-            contract.get(),
-            0
-        );
-    }
+    let contract: Contract = Contract::default();
+    
+    assert_eq!(
+        contract.get(),
+        0
+    );
+}
 
-    #[test]
-    pub fn increment() {
-        env_setup();
+#[test]
+pub fn increment() {
+    env_setup();
 
-        let mut contract: Contract = Contract::default();
+    let mut contract: Contract = Contract::default();
 
-        contract.increment();
+    contract.increment();
 
-        assert_eq!(
-            contract.get(),
-            1
-        );
-    }
+    assert_eq!(
+        contract.get(),
+        1
+    );
+}
 
-    #[test]
-    pub fn decrement() {
-        env_setup();
+#[test]
+pub fn decrement() {
+    env_setup();
 
-        let mut contract: Contract = Contract::default();
+    let mut contract: Contract = Contract::default();
 
-        contract.decrement();
+    contract.decrement();
 
-        assert_eq!(
-            contract.get(),
-            -1
-        );
-    }
+    assert_eq!(
+        contract.get(),
+        -1
+    );
+}
 ```
 
 Percebe-se um padrão em cada um dos testes:

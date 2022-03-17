@@ -4,6 +4,8 @@
 
 Este curto tutorial possui o objetivo de explicar sobre ownership.
 
+---
+
 ## Funções de Contrato
 
 ```rust
@@ -13,6 +15,8 @@ pub fn get_length(&self) -> u32;
 /// Retorna o comprimento da String e altera o nome armazenado para "Changed name"
 pub fn get_length_again(&mut self) -> u32;
 ```
+
+---
 
 ## Hipótese
 
@@ -39,6 +43,8 @@ Mas isso nos trás outro problema. Se uma função tem acesso ao endereço de me
 
 **Extra:** Ponteiros existem em Rust também. Mas existem vários tipos de ponteiros, com diferentes vantagens e desvantagens. Ponteiros semelhantes à linguagem C podem ser utilizados também, mas os blocos que os utilizam precisam ser marcados como "unsafe" ([Mais Informações](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html)).
 
+---
+
 ## Ownership
 
 A instrução a seguir:
@@ -58,6 +64,8 @@ Dos tipos primitivos:
 Em outras palavras, para criarmos uma cópia de um String, precisamos fazer isso manualmente.
 
 Ownership garante que apenas uma variável é dona ("owns") de um endereço de váriável. Essa possessão pode ser transferida. Mas para compartilharmos uma variável, usamos ponteiros ou referências.
+
+---
 
 ## Referências
 
@@ -86,11 +94,15 @@ Algumas regras a considerar:
 
 Quando criamos uma referência, digamos que a variável dona está "emprestando" ("borrow") para a outra. A linha em que o empréstimo é utilizado por ultimo é a linha em que o empréstimo é devolvido.
 
+---
+
 ## Importante
 
 Não retorne referências. Retornar referências é possivel, mas é preciso marcar o tempo-de-vida (lifetime) do valor retornado. Não recomendamos estudar isso enquanto está aprendendo a linguagem rust. Todo o conceito de lifetimes pode ser evitado simplesmente retornando cópias quando necessário. Para os interessados, referências [aqui](https://doc.rust-lang.org/rust-by-example/scope/lifetime.html).
 
 Lifetimes são um conceito bem poderoso quando usado corretamente. As ferramentas serde e borsh usam isso para converter texto json para o tipo que precisamos com zero cópia. Ou seja, existe alocação de memória para o String json, para o tipo que precisamos, e nada mais. O processador não precisa esperar alocação de memória, ou seja, muito rápido.
+
+---
 
 ## Exemplos
 
@@ -149,13 +161,19 @@ pub fn get_length_again(&mut self) -> u32 {
 
 Antes de iniciarmos com os detalhes falaremos sobre String e &str.
 
+---
+
 ### O que é String
 
 Uma String é uma variável que possui dono. Armazena um "string" e irá ser liberado da memória quando a variável ser liberada. Mas "Um texto entre aspas como este não é um String, é um &str". Uma referência a um String é um &String ou &mut String.
 
+---
+
 ### O que é &str
 
 Isso é um tipo criado para simplificar o uso de Strings em nosso código. Age como uma referência imutável à um String. Mas este será alocado pelo compilador, e o compilador decide como melhor otimizá-lo na memória.
+
+---
 
 ### Strings em Funções
 
