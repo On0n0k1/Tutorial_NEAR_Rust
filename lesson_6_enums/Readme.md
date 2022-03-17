@@ -75,6 +75,19 @@ cargo build -p lesson_6_1_simple --target wasm32-unknown-unknown --release
 
 Os arquivos '.wasm' estarão em './lesson_6_enums/target/wasm32-unknown-unknown/release/'.
 
+```bash
+cargo doc --lib --document-private-items -p lesson_6_1_simple --open
+```
+
+Gera documentação da sub-lição 6-1 e abre no browser padrão.
+
+ - ```--lib``` especifica que a crate é um library.
+ - ```--document-private-items``` pede para gerar documentação de todos os items.
+ - ```--open``` abre o website no navegador padrão.
+
+Documentação estará em './target/doc/lesson_6_1_simple/index.html'.
+
+
 ---
 
  - A proxima sub-seção será sobre [declaração e uso de enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/lesson_6_1_simple/).

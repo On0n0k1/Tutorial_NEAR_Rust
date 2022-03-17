@@ -1,4 +1,4 @@
-use near_sdk::borsh::{BorshDeserialize, BorshSerialize};
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env};
 
 
@@ -29,12 +29,19 @@ pub fn log(message: &str){
 ///  - Example0::FOURTH
 ///  - Example0::FIFTH
 /// 
+#[derive(BorshDeserialize, BorshSerialize, Clone)]
 pub enum Example0{
     First,
     Second,
     Third,
     Fourth,
     Fifth,
+}
+
+impl Default for Example0{
+    fn default() -> Self {
+        Example0::First
+    }
 }
 
 
@@ -91,6 +98,7 @@ impl Example0{
 /// Use enums para agrupar tipos diferentes que compartilham uma funcionalidade semelhante.
 /// 
 /// 
+#[derive(Clone, BorshDeserialize, BorshSerialize)]
 pub enum Example1{
     NoValue,
     AnInteger(i32),
@@ -98,6 +106,12 @@ pub enum Example1{
     AString(String),
     ATuple(i32, u32),
     ACLikeStruct{first: u32, second: String},
+}
+
+impl Default for Example1{
+    fn default() -> Self {
+        Example1::NoValue
+    }
 }
 
 
@@ -123,7 +137,7 @@ impl Example1{
             Example1::AFloat(valor) => format!("{}", valor),
             Example1::AString(valor) => format!("{}", valor),
             Example1::ATuple(valor0, valor1) => format!("({}, {})", valor0, valor1),
-            Example1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: {},\n}}\n", first, second),
+            Example1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: \"{}\",\n}}\n", first, second),
         }
     }
 
@@ -184,12 +198,31 @@ impl Example1{
 /// 
 /// Criado apenas para mostrar um exemplo de implementação de struct em match.
 /// 
+#[derive(BorshDeserialize, BorshSerialize, Clone)]
 pub struct Employee{
     pub name: String,
     pub id: u32,
     pub pass: String,
     pub permissions: Vec<String>,
     pub actions: Vec<String>,
+}
+
+impl Default for Employee{
+    fn default() -> Self {
+        Employee { 
+            name: String::from("a name"), 
+            id: 11, 
+            pass: String::from("some random pass"), 
+            permissions: vec![
+                String::from("Can access google"),
+                format!("Can access 9gag"),
+            ], 
+            actions: vec![
+                String::from("Did something"),
+                String::from("Did something else"),
+            ],
+        }
+    }
 }
 
 /// Exemplo mais prático. 
@@ -210,10 +243,17 @@ pub struct Employee{
 ///  - Employee: passe (codificado) para acesso. Lista de ações. Lista de permissões no sistema.
 ///  - Client: apenas lista de pedidos.
 /// 
+#[derive(BorshDeserialize, BorshSerialize, Clone)]
 pub enum Example2User{
     Admin{ name: String, id: u32, pass: String, actions: Vec<String> },
     Client{ name: String, id: u32, orders: Vec<String> },
     Employee( Employee ),
+}
+
+impl Default for Example2User{
+    fn default() -> Self {
+        Example2User::Employee(Employee::default())
+    }
 }
 
 
@@ -287,5 +327,91 @@ impl Example2User{
         }
 
         Ok(result)
+    }
+}
+
+
+#[cfg(test)]
+mod tests{
+    use super::*;
+
+    #[test]
+    fn example0() {
+        let first = Example0::First;
+        let second = Example0::Second;
+        let third = Example0::Third;
+        let fourth = Example0::Fourth;
+        let fifth = Example0::Fifth;
+
+        assert_eq!(first.get_number(), 1);
+        assert_eq!(second.get_number(), 2);
+        assert_eq!(third.get_number(), 3);
+        assert_eq!(fourth.get_number(), 4);
+        assert_eq!(fifth.get_number(), 5);
+
+        assert_eq!(first.is_third(), false);
+        assert_eq!(second.is_third(), false);
+        assert_eq!(third.is_third(), true);
+        assert_eq!(fourth.is_third(), false);
+        assert_eq!(fifth.is_third(), false);
+    }
+
+    // NoValue,
+    // AnInteger(i32),
+    // AFloat(f32),
+    // AString(String),
+    // ATuple(i32, u32),
+    // ACLikeStruct{first: u32, second: String},
+    fn example1_create() -> (
+        Example1,
+        Example1,
+        Example1,
+        Example1,
+        Example1,
+        Example1,
+    ){
+        // Retorna uma tupla com um exemplo de cada um dos valores.
+        (
+            Example1::NoValue,
+            Example1::AnInteger(10),
+            Example1::AFloat(3.5),
+            Example1::AString(String::from("A String")),
+            Example1::ATuple(-5, 5),
+            Example1::ACLikeStruct{first: 1, second: String::from("second")},
+        )
+    }
+
+    #[test]
+    fn example1_get(){
+        let (
+            no_value,
+            an_integer,
+            a_float,
+            a_string,
+            a_tuple,
+            a_c_like_struct
+        ) = example1_create();
+
+        let no_value = no_value.get();
+        let an_integer = an_integer.get();
+        let a_float = a_float.get();
+        let a_string = a_string.get();
+        let a_tuple = a_tuple.get();
+        let a_c_like_struct = a_c_like_struct.get();
+        
+
+        assert!(no_value.eq_ignore_ascii_case(""));
+        assert!(an_integer.eq_ignore_ascii_case("10"));
+        assert!(a_float.eq_ignore_ascii_case("3.5"));
+        assert!(a_string.eq_ignore_ascii_case("A String"));
+        assert!(a_tuple.eq_ignore_ascii_case("(-5, 5)"));
+        assert!(a_c_like_struct.eq_ignore_ascii_case(&format!("{{\nfirst: 1,\nsecond: \"second\",\n}}\n")));
+
+        // Example1::NoValue => String::from(""),
+        // Example1::AnInteger(valor) => format!("{}", valor),
+        // Example1::AFloat(valor) => format!("{}", valor),
+        // Example1::AString(valor) => format!("{}", valor),
+        // Example1::ATuple(valor0, valor1) => format!("({}, {})", valor0, valor1),
+        // Example1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: {},\n}}\n", first, second),
     }
 }
