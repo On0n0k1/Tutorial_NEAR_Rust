@@ -70,7 +70,7 @@ impl Contract{
     }
 
     /// Chama Example0::get_number.
-    pub fn example_0_get_number(&self) -> u32{
+    pub fn example_0_get_number(&self) -> u32 {
         log_call("get_example_0_get_number");
         self.example_0.get_number()
     }
