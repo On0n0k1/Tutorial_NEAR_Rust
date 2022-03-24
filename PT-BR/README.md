@@ -1,5 +1,7 @@
 # Tutorial_NEAR_Rust
 
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+
 Tutorial em etapas para desenvolvimento de contratos inteligentes em rust. Neste conjunto de tutoriais serão discutidos todas as principais características da linguagem, assim como seu uso na plataforma NEAR.
 
 ---
@@ -98,8 +100,8 @@ O foco da linguagem Rust não é o resultado final dessa execução. E sim, o ca
 
 Antes de começarmos, devemos realizar os seguintes passos:
 
- - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/setup-nearcli.md) para interagir com a plataforma NEAR.
- - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/rust.md) para compilar e testar os projetos.
+ - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/setup-nearcli.md) para interagir com a plataforma NEAR.
+ - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/rust.md) para compilar e testar os projetos.
 
 ---
 
@@ -107,11 +109,11 @@ Antes de começarmos, devemos realizar os seguintes passos:
 
 [topo](#tutorial_near_rust)
 
- - [Lição 1: Contratos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_1_contract)
- - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_2_ownership)
- - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs)
- - [Lição 4: Módulos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_4_modules)
- - [Licão 5: Usando Macros](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_5_macro_usage)
- - [Lição 6: Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums)
+ - [Lição 1: Contratos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_1_contract)
+ - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_2_ownership)
+ - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_3_structs)
+ - [Lição 4: Módulos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_4_modules)
+ - [Licão 5: Usando Macros](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_5_macro_usage)
+ - [Lição 6: Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums)
  - Lição 7: Traits
  - Lição 8: Coleções

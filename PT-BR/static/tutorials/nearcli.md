@@ -85,7 +85,7 @@ Para criar uma conta de topo nível, use [near-api-js](https://docs.near.org/doc
 near deploy --accountId minha-subconta.minha-conta.testnet --wasmFile ./compilado.wasm
 ```
 
-Após compilar nosso projeto (cheque o [tutorial cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md)), usamos este comando para implantar o arquivo compilado em nossa subconta.
+Após compilar nosso projeto (cheque o [tutorial cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/cargo.md)), usamos este comando para implantar o arquivo compilado em nossa subconta.
 
  - **accountId**: ID da conta em que implantaremos o contrato;
  - **wasmFile**: Caminho para o arquivo webassembly compilado;

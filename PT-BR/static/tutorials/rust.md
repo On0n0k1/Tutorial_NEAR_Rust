@@ -32,7 +32,7 @@ Recomendaremos duas alternativas para instalação de Rust. A primeira é recome
 
 Acesse o [repositório](https://github.com/rust-lang/rustlings) e siga as instruções de instalação.
 
-![Pagina de web rust](/static/images/rustlings.png)
+![Pagina de web rust](../images/rustlings.png)
 
 #### Rustlings para MacOS/Linux
 [topo](#instala%C3%A7%C3%A3o-rust)

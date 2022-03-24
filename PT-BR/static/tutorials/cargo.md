@@ -135,6 +135,6 @@ Clique em Contract para ver as funções implementadas:
 
 Comentários com ```//``` não aparecem na documentação.
 
-[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust)
+[Voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 

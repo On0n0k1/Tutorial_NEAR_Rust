@@ -1,6 +1,6 @@
 # Lição 3 - Structs
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Esta lição discute sobre o formato de structs e como ownership é usada nos métodos.
 
@@ -205,4 +205,4 @@ Mas como declaramos ```self``` em vez de ```&self``` ou ```&mut self``` como arg
 
 Um usuário iniciante provavelmente receberá um aviso de erro muito confuso se tentar escrever o método dessa forma. Um erro similar a "valor não pode ser usado pois um move aconteceu aqui.".
 
-A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_4_modules) será sobre módulos.
+A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_4_modules) será sobre módulos.

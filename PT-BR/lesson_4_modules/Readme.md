@@ -1,6 +1,6 @@
 # Lição 4 - Módulos
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Esta lição discute sobre como módulos são importados. 
 
@@ -286,4 +286,4 @@ O teste acima irá causar pânico, mas esperamos pânico. Então o teste será u
 
 Se a operação não causar pânico, ou causar pânico com uma mensagem diferente do esperado ("expected"). O teste irá falhar.
 
-A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_5_macro_usage) será sobre uso de macros.
+A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_5_macro_usage) será sobre uso de macros.

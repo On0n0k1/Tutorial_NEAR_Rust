@@ -1,10 +1,10 @@
 # Lição 1: Contrato
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Veja também:
- - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/cargo.md).
- - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/static/tutorials/nearcli.md).
+ - Usos da [ferramenta cargo](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/cargo.md).
+ - Usos da [ferramenta near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/nearcli.md).
 
 ---
 
@@ -293,4 +293,4 @@ Percebe-se um padrão em cada um dos testes:
 
 A função ```get``` foi testada primeiro. Isto porque esta será usada nos testes seguidos. Se esta função não funcionasse da forma que esperassemos, temos que ver este erro primeiro na lista. Bom para evitar confusões nos testes. 
 
-A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_2_ownership) será sobre ownership.
+A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_2_ownership) será sobre ownership.

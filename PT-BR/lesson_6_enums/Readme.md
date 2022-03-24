@@ -1,11 +1,11 @@
 # Lição 6 - Enums
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Esta lição é dividida em 4 partes relacionadas a enums. Cada tópico é uma crate. Aproveitaremos este momento para explicar sobre workspaces e como usá-los.
 
 As sub-lições são as seguintes:
- - [Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/lesson_6_1_simple/).
+ - [Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
  - Enums da biblioteca standard, Option e Result.
  - Como implementar erros de forma prática e eficiente.
  - Como usar enums para agrupar diversos tipos em um único enum.
@@ -90,6 +90,6 @@ Documentação estará em './target/doc/lesson_6_1_simple/index.html'.
 
 ---
 
- - A proxima sub-seção será sobre [declaração e uso de enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/lesson_6_1_simple/).
+ - A proxima sub-seção será sobre [declaração e uso de enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
  - A proxima lição será sobre traits.
 

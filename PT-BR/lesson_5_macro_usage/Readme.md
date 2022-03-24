@@ -1,6 +1,6 @@
 # Lição 5 - Uso de Macros
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Macros são a ferramenta principal para a utilização efetiva da linguagem rust. Não é necessário saber como criar macros. Mas é essencial entender o que são e como usá-los.
 
@@ -307,6 +307,6 @@ Lembrar:
  - Sempre que for precisar de uma referência para uma ```String``` em uma função, use ```&str```. Não use ```&String```.
  - "Strings como essa" são do tipo ```&'static str```. Mais detalhes na seção sobre lifetimes. Teoricamente, são strings que nunca são removidas da memória, mas isso depende da otimização do compilador.
 
-A [proxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums) será sobre enums.
+A [proxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums) será sobre enums.
 
 

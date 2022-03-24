@@ -1,6 +1,6 @@
 # Lição 2: Ownership
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/)
 
 Este curto tutorial possui o objetivo de explicar sobre ownership.
 
@@ -255,4 +255,4 @@ pub fn get_length_again(&mut self) -> u32 {
 
 Simplesmente chama ```this_takes_a_reference``` e altera o "nome" armazenado no contrato. Este exemplo mostra que podem haver várias referências para uma variável. Faça as alterações recomendadas nos comentários para ver as reações do compilador.
 
-A [próxima Lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_3_structs) será sobre structs.
+A [próxima Lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_3_structs) será sobre structs.
