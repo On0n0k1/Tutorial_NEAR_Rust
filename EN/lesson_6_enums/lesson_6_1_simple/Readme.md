@@ -1,6 +1,6 @@
 # Lição 6 - 1 Uso de Enums
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/lesson_6_1_simple/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/)
 
 Essa lição descreve enums e instruções ```match```.
 
