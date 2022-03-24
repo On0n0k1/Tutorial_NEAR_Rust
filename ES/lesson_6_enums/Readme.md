@@ -1,6 +1,6 @@
 # Lição 6 - Enums
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/ES/)
+[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/ES)
 
 Esta lição é dividida em 4 partes relacionadas a enums. Cada tópico é uma crate. Aproveitaremos este momento para explicar sobre workspaces e como usá-los.
 
