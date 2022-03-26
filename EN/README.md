@@ -1,119 +1,125 @@
 # Tutorial_NEAR_Rust
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/)
 
-Tutorial em etapas para desenvolvimento de contratos inteligentes em rust. Neste conjunto de tutoriais serão discutidos todas as principais características da linguagem, assim como seu uso na plataforma NEAR.
-
----
-
-## Contato
-
-[topo](#tutorial_near_rust)
-
-Para dúvidas, reclamações ou sugestões, por favor me adicione no discord On0n0k1#3800. Se este tutorial facilitar a sua vida, considere comprar um café para mim enviando uma fração de NEAR para stiltztinkerstein.near .
+A step-by-step course for learning Smart Contract development using Rust. In this set of lessons, we will discuss the main features of the Rust language, 
+as well as going over the NEAR platform. 
 
 ---
 
-## Tópicos
+## Contact
 
-[topo](#tutorial_near_rust)
+[top](#tutorial_near_rust)
 
- - [O Que é a linguagem Rust](#o-que-é-a-linguagem-rust)
- - [Usos da linguagem Rust](#usos-da-linguagem-rust)
- - [Aprendendo a Linguagem Rust](#aprendendo-a-linguagem-rust)
- - [Comparações com Javascript e Python](#compara%C3%A7%C3%B5es-com-javascript-e-python)
- - [Instalação](#instala%C3%A7%C3%A3o)
- - [Lições](#li%C3%A7%C3%B5es)
+For any questions, complaints or suggestions, look me up on Discord On0n0k1#3800. If this course makes your life easier, feel free to buy me a cup of coffe by sending a bit of $NEAR to stiltztinkerstein.near . Thank you!
 
 ---
 
-## O que é a linguagem Rust
+## Topics
 
-[topo](#tutorial_near_rust)
+[top](#tutorial_near_rust)
 
-De forma bem resumida, é uma linguagem de programação de baixo nível com as seguintes características:
-
- - Execução aproximadamente tão rápida quanto linguagem c ou c++.
- - Não tem os riscos de vazamento de memória que outras linguagens de baixo nível possuem.
- - É dificil de começar a aprender.
- - Não **usa** e nem **precisa** de coleta de lixo de memória. Pois no periodo de compilação, o compilador sabe exatamente quando variáveis são criadas e liberadas.
- - Processamento em paralelo é fácil.
- - Processamento assíncrono é de dificuldade semelhante a outras linguagens populares.
- - Muito mais simples organização de projeto e dependências do que python e javascript.
- - Ganhou repetidos anos consecutivos como a linguagem mais popular do stackoverflow.
+ - [What is the Rust language](#what-is-the-rust-language)
+ - [Using Rust](#using-rust)
+ - [Learning Rust](#learning-rust)
+ - [Comparing Rust to Javascript and Python](#comparing-rust-to-javascript-and-python)
+ - [Installing](#installing)
+ - [Lessons](#lessons)
 
 ---
 
-## Usos da linguagem Rust
+## What is the Rust language
 
 [topo](#tutorial_near_rust)
 
-Um desenvolvedor Rust pode:
+In short, Rust is a low-level systems programming language with the following features:
 
- - Criar apps decentralizados em plataformas web3 como NEAR.
- - Pode criar aplicativos que não precisam de uma máquina virtual para serem executados. Precisa do compilador Rust para compilar, mas não precisa para executar.
- - Criar servidores compactos e rápidos em conteineres docker.
- - Criar aplicações potentes como funções lambda para serem implantados em servidores aws (web3 é melhor porém).
- - Usar o linker para criar bibliotecas que podem ser usadas por um compilador como c.
- - Compilar bibliotecas que podem ser importadas em um browser javascript ou em um runtime nodejs com o formato WebAssembly.
- - Compilar bibliotecas potentes e eficientes para Python usando a crate PyO3.
- - Compilar código para dispositivos embarcados (embedded).
- - Competir em um mercado de trabalho que possui 1 ou 2 inscritos por vaga (incluindo internacional).
+ - Execution time in the likes of C or C++.
+ - Doesn't have the risk involved with memory management as other low-level languages.
+ - It has a steep learning curve (but is is well worth it!).
+ - Doesn't have and doesn't need garbage collection. At compile time, the compiler can determine when variables are created and freed. 
+ - Easy to do parallel programming. 
+ - Async programming has about the same level of difficult as other popular languages.
+ - Project and Dependency management is way easier than Python or JavaScript.
+ - Has been, for years, the most loved language by the developer community!
 
 ---
 
-## Aprendendo a linguagem Rust
+## Using Rust
+
 [topo](#tutorial_near_rust)
 
-No meu ponto de vista, aprender a linguagem rust é semelhante a idéia de domar um dragão em um mundo de fantasia. É demorado, é dificil, existem muitas alternativas diferentes e mais simples do que essa. Mas, se conseguir, você vai ter um terrível dragão ao seu lado.
+A Rust developer can:
 
-Existem estudos que destacaram que o tempo para escrever uma certa quantidade de linhas de código em linguagens de baixo nível (como c) é até 30 vezes mais devagar do que as de alto nível (como python e javascript). Pela minha prática, é mais demorado ainda para uma pessoa aprendendo Rust escrever código do que c. 
-
-Mas, com prática, ficamos mais ágeis em tudo. Com o tempo acostumamos com o que o compilador precisa e espera de nós. Podemos também configurar snippets para gerar códigos de "boilerplate" (forma) automaticamente. Então, é apenas uma questão de entendimento, memorização e paciência para o desenvolvedor. Houveram vezes em que eu escrevi 800 linhas de código Rust em 2 dias.
-
-Quase sempre teremos que dar pausas para estudar o nosso método e garantir que estamos fazendo as decisões corretas. Porém, cada tentativa seguinte será mais fácil que a anterior.
+ - Create web3 applications using decentralized platforms such as NEAR.
+ - Create applications that don't need a virtual machine to run them. Only the compiler is needed to produce an executable.
+ - Create fast and compact server software hosted in Docker containers.
+ - Create robust applications like Lambda functions that can be hosted on AWS (better web3 performance).
+ - Create dynamic libs that can used from C.
+ - Compile modules to WebAssembly, which can then be imported in a browser that supports javascript or a runtime (like node.js).
+ - Compile robust and fast modules for Python using the PyO3 crate.
+ - Compile code that target Embedded systems.
+ - Have an edge in the job market where there's very few Rust developers worlwide.
 
 ---
 
-## Comparações com javascript e Python
+## Learning Rust
+[top](#tutorial_near_rust)
 
-[topo](#tutorial_near_rust)
+In my opinion, learning Rust is similar to taming a dragon in a fantasy-world. It is slow, difficult, with a lot of different, and simpler, alternatives. 
+But if you do tame it, you will have a most powerful dragon by your side.
 
-Porém uma pessoa astuta perguntaria "Porque eu iria aprender uma linguagem dessas se eu ja posso resolver os mesmos problemas com as linguagens que sei?" . É uma ótima pergunta, se eu ja posso conseguir o resultado escrevendo algumas linhas de código em python no terminal, porque eu iria querer aprender Rust?
+Studies show that it takes as much as 30 times more to write code in a low-level language (like C), than in a higher lever language (like Python or JavaScript). 
+It is my experience that for a newcomer learnig Rust, it is even slower than writing C. 
 
-Facilidade de uso e resolução de problemas. Este é o foco principal dessas linguagens. Como conseguir a solução para o nosso problema da forma mais simples possivel. Os processadores ficavam cada vez mais rápido cada geração, então bastava comprar as gerações de hardware mais recentes.
+But, with practice, we get better at everything. With time, we learn what the compiler expects from us. We can leverage code snippets to generate "boilerplate" code automatically. Then, for the developer, everything just becomes a matter of understanding, memory and patience. There were times when I wrote 800 lines of Rust code
+in just 2 days. 
 
-Porém a lei de Moore não se aplica mais. Os desenvolvedores estão precisando de algoritmos mais eficientes. Esta necessidade nos faz olhar para nossas linhas de código e perguntar "O que está instrução está fazendo exatamente?"
-
-Quando escrevemos uma instrução em python "a = 3". A máquina virtual python está criando um objeto numero, criando um ponteiro mutex que aponta para o numero, e associando "a" a este ponteiro. Por isso que python normalmente é limitado a um core do processador. Quando tentamos aproveitar mais a capacidade de processamento de nossa máquina, a complexidade de código em javascript e python cresce exponencialmente.
-
-O foco da linguagem Rust não é o resultado final dessa execução. E sim, o caminho que o processador e memória levam até alcançar este resultado. Um(a) desenvolvedor(a) rust experiente sabe olhar um bloco de código e dizer:
- - "Essa memória vai ser liberada nessa linha de código";
- - "O processador irá pedir pra liberar um espaço de memória nessa linha e criar uma cópia dessa variável aqui.";
- - "Essa função irá pegar esse endereço emprestado, usar este valor nessa parte, e retornar o endereço para o dono ao fim.";
+We must always take a break to assess our process and guarantee we are making the right calls. if we do, every future step will be easier than the one that came before it. 
 
 ---
 
-## Instalação
+## Comparing Rust to Javascript and Python
 
-[topo](#tutorial_near_rust)
+[top](#tutorial_near_rust)
 
-Antes de começarmos, devemos realizar os seguintes passos:
+A clever person might ask: "Why would I learn a difficult language if I can already solve the same problems in another language I already know?"... and that is a good question! if I already get good results writing a few lines of code in Python, why would I learn Rust? 
 
- - Instalar [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/setup-nearcli.md) para interagir com a plataforma NEAR.
- - Instalar [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/rust.md) para compilar e testar os projetos.
+Easy of use and quick problem solving: that is the main focus of those languages. How to get to a solution for our problem the most easiest way. 
+Processors were getting faster with each generation, so you could just buy new hardware that was faster and better and increase performance. 
+
+But Moore's Law doesn't apply anymore. So, developers are needing better and more efficient algorithms. This need makes them take a closer look at the code and ask
+"What is this instruction doing, exactly?". 
+
+When we write `"a = 3"` in Python, a virtual machine is creating a "number" object, which entails creating a pointer to that number and then associating variable "a" to that pointer. That's why Python is generally limited to one processor core. When we want to take advantage of larger processing power on our machine, the code complexity increases exponentially in both JavaScript and Python.
+
+Rust's focus isn't about the final result of that execution. It is about the path the processor and memory take to reach that result. An experienced Rust developer can take a look at a block of code and say: 
+ - "That memory is going to be freed it this point in code";
+ - "The processor is going to request freeing memory here and create a shallow copy of that variable here.";
+ - "This function is going to borrow this address, use the value in this part of the code, and then give back that address to the owner.";
 
 ---
 
-## Lições
+## Installing
 
-[topo](#tutorial_near_rust)
+[top](#tutorial_near_rust)
 
- - [Lição 1: Contratos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_1_contract)
- - [Lição 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership)
- - [Lição 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_3_structs)
- - [Lição 4: Módulos](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules)
- - [Licão 5: Usando Macros](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage)
- - [Lição 6: Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums)
- - Lição 7: Traits
- - Lição 8: Coleções
+You need the following installed before starting with the lessons:
+
+ - Install [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/setup-nearcli.md) to interact with the NEAR platform.
+ - Install [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/rust.md) to be able to compile and test projects.
+
+---
+
+## Lessons
+
+[top](#tutorial_near_rust)
+
+ - [Lesson 1: Smart Contracts](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_1_contract)
+ - [Lesson 2: Ownership](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership)
+ - [Lesson 3: Structs](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_3_structs)
+ - [Lesson 4: Modules](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules)
+ - [Lesson 5: Using Macros](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage)
+ - [Lesson 6: Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums)
+ - Lesson 7: Traits
+ - Lesson 8: Collections
