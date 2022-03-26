@@ -91,7 +91,7 @@ Processors were getting faster with each generation, so you could just buy new h
 But Moore's Law doesn't apply anymore. So, developers are needing better and more efficient algorithms. This need makes them take a closer look at the code and ask
 "What is this instruction doing, exactly?". 
 
-When we write ```"a = 3"``` in Python, a virtual machine is creating a "number" object, which entails creating a pointer to that number and then associating variable ```a``` to that pointer. That's why Python is generally limited to one processor core. When we want to take advantage of larger processing power on our machine, the code complexity increases exponentially in both JavaScript and Python.
+When we write `"a = 3"` in Python, a virtual machine is creating a number object, which entails creating a pointer to that number and then associating variable `a` to that pointer. That's why Python is generally limited to one processor core. When we want to take advantage of larger processing power on our machine, the code complexity increases exponentially in both JavaScript and Python.
 
 Rust's focus isn't about the final result of that execution. It is about the path the processor and memory take to reach that result. An experienced Rust developer can take a look at a block of code and say: 
  - "That memory is going to be freed at this point in code";
@@ -104,7 +104,7 @@ Rust's focus isn't about the final result of that execution. It is about the pat
 
 [top](#tutorial_near_rust)
 
-You need to install the folloowing before starting the lessons:
+You need to install the following before starting the lessons:
 
  - Install [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/setup-nearcli.md) to interact with the NEAR platform.
  - Install [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/rust.md) to be able to compile and test projects.
