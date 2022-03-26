@@ -47,7 +47,7 @@ In short, Rust is a low-level systems programming language with the following fe
 
 ## Using Rust
 
-[topo](#tutorial_near_rust)
+[top](#tutorial_near_rust)
 
 A Rust developer can:
 
@@ -70,12 +70,12 @@ In my opinion, learning Rust is similar to taming a dragon in a fantasy-world. I
 But if you do tame it, you will have a most powerful dragon by your side.
 
 Studies show that it takes as much as 30 times more to write code in a low-level language (like C), than in a higher lever language (like Python or JavaScript). 
-It is my experience that for a newcomer learnig Rust, it is even slower than writing C. 
+It is my experience that for a newcomer learning Rust, it is even slower than writing C. 
 
 But, with practice, we get better at everything. With time, we learn what the compiler expects from us. We can leverage code snippets to generate "boilerplate" code automatically. Then, for the developer, everything just becomes a matter of understanding, memory and patience. There were times when I wrote 800 lines of Rust code
 in just 2 days. 
 
-We must always take a break to assess our process and guarantee we are making the right calls. if we do, every future step will be easier than the one that came before it. 
+We must always take a break to assess our process and make sure we are making the right calls. if we do, every future step will be easier than the one that came before it. 
 
 ---
 
@@ -91,10 +91,10 @@ Processors were getting faster with each generation, so you could just buy new h
 But Moore's Law doesn't apply anymore. So, developers are needing better and more efficient algorithms. This need makes them take a closer look at the code and ask
 "What is this instruction doing, exactly?". 
 
-When we write `"a = 3"` in Python, a virtual machine is creating a "number" object, which entails creating a pointer to that number and then associating variable "a" to that pointer. That's why Python is generally limited to one processor core. When we want to take advantage of larger processing power on our machine, the code complexity increases exponentially in both JavaScript and Python.
+When we write ```"a = 3"``` in Python, a virtual machine is creating a "number" object, which entails creating a pointer to that number and then associating variable ```a``` to that pointer. That's why Python is generally limited to one processor core. When we want to take advantage of larger processing power on our machine, the code complexity increases exponentially in both JavaScript and Python.
 
 Rust's focus isn't about the final result of that execution. It is about the path the processor and memory take to reach that result. An experienced Rust developer can take a look at a block of code and say: 
- - "That memory is going to be freed it this point in code";
+ - "That memory is going to be freed at this point in code";
  - "The processor is going to request freeing memory here and create a shallow copy of that variable here.";
  - "This function is going to borrow this address, use the value in this part of the code, and then give back that address to the owner.";
 
@@ -104,7 +104,7 @@ Rust's focus isn't about the final result of that execution. It is about the pat
 
 [top](#tutorial_near_rust)
 
-You need the following installed before starting with the lessons:
+You need to install the folloowing before starting the lessons:
 
  - Install [near-cli](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/setup-nearcli.md) to interact with the NEAR platform.
  - Install [rust](https://github.com/On0n0k1/Tutorial_NEAR_Rust/blob/main/PT-BR/static/tutorials/rust.md) to be able to compile and test projects.
