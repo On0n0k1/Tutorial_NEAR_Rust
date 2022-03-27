@@ -1,39 +1,39 @@
-//! Fonte <https://github.com/near-examples/rust-counter>
+//! Source <https://github.com/near-examples/rust-counter>
 //! 
 //! 
 //! 
 
-// Dicas sobre documentação:
-// comentarios com // não aparecem na documentação.
-// comentarios com /// aparecem como descrição para o que estiver a seguir (mod, fn, struct, enum, trait...)
-// comentarios com //! podem apenas existir no inicio do arquivo, representam a descrição de todo o módulo.
+// Documentation Tips:
+// Double-slash comments // don't show up in documentation.
+// Three-slash comments /// show un as description for what comes next (mod, fn, struct, enum, trait...)
+// Bang comments //! can appear at the beginning of the file, and they provide documentation about the entire module.
 
 
-// módulos importados
+// imports
 use near_sdk::{
-    // Parâmetros recebidos e valores retornados são convertidos para json com esse módulo
+    // Arugments received and return values will be converted to/from JSON with borsh
     borsh::{
         self,
         BorshDeserialize,
         BorshSerialize,
     },
     // env,
-    // Cria o boilerplate necessário para máquinas virtuais NEAR
+    // Creates boilerplatecode needed for NEAR virtual machine
     near_bindgen,
 };
 
 near_sdk::setup_alloc!();
 
-/// Contrato. Este struct contém o estado (state) da máquina virtual.
-/// As funções deste struct são as funções do contrato.
+/// Smart Contract. This struct contains the state in the VM.
+/// Functions here are Smart Contract functions.
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract{
-    /// Contador.
+    /// Counter.
     counter: i32
 }
 
-// Default é executado quando o contrato não inicializado manualmente.
+// Default is used for auto-initialization
 impl Default for Contract{
     fn default() -> Self{
         Contract { counter: 0 }
@@ -43,19 +43,19 @@ impl Default for Contract{
 #[near_bindgen]
 impl Contract{
 
-    /// Retorna o contador.
+    /// Returns the counter value
     pub fn get(&self) -> i32 {
         // return self.counter;
         self.counter
     }
 
-    /// Incrementa o contador em 1.
+    /// Increments the counter by 1
     pub fn increment(&mut self) -> i32 {
         self.counter += 1;
         self.counter
     }
 
-    /// Decrementa o contador em 1.
+    /// Decreases the counter by 1
     pub fn decrement(&mut self) -> i32 {
         self.counter -= 1;
         self.counter
@@ -63,38 +63,37 @@ impl Contract{
 }
 
 
-// Nossos testes de unidade ficam aqui.
-// cfg(test) quer dizer que esse mod só será compilado em ambientes de teste.
+// Unit tests go here
+// cfg(test) means this mod will be compiled when doing unit testings
 #[cfg(test)]
 mod tests{
-    // super::* importa todos os módulos acima.
+    // super::* imports all modules
     use super::*;
-    // alguns módulos que só usaremos em situações de teste
+    // import some near_sdk modules needed for these tests 
     use near_sdk::{
-        // um id de conta como por exemplo "stiltztinkerstein.near"
+        // an account id, like "stiltztinkerstein.near"
         AccountId,
-        // possui métodos relacionados ao ambiente de execução.
-        // por exemplo, se quisermos saber o nome do usuário que executou
-        // esse contrato, usaremos uma função no módulo env.
+        // has functions related to the execution environment
+        // e.g.: we wanted to know the user account that executed this contract
+        // we would use a function found here
         env,
-        // Simula o blockchain
+        // Mocks (simulates) the Blockchain
         MockedBlockchain,
-        // Macro que inicializa o ambiente de text com o contexto informado.
+        // Macro that sets up the test environment with a valid context
         testing_env,
-        // Usado para criar um contexto de teste.
+        // Used to create a test context
         test_utils::VMContextBuilder,
-        // Simplesmente representa um Id de Conta valido.
-        // Um id de conta é um string, mas não é todo string que é um id válido.
+        // A valid account id
+        // An account id is a string, but the entire string does not represent the actual valid id
         json_types::ValidAccountId,
     };
 
-    /// Essa função não é um teste. É usada pelos testes para simular
-    /// um ambiente de teste.
+    /// This function is not a test. It is used by the tests to setup our mock test environment
     fn env_setup(){
-        // inicializa um construtor de contexto de teste.
+        // Initializes a context builder for our tests 
         let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-        // atributos que podem ser editados com o builder:
+        // attributes that can be modified using the builder
         // current_account_id
         // signer_account_id
         // signer_account_pk
@@ -110,22 +109,22 @@ mod tests{
         // random_seed
         // is_view
 
-        // string com nome account_id
+        // account id string
         let account_id: AccountId = String::from("stiltztinkerstein");
 
         builder.current_account_id(
-            // try_from tenta converter o string acima para um id valido
-            // panic se o id é invalido.
+            // try_from tries to convert a string to a valid account id
+            // panics if the id is invalid
             ValidAccountId::try_from(
                 account_id.clone()
             ).unwrap()
         );
 
-        // inicializa simulação
+        // sets up the mock
         testing_env!(builder.build());
 
-        // Se os dois primeiros parametros não são iguais, 
-        // retorna a mensagem de erro seguinte.
+        // if the first two arguments are not equal, 
+        // return the error message
         assert_eq!(
             env::current_account_id(),
             account_id, 
@@ -136,8 +135,8 @@ mod tests{
     }
 
 
-    /// Como tem o marcador #[test] vai executar automaticamente
-    /// quando realizarmos testes de unidade.
+    /// As it is annotated as #[test] this will execute automatically
+    /// when we do unit testing
     #[test]
     pub fn get() {
         env_setup();
