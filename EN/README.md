@@ -67,7 +67,7 @@ A Rust developer can:
 [top](#tutorial_near_rust)
 
 In my opinion, learning Rust is similar to taming a dragon in a fantasy-world. It is slow, difficult, with a lot of different, and simpler, alternatives. 
-But if you do tame it, you will have a most powerful dragon by your side.
+But if you do tame it, you will have a **powerful** dragon by your side.
 
 Studies show that it takes as much as 30 times more to write code in a low-level language (like C), than in a higher lever language (like Python or JavaScript). 
 It is my experience that for a newcomer learning Rust, it is even slower than writing C. 
