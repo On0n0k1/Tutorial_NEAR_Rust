@@ -18,7 +18,7 @@ Also see:
 
 ---
 
-## Structure of a NEAR Smart Contract
+### Structure of a NEAR Smart Contract
 [top](#topics)
 
 Creating a NEAR Smart Contract in Rust can be summarized as:
@@ -35,7 +35,7 @@ The developer is free to add anything to the above list as needed; the steps out
 ### Importing Dependencies
 [top](#topics)
 
-Explained in detail in Lesson #4, we need at this point to know the differences between `use` and `mod`. 
+Explained in detail in Lesson 4, we need at this point to know the differences between `use` and `mod`. 
 
 ```rust
 use near_sdk::near_bindgen;
@@ -176,7 +176,7 @@ We can now see that the function `get` returns the actual value of `counter` whi
 ### Unit tests
 [top](#topics)
 
-We'll deep dive in more detail in Lesson #4, as we don't need to have all our unit tests for now. We can include unit tests at the end of each Rust module. We can also create a directory `tests`, where all files ending in `.rs` will be considered tests in a test module. 
+We'll deep dive in more detail in Lesson 4, as we don't need to have all our unit tests for now. We can include unit tests at the end of each Rust module. We can also create a directory `tests`, where all files ending in `.rs` will be considered tests in a test module. 
 
 ```rust
 #[cfg(test)]
@@ -289,6 +289,6 @@ You can probably see there's a pattern in these tests:
 
 The function `get` was tested first and this is because it will be used in the following tests. If this function would have not passed the test, we would have to fix it first, before moving on to the other functions. 
 
-Lesson #1 :white_check_mark: ... **Done! Congratulations!**
+Lesson 1 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership) will be about Rust's concept of **Ownership**.
