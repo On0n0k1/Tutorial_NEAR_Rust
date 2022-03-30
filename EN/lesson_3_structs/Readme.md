@@ -76,12 +76,12 @@ pub struct StructExample{
 }
 ```
 This type has the following fields: 
- - an_integer: an unsigned 32-bit integer.
- - another_integer: a signed 32-bit integer.
- - a_floating: a floating 32-bit number.
- - a_string: a String, described in the previous lesson.
+ - `an_integer`: an unsigned 32-bit integer.
+ - `another_integer`: a signed 32-bit integer.
+ - `a_floating`: a floating 32-bit number.
+ - `a_string`: a String, described in the previous lesson.
 
-Em muitas linguagens teriamos que escrever algo como ```long int``` para i32, ```long long int``` para i64. Em rust e assemblyscript, simplesmente usamos i para "signed" (positivo e negativo) e u para "unsigned" (positivo). u8, u16, u32, u64 e u128 são todos tipos válidos de inteiros "unsigned".
+In other languags, we might have to write `long int` for i32, or `long long int` for i64. However, in Rust, we just need to specify the `i` for "signed" (positive or negative) and `u` for "unsigned" (positive). All types such as `u8`, `u16`, `u32`, `u64` and `u128` are all valid "unsigned" types.
 
 ---
 
