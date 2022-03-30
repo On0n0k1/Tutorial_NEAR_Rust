@@ -1,113 +1,130 @@
-# Lição 2: Ownership
+# Lesson 2: Ownership
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
-Este curto tutorial possui o objetivo de explicar sobre ownership.
+Let's learn about Ownership in Rust!
 
 ---
 
-## Funções de Contrato
+## Topics
+ - [Functions](#functions)
+ - [Background](#background)
+ - [Ownership](#ownership)
+ - [References](#references)
+ - [Using References](#using-references)
+ - [Examples](#examples)
+ - [Unit tests](#unit-tests)
+
+---
+
+### Functions
+[top](#topics)
 
 ```rust
-/// Retorna o comprimento da String armazenada
+/// Returns the length of the string
 pub fn get_length(&self) -> u32;
 
-/// Retorna o comprimento da String e altera o nome armazenado para "Changed name"
+/// Returns the length of the string and changes `name` to another value.
 pub fn get_length_again(&mut self) -> u32;
 ```
 
 ---
 
-## Hipótese
+### Background
+[top](#topics)
 
-Ownership é explicado na seção seguinte. Esta discute o problema que ownership soluciona.
+We'll explain the concept of **Ownership** in the next section, but let's first focus on the problem it solves. 
 
-Consideremos a instrução exemplo a seguir:
-
-```
-A = B;
-```
-
-Sabemos que A é igual a B. A recebe o valor de B. Mas o que está acontecendo? 
-
-Estamos criando uma cópia do valor de B e associando A a este valor? Criar uma cópia significa requisitar alocação de memória, adiquirir o endereço da memória e igualar o valor desse endereço ao valor de B. Para um número inteiro isso parece simples, mas e se fosse uma string de 2 mil caracteres?
-
-E se usarmos uma variável como parâmetro de função. Estariamos criando uma cópia da variável e depois apagando a cópia no fim da função?
-
-Percebe-se que precisamos de uma forma de reutilizar o mesmo endereço de memória em várias partes diferentes do programa. A linguagem C solucionou isso através do uso de ponteiros. Em vez de armazenarmos o valor da variável, nós armazenamos o endereço de memória daquele tipo de variável.
-
-Mas isso nos trás outro problema. Se uma função tem acesso ao endereço de memória de uma variável importante, essa função agora tem muito poder. E se o método foi implementado de uma forma insegura? Um hacker poderia aproveitar essa falha de segurança para acessar um sistema.
-
- - Precisamos de uma forma de reutilizar memória para evitar sobrecarregar o sistema com operações desnecessárias.
- - Mas precisamos evitar que esse uso de memória dê mais poder as instruções do que é necessário.
-
-**Extra:** Ponteiros existem em Rust também. Mas existem vários tipos de ponteiros, com diferentes vantagens e desvantagens. Ponteiros semelhantes à linguagem C podem ser utilizados também, mas os blocos que os utilizam precisam ser marcados como "unsafe" ([Mais Informações](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html)).
-
----
-
-## Ownership
-
-A instrução a seguir:
+Consider the following statement:
 
 ```
 A = B;
 ```
 
-Pode agir de duas formas diferentes:
- - Se **B** implementa a trait Copy, irá criar uma cópia automaticamente.
- - Se **B** não implementa Copy, **A** será dona de **B** agora. O compilador não deixará realizarmos instruções com **B**, porque o valor de **B** foi "movido" para **A**.
+We know `A`  is equal to `B`, since `A` is being assigned the value of `B`. But what is really happening? 
 
-Dos tipos primitivos: 
- - Números (```u32```, ```f32```, ```i32```, ...) implementam ```Copy``` e ```Clone```. 
- - String implementa ```Clone```, mas não implementa ```Copy```. 
+Are we creating a copy of the value of `B`, and assigning `A` that value? Creating a copy means to allocate memory, get that memory's address and set that memory's address to the value of `B`.  For an integer that seems simple, but what about a 2.000 character string? 
 
-Em outras palavras, para criarmos uma cópia de um String, precisamos fazer isso manualmente.
+And if we are using a variable as an argument to a function... are we creating a copy of the variable and then dropping it after the function finishes? 
 
-Ownership garante que apenas uma variável é dona ("owns") de um endereço de váriável. Essa possessão pode ser transferida. Mas para compartilharmos uma variável, usamos ponteiros ou referências.
+You will realize we need a way to reuse the same memory address in different parts of our application. The C language solved this through the use of pointers. Instead of storing the value of a variable, we store the memory address for that type of variable. 
+
+But that solutions brings another problem. If a function has access to the memory address of a very important variable, then this function has a lot of power. What if this function was implemented without thinking of potential security issues? A hacker could use an implementation flaw or bug to break the application or gain access to the system. 
+
+ - We need a method of handling memory that avoids unnecessary overhead and provides safety. 
+ - And, we need to avoid that our chosen memory handling strategy provides more power than it needs to. 
+
+**:hand: NOTE:** Rust also has pointers, but there are different kinds of pointers, with different advantages and disadvantages. C style pointers can be used but the code where they're used (code block) **must** to be annotated as **"unsafe"** ([More](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html)).
 
 ---
 
-## Referências
+### Ownership
+[top](#topics)
 
-Referências, ou empréstimos ("borrows") são uma forma de compartilhar um endereço de memória com permissões limitadas. As referências podem ser mutáveis ou imutáveis. São escritas, respectivamente, da seguinte forma:
+The following statement:
+
+```
+A = B;
+```
+
+Can be done in two ways: 
+ - If `B` implements a `Copy` trait, it will create a copy automatically. 
+ - If `B` doesn't implement `Copy`, `A` will **own** `B`. The compiler will restrict the use of `B`, because the value of `B` was **"moved"** to `A`. 
+
+ - Numbers (`u32`, `f32`, `i32`, ...) implement `Copy` and `Clone`. 
+ - String implements `Clone`, but **not** `Copy`.
+
+**:hand: NOTE:** [What’s the difference between Copy and Clone?](https://doc.rust-lang.org/std/marker/trait.Copy.html#whats-the-difference-between-copy-and-clone)
+
+So, in order to create a copy of a String, we need to do it explicitly. 
+
+Ownership guarantees that a variable is the owner of ("owns") a memory address for that variable. Keep in mind, that ownership can be transfered, but to "share" a variable, we can just use pointers or references. 
+
+---
+
+### References
+[top](#topics)
+
+References, or borrowing ("borrow") are a way of sharing memory addresses with limited permissions. These references can be mutable or immutable, and are specified as: 
 
 ```rust
-let a = 10; // Criando uma variável com valor 10
-let b = &a; // Criando uma variável que é uma referência à variavel a
+let a = 10; // Create a variable with a value of 10
+let b = &a; // Create a variable b that references variable a
 ```
 
 ```rust
-let mut a = 10; // Criando uma variável mutável com valor 10
-let b = &mut a; // Criando uma variável que é uma referência mutável à variavel a
+let mut a = 10; // Create a mutable variable with a value of 10
+let b = &mut a; // Create a variable that is a mutable reference to variable a
 ```
 
-Variáveis são, por padrão, imutáveis, constantes. Por isso declarei ```a``` mutavel no segundo exemplo.
+Variables are, by default, immutable or more like constants. That's why you need to explicitly declare `a` as mutable. 
 
- - Referências imutáveis permitem acessar o valor, mas não permitem alterá-lo.
- - Referências mutáveis permitem acessar o valor e permitem alterá-lo.
+ - Immutable references can access a value, but they can't change it.
+ - Mutable reference can access **and** change a value.
 
-Algumas regras a considerar:
- - Não se pode alterar a variável original enquanto uma referência ainda existe.
- - Várias referências imutáveis podem existir.
- - Só uma referência mutável pode existir.
- - Não podem existir referências imutáveis se uma referência mutável existe.
+Here are some rules to remember:
+ - You can't change the original value while there's still a reference to it.
+ - You can have many immutable references.
+ - There can be only **one** mutable reference. 
+ - You can't have immutable references if there is one mutable reference.
 
-Quando criamos uma referência, digamos que a variável dona está "emprestando" ("borrow") para a outra. A linha em que o empréstimo é utilizado por ultimo é a linha em que o empréstimo é devolvido.
-
----
-
-## Importante
-
-Não retorne referências. Retornar referências é possivel, mas é preciso marcar o tempo-de-vida (lifetime) do valor retornado. Não recomendamos estudar isso enquanto está aprendendo a linguagem rust. Todo o conceito de lifetimes pode ser evitado simplesmente retornando cópias quando necessário. Para os interessados, referências [aqui](https://doc.rust-lang.org/rust-by-example/scope/lifetime.html).
-
-Lifetimes são um conceito bem poderoso quando usado corretamente. As ferramentas serde e borsh usam isso para converter texto json para o tipo que precisamos com zero cópia. Ou seja, existe alocação de memória para o String json, para o tipo que precisamos, e nada mais. O processador não precisa esperar alocação de memória, ou seja, muito rápido.
+When we create a reference, we're basically having an "owner" variable "borrow" its value to another variable The "borrowing" ends on the last line the variable is used. 
 
 ---
 
-## Exemplos
+### :warning: Using References
+[top](#topics)
 
-Para o contrato descrito a seguir:
+**Don't return references just yet!** While returning them is possible, you have to specify the "lifetime" of the return value. You're beginning to learn Rust, and the whole concept of lifetimes can be avoided by simply returning copies when necessary. If you want to know more, then [learn more about lifetimes](https://doc.rust-lang.org/rust-by-example/scope/lifetime.html) first.
 
+Lifetimes are a **powerful** concept if used correctly. Tools like `serde` and `borsh` use it to convert JSON to the type we need without any copying. That means, memory allocation is only made for our JSON string and for the type we need, nothing more. 
+
+---
+
+### Examples
+[top](#topics)
+
+This is our Smart Contract ...
 ```rust
 #[near_bindgen]
 #[derive(Clone, BorshDeserialize, BorshSerialize)]
@@ -124,7 +141,7 @@ impl Default for Contract{
 }
 ```
 
-Temos os exemplos a seguir:
+... and here are the functions we will go over as we learn: 
 
 ```rust
 fn this_takes_a_reference(name: &str) -> usize { 
@@ -142,7 +159,7 @@ pub fn get_length(&self) -> u32 {
     assert_eq!(
         length_reference, 
         length_ownership, 
-        "Ambos tamanhos não são o mesmo {} e {}", length_reference, length_ownership,
+        "Both have the same size {} and {}", length_reference, length_ownership,
     );
 
     length_reference as u32
@@ -159,70 +176,64 @@ pub fn get_length_again(&mut self) -> u32 {
 }
 ```
 
-Antes de iniciarmos com os detalhes falaremos sobre String e &str.
+But before getting into details, let's talk about `String` and `&str`.
 
 ---
 
-### O que é String
+### What is a `String`
 
-Uma String é uma variável que possui dono. Armazena um "string" e irá ser liberado da memória quando a variável ser liberada. Mas "Um texto entre aspas como este não é um String, é um &str". Uma referência a um String é um &String ou &mut String.
-
----
-
-### O que é &str
-
-Isso é um tipo criado para simplificar o uso de Strings em nosso código. Age como uma referência imutável à um String. Mas este será alocado pelo compilador, e o compilador decide como melhor otimizá-lo na memória.
+A `String` is a variable that has an owner. It stores a string and will be freed from memory when the variable is dropped. Unlike other languages, keep in a mind a string in quotes, such as `"A text like this"` is not a String, but rather something called a string slice, or `&str`. A reference to a String is denoted as `&String` or `&mut String`.
 
 ---
 
-### Strings em Funções
+### What is an `&str` (or string slice)
 
-Consideraremos as duas variáveis abaixo para o exemplo:
+This type simplifies string use in our code. Think of it as an immutable reference to a String, but as it is allocated by the compiler, the compiler gets to decide how to best optimize its memory use.
+
+---
+
+### Using `String` in Functions
+
+Let's take a look at an example of `String` and `&str`:
 
 ```rust
-let variavel: String = String::from("Uma Variavel");
-let referencia: &str = "Uma Variavel";
+let variable: String = String::from("A Variable");
+let reference: &str = "A Variable";
 ```
 
-A função abaixo recebe um &str e retorna o comprimento da string. O empréstimo é devolvido no fim da função.
+The function below takes a `&str` and returns its length. The "borrow" ends when the function finishes. 
 
 ```rust
 fn this_takes_a_reference(name: &str) -> usize { 
-    return name.len();
+    name.len()
 }
 ```
-
-Para utilizar a função com os parâmetros:
+Let's provide the function some arguments:
 
 ```rust
-this_takes_a_reference(&variavel);
-this_takes_a_reference(referencia);
+this_takes_a_reference(&variable);
+this_takes_a_reference(reference);
 ```
-
-A função abaixo recebe um String como parâmetro e retorna o comprimento. A função se torna dona do endereço de memória e o deleta no fim.
+The following functions takes a `String` as argument and returns its length. The functions becomes the **owner** of the memory and drops it when it finishes. 
 
 ```rust
 fn this_takes_the_ownership(name: String) -> usize {
     name.len()
 }
 ```
-
-Para utilizar a função com os parâmetros:
+In order to use arguments with `this_takes_the_ownership` ...
 
 ```rust
-this_takes_the_ownership(variavel);
-this_takes_the_ownership(String::from(referencia));
+this_takes_the_ownership(variable);
+this_takes_the_ownership(String::from(reference));
 ```
+... we need to convert `&str` to a `String` before passing it.  Also, this function acquired ownership but that wasn't really needed.
 
-Precisamos de transformar o &str em um String antes de usar como parâmetro. A função adiquiriu ownership quando não precisava também.
+Both functions `this_takes_a_reference` and `this_takes_the_ownership` do the same thing, don't cause errors and return the same result. **But**, the first one is more efficient than the second one. Be mindful to prefer using `&str` instead of `String` on function declarations.
 
-Ambas as funções ```this_takes_a_reference``` e ```this_takes_the_ownership``` fazem a mesma coisa, não causam erros, e retornam o mesmo resultado. Mas a primeira é bem mais eficiente do que a segunda.
+You also need to keep in mind that Smart Contract functions annotated with `#[near_bindgen]` need to use the `String` type in their arguments. That's only because the deserialization traits are implemented for `String`, but not for `&str`.
 
-Por isso, é boa prática usar ```&str``` em vez de ```String``` nas declarações de função.
-
-Eu lamento ter que adicionar mais um detalhe nessa explicação, mas funções de contrato, aquelas em que precisamos de marcar com ```#[near_bindgen]``` precisam de receber String como parâmetro. Isso é porque as traits de deserialização são implementadas para String, mas não são implementadas para referências de string.
-
-A função:
+The following function ...
 
 ```rust
 pub fn get_length(&self) -> u32 {
@@ -232,14 +243,13 @@ pub fn get_length(&self) -> u32 {
     assert_eq!(
         length_reference, 
         length_ownership, 
-        "Ambos tamanhos não são o mesmo {} e {}", length_reference, length_ownership,
+        "Both have the same length {} and {}", length_reference, length_ownership,
     );
 }
 ```
+... calls `this_takes_a_reference` and `this_takes_the_ownership`, making sure both return the same value (by ussing an `assert_eq`) before actually returning it. 
 
-Chama ```this_takes_a_reference``` e ```this_takes_the_ownership```, garantindo que ambas retornam o mesmo valor antes de retorná-lo. Como ```this_takes_the_ownership``` não pega o valor emprestado, criamos uma cópia para ser usada como necessário.
-
-A função:
+Let's take a look a another function:
 
 ```rust
 pub fn get_length_again(&mut self) -> u32 {
@@ -247,12 +257,15 @@ pub fn get_length_again(&mut self) -> u32 {
     let _another_reference: &String = &self.name;
     let _yet_another_reference: &String = &self.name;
     let length = Self::this_takes_a_reference(a_reference);
-    self.name = String::from("Changed name");
+
+    self.name = String::from("Changed name"); // change value of name
 
     length as u32
 }
 ```
+Calls `this_takes_a_reference` and changes the value of `name` stored in the Smart Contract. You can see that there can be many references to the same variable, but be sure to change these as specified [in the code's comments](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership/src/lib.rs) to see how the compiler reacts.
 
-Simplesmente chama ```this_takes_a_reference``` e altera o "nome" armazenado no contrato. Este exemplo mostra que podem haver várias referências para uma variável. Faça as alterações recomendadas nos comentários para ver as reações do compilador.
 
-A [próxima Lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_3_structs) será sobre structs.
+Lesson 2 :white_check_mark: ... **Done! Congratulations!**
+
+Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_3_structs) will be about Rust's structs.
