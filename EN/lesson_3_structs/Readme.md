@@ -162,23 +162,24 @@ pub fn just_a_function() {
 ```
 This function outputs two lines of text. 
 
-A função ```log``` recebe uma sequência de bytes como parâmetro. Devido a isso, a primeira linha mostra que podemos incluir a letra "b" antes das aspas para tratar a string como bytes.
+The `log` function receives a sequence of bytes as an argument. 
+So, in our first call, you can use "b" as a way to indicate that the following string should be treated as bytes. 
 
-Na segunda instrução usamos o macro ```format!``` para formatar uma String dinamicamente. O tipo String possui um método ```.as_bytes``` que converte o tipo para bytes. Para mais detalhes sobre String, cheque os [docs oficiais](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes).
+The second time, we use the macro `format!` to format a String. The String type has a function `.as_bytes()` that converts its value to bytes. If you want to learn more, then be sure to read about [as_bytes()](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes).
 
 ---
 
 ### Macros
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+[top](#topics)
 
-Serão explicados mais adiante. Para simplificar o entendimento inicial, considere **macros** como funções que são executadas antes do código ser compilado. São funções que geram código. Só depois do **macro** gerar código que o compilador checa por erros. O uso mais comum de **macros** é para agir como funções que recebem um número variado de parâmetros.
+For now, let's consider a **macro** as a function that will execute prior to code being compiled. These function generate code for you. After the code is generated, the compiler runs and error checking happens. The most common scenario for a **macro** is to allow for functions with a variable number of parameters. 
 
-Outra forma de vermos **macros** é: uma forma de trocar complexidade de código por praticidade de uso.
+Another way to see macros would be as a way to trade code complexity for ease of use. 
 
 ---
 
 ### take_ownership
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+[top](#topics)
 
 ```rust
 pub fn take_ownership(self) -> u32{
@@ -189,19 +190,18 @@ pub fn take_ownership(self) -> u32{
 
     self.an_integer
 
-    // self será liberado da memória aqui
+    // self will be dropped / freed here
 }
 ```
 
-Acho esse exemplo interessante. 
- - Imprime "Taking ownership of itself" na tela. 
- - Imprime o valor de ```an_integer``` no contrato. 
- - E retorna o valor de ```an_integer```.
+This is an interesting piece of code: 
+ - Prints "Taking ownership of itself" on screen. 
+ - Prints the value of `an_integer`, which is a contract variable. 
+ - Finally, returns the value of `an_integer`.
 
-Mas como declaramos ```self``` em vez de ```&self``` ou ```&mut self``` como argumento, o método tomará possessão (ownership) de si mesmo e se auto-destruira no fim. 
+However, as we used `self` instead of `&self`, as well as `&mut self` as an argument, this function will take ownership of itself and will "self-destruct" after finishing execution. 
 
-Um usuário iniciante provavelmente receberá um aviso de erro muito confuso se tentar escrever o método dessa forma. Um erro similar a "valor não pode ser usado pois um move aconteceu aqui.".
-
+:hand: **NOTE:** a beginner will probably get a confusing error from the compiler while attempting to write the code above, such as "value used here after move".
 
 Lesson 3 :white_check_mark: ... **Done! Congratulations!**
 
