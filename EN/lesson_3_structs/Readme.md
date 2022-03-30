@@ -1,4 +1,4 @@
-# Lsesson 3 - Structs
+# Lesson 3 - Structs
 
 [back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
@@ -81,7 +81,7 @@ This type has the following fields:
  - `a_floating`: a floating 32-bit number.
  - `a_string`: a String, described in the previous lesson.
 
-In other languags, we might have to write `long int` for i32, or `long long int` for i64. However, in Rust, we just need to specify the `i` for "signed" (positive or negative) and `u` for "unsigned" (positive). All types such as `u8`, `u16`, `u32`, `u64` and `u128` are all valid "unsigned" types.
+In other languages, we might have to write `long int` for i32, or `long long int` for i64. However, in Rust, we just need to specify the `i` for "signed" (positive or negative) and `u` for "unsigned" (positive). All types such as `u8`, `u16`, `u32`, `u64` and `u128` are all valid "unsigned" types.
 
 ---
 
@@ -172,7 +172,7 @@ The second time, we use the macro `format!` to format a String. The String type 
 ### Macros
 [top](#topics)
 
-For now, let's consider a **macro** as a function that will execute prior to code being compiled. These function generate code for you. After the code is generated, the compiler runs and error checking happens. The most common scenario for a **macro** is to allow for functions with a variable number of parameters. 
+For now, let's consider a **macro** as a function that will execute prior to code being compiled. These functions generate code for you. After the code is generated, the compiler runs and error checking happens. The most common scenario for a **macro** is to allow for functions with a variable number of parameters. 
 
 Another way to see macros would be as a way to trade code complexity for ease of use. 
 
