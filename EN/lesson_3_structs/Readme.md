@@ -22,7 +22,7 @@ Let's go over `struct` and how ownership is used in our struct functions.
 ## Introduction
 [back](#topics)
 
-A `struct` is similar to a class in other object-oriented programming languages. The difference is that a `struct` doens't support inheritance, but we can implement one or more `trait`s on them, and these traits specify behavior. 
+A `struct` is similar to a class in other object-oriented programming languages. The difference is that a `struct` doens't support inheritance, but we can implement one or more traits on them, and these traits specify behavior. 
 
 We'll dive into traits in future lessons, but for now, consider traits as sets of functions that represent behavior supported by types. The trait `Clone` allows using the `.clone()` function to create copies of an instance. The trait `BorshDeserialize` lets you build an instance of a type by using a JSON formatted string. 
 
