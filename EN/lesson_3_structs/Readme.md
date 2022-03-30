@@ -1,40 +1,40 @@
-# Lição 3 - Structs
+# Lsesson 3 - Structs
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
-Esta lição discute sobre o formato de structs e como ownership é usada nos métodos.
-
----
-
-## Tópicos
-
- - [Descrição](#descri%C3%A7%C3%A3o)
- - [Funções de Contrato](#fun%C3%A7%C3%B5es-de-contrato)
- - [Projeto](#projeto)
-   - [Estrutura de Contrato](#estrutura-de-contrato)
-   - [Trait Clone](#trait-clone)
-   - [just_a_function](#just_a_function)
-   - [macros](#macros)
-   - [take_ownership](#take_ownership)
+Let's go over `struct` and how ownership is used in our struct functions.
 
 ---
 
-## Descrição
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+## Topics
 
-Structs são um pouco semelhantes a classes em algumas linguagens orientadas a objetos. A diferença é que ```structs``` não podem herdar outros ```structs```, só podem implementar ```traits```.
-
-Aprofundaremos o conceito de traits em uma lição adiante. Mas considere traits como um conjunto de funções representando uma característica que vários tipos diferentes podem implementar. A trait ```Clone``` permite usar o método ```.clone()``` para criar uma cópia do elemento. A trait ```BorshDeserialize``` permite tentar construir uma instância do tipo utilizando um string no formato json.
-
-Mais adiante aprenderemos a criar funções que aplicam a qualquer tipo de variável que implementa uma trait especifica. Porém, essa lição será apenas sobre structs.
+ - [Introduction](#introduction)
+ - [Contract functions](#contract-functions)
+ - [Project](#project)
+   - [Contract Structure](#contract-structure)
+   - [`Clone` trait](#clone-trait)
+   - [`just_a_function`](#just_a_function)
+   - [Macros](#macros)
+   - [`take_ownership`](#take_ownership)
 
 ---
 
-## Funções de Contrato
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+## Introduction
+[back](#topics)
+
+A `struct` is similar to a class in other object-oriented programming languages. The difference is that a `struct` doens't support inheritance, but we can implement one or more `trait`s on them, and these traits specify behavior. 
+
+We'll dive into traits in future lessons, but for now, consider traits as sets of functions that represent behavior supported by types. The trait `Clone` allows using the `.clone()` function to create copies of an instance. The trait `BorshDeserialize` lets you build an instance of a type by using a JSON formatted string. 
+
+Later on, we'll learn how to create trait functions that can be applied to any type. For now, we'll just focus on structs.
+
+---
+
+## Smart Contract functions
+[top](#topics)
 
 ```rust
-// gets e sets
+// gets and sets
 pub fn get_a_string(&self) -> String;
 
 pub fn get_a_floating(&self) -> f32;
@@ -51,22 +51,21 @@ pub fn set_an_integer(&mut self, an_integer: u32);
 
 pub fn set_another_integer(&mut self, another_integer: i32);
 
-// Uma função que não altera nem acessa o estado do contrato
+// A function that doesn't change the contract's state
 pub fn just_a_function();
 
-// Uma função StructExample que toma ownership de si mesmo, se deletando no final.
+// A function using StructExample that takes ownership of itself and is dropped at the end
 pub fn take_ownership(&self) -> u32;
 ```
-
-Cheque a implementação para mais detalhes.
+See their implementations for details.
 
 ---
 
-## Projeto
+## Project
 
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+[top](#topics)
 
-Criamos um tipo de nome ```StructExample```.
+We'll first create a `struct` called `StructExample`.
 
 ```rust
 pub struct StructExample{
@@ -76,21 +75,21 @@ pub struct StructExample{
     a_string: String,
 }
 ```
-O tipo possui os seguintes valores internos:
- - an_integer: um inteiro positivo de 32 bits;
- - another_integer: um inteiro positivo ou negativo de 32 bits;
- - a_floating: um número real de 32 bits;
- - a_string: um string, descrito na lição anterior;
+This type has the following fields: 
+ - an_integer: an unsigned 32-bit integer.
+ - another_integer: a signed 32-bit integer.
+ - a_floating: a floating 32-bit number.
+ - a_string: a String, described in the previous lesson.
 
 Em muitas linguagens teriamos que escrever algo como ```long int``` para i32, ```long long int``` para i64. Em rust e assemblyscript, simplesmente usamos i para "signed" (positivo e negativo) e u para "unsigned" (positivo). u8, u16, u32, u64 e u128 são todos tipos válidos de inteiros "unsigned".
 
 ---
 
-### Estrutura de Contrato
+### Contract Structure
 
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+[top](#topics)
 
-O contrato possui a seguinte estrutura:
+Here's the Smart Contract code:
 
 ```rust
 #[derive(BorshDeserialize, BorshSerialize, Default)]
@@ -98,8 +97,7 @@ pub struct Contract {
     struct_example: StructExample,
 }
 ```
-
-Este exemplo de contrato deriva a trait ```Default``` em vez de implementar manualmente. Essa forma de implementar executa o método ```.default()``` para todos os valores internos. Devido a isso, o tipo ```struct_example``` deve implementar ```Default``` também.
+See how this Smart Contract is annotated with `derive`? When you `derive`, it means the compiler is able to provide a basic implementation for some traits, but you can manually implement them if more complex behavior is needed. Here, `derive` for `Default` will make sure **all fields** of `Contract` have a `.default()` function. This also means that `StructExample` must also implement the `Default` trait. 
 
 ```rust
 impl Default for StructExample{
@@ -116,27 +114,25 @@ impl Default for StructExample{
     }
 }
 ```
-
-Escolhemos alguns valores aleatórios para servir de exemplo. Vemos que não é necessário escrever algo como ```an_integer: an_integer``` ou ```a_floating: a_floating``` quando os nomes são iguais.
+We used some random values for this example. We also don't need to specify `an_integer: an_integer` or `a_floating: a_floating` when the names of the variables are the same.
 
 ---
 
-### Trait Clone
+### `Clone` trait
+[top](#topics)
 
-[voltar](#li%C3%A7%C3%A3o-3---structs)
-
-Implementamos a trait Clone para o tipo:
+Let's implement the `Clone` trait on our `StructExample`:
 
 ```rust
 impl Clone for StructExample{
-    // self é uma instancia de StructExample, Self (Letra maiúscula) é o tipo StructExample.
+    // self is an instance of StructExample, Self (uppercase) is of type StructExample.
     fn clone(&self) -> Self {
         let an_integer: u32 = self.get_an_integer();
         let another_integer: i32 = self.get_another_integer();
         let a_floating: f32 = self.get_a_floating();
         let a_string: String = self.get_a_string();
 
-        // Self e StructExample são a mesma coisa (Em qualquer impl de StructExample)
+        // Self and StructExample are the same
         Self {
             an_integer,
             another_integer,
@@ -146,16 +142,17 @@ impl Clone for StructExample{
     }
 }
 ```
+:hand: **NOTE:** Remember, I'm intentionally writing code in a more complex way just to show the different ways our implementation could be made. 
 
-**Vale relembrar que estou intencionalmente escrevendo o código de forma mais complexa apenas para demonstrar as diversas liberdades que temos na implementação de nossos projetos.**
+There really isn't much to say on `get` and `set` functions, you can just check the comments. 
 
-Não há muito o que adicionar sobre as implementações dos ```get```s e ```set```s. Recomendo checar os comentários. Mas discutiremos sobre ```just_a_function``` e ```take_ownership``` a seguir:
+Let's go over `just_a_function` and `take_ownership`:
 
 ---
 
 ### just_a_function
 
-[voltar](#li%C3%A7%C3%A3o-3---structs)
+[top](#topics)
 
 ```rust
 pub fn just_a_function() {
@@ -163,7 +160,7 @@ pub fn just_a_function() {
     env::log(format!("1 + 1 = {}", 1 + 1).as_bytes());
 }
 ```
-Esta função imprime duas linhas de texto. 
+This function outputs two lines of text. 
 
 A função ```log``` recebe uma sequência de bytes como parâmetro. Devido a isso, a primeira linha mostra que podemos incluir a letra "b" antes das aspas para tratar a string como bytes.
 
@@ -205,4 +202,7 @@ Mas como declaramos ```self``` em vez de ```&self``` ou ```&mut self``` como arg
 
 Um usuário iniciante provavelmente receberá um aviso de erro muito confuso se tentar escrever o método dessa forma. Um erro similar a "valor não pode ser usado pois um move aconteceu aqui.".
 
-A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules) será sobre módulos.
+
+Lesson 3 :white_check_mark: ... **Done! Congratulations!**
+
+Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules) will be about Rust's modules.
