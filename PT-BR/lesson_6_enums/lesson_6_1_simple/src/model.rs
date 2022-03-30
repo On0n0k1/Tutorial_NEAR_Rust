@@ -123,7 +123,7 @@ impl Example1{
     // Porem, vale lembrar que um método ou função deve retornar apenas um tipo de resultado especificado.
     //
     // Um desenvolvedor pode tentar criar uma função get que retorna o valor armazenado.
-    // Isso será dificil de implementar.
+    // Isso pode ser dificil de implementar.
     // 
     // A forma mais simples de uma função get seria converter para um mesmo tipo.
     // Seguem alguns exemplos:
@@ -147,10 +147,7 @@ impl Example1{
         }
     }
 
-
-    // Também pode-se criar uma função para retornar cada tipo.
-
-    /// true se o valor do enum
+    /// true se o enum for Example1::NoValue.
     pub fn is_no_value(&self) -> bool{
         log("Calling Example1::is_no_value");
 
@@ -324,11 +321,11 @@ impl Example2User{
 
     /// Retorna a lista de ações se for Admin ou Employee.
     /// 
-    /// Como exemplo, digamos que o design de projeto necessita de retornar
+    /// Como exemplo, digamos que o sistema precisa retornar
     /// um erro, se o usuário for um Client.
     /// 
     /// Result é semelhante a Option. Mas é usado para representar ações que podem causar erros.
-    /// Explicado na proxima sub-seção.
+    /// Explicado na proxima seção.
     pub fn get_actions(&self) -> Result<Vec<String>, String> {
         log("Calling Example2User::get_actions");
         
