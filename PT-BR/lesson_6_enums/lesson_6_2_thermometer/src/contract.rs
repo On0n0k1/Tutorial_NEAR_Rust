@@ -1,5 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 
+
 #[allow(unused_imports)]
 use near_sdk::{
     collections::Vector,
@@ -7,13 +8,12 @@ use near_sdk::{
     BorshStorageKey,
 };
 
+
 near_sdk::setup_alloc!();
 
+
 use crate::{
-    temperature::{
-        temp_format::TempFormat,
-        // Temperature,
-    },
+    temperature::temp_format::TempFormat,
     utils::log,
     entry::Entry,
 };
@@ -63,10 +63,49 @@ impl Contract{
         self.temp_format = temp_format;
     }
 
-    pub fn push_temp(&mut self, value: f32, temp_format: String){
+    // time: (u8, u8, u8, f32),
+    // date: (i32, String, u8),
+    // temp_format: &TempFormat, 
+    // value: f32, 
+    // arg_temp: Option<String>,
+    
+    // Exemplo de argumento para esta função: '{"time": [11, 32, 10, 0.85], "date": [2022, "feb", 11], "value": 127, "arg_temp": "k" }'
+    pub fn new_entry(
+        &mut self, 
+        time: (u8, u8, u8, f32),
+        date: (i32, String, u8),
+        value: f32, 
+        arg_temp: Option<String>,
+    ){
+        // log("Creating TempFormat");
+        // let temp_format: TempFormat = TempFormat::new(&temp_format);
 
+        log("Creating Entry");
+        let entry: Entry = Entry::new(time, date, &self.temp_format, value, arg_temp);
+
+        log("Pushing entry to Vector");
+        self.entries.push(&entry);
     }
-    // pub fn push_temp()
 
+    pub fn get_format(&self) -> String {
+        let temp_format: String = String::from(&self.temp_format);
+        
+        temp_format
+    }
+
+    // pub fn new_entry(&mut self, )
+    pub fn list_entries(&self) -> Vec<Entry> {
+        let mut entries: Vec<Entry> = Vec::with_capacity(
+            self.entries.len()
+                .try_into()
+                .unwrap()
+        );
+
+        for entry in self.entries.iter(){
+            entries.push(entry)
+        }
+
+        entries
+    }
 }
 

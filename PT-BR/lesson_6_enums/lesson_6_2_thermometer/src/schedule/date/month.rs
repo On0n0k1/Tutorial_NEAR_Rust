@@ -26,18 +26,18 @@ impl Month{
         let lower_case: String = month.to_ascii_lowercase();
         
         match &lower_case[..]{
-            "january" | "jan" | "janeiro" => Month::January(String::from("January")),
-            "february" | "feb" | "fevereiro" | "fev" => Month::February(String::from("February")),
-            "march" | "mar" | "março" => Month::March(String::from("March")),
+            "january" | "jan" | "janeiro" | "enero" | "ene" => Month::January(String::from("January")),
+            "february" | "feb" | "fevereiro" | "fev" | "febrero" => Month::February(String::from("February")),
+            "march" | "mar" | "março" | "marzo" => Month::March(String::from("March")),
             "april" | "ap" | "abril" => Month::April(String::from("April")),
-            "may" | "maio" => Month::May(String::from("May")),
-            "june" | "jun" | "junho" => Month::June(String::from("June")),
-            "july" | "jul" | "julho" => Month::July(String::from("July")),
+            "may" | "maio" | "mayo" => Month::May(String::from("May")),
+            "june" | "jun" | "junho" | "junio" => Month::June(String::from("June")),
+            "july" | "jul" | "julho" | "julio" => Month::July(String::from("July")),
             "august" | "aug" | "agosto" | "ago" => Month::August(String::from("August")),
-            "september" | "sep" | "setembro" | "set" => Month::September(String::from("September")),
-            "october" | "octo" | "outubro" | "out" => Month::October(String::from("October")),
-            "november" | "nov" | "novembro" => Month::November(String::from("November")),
-            "december" | "dec" | "dezembro" | "dez" => Month::December(String::from("December")),
+            "september" | "sep" | "setembro" | "set" | "septiembre" => Month::September(String::from("September")),
+            "october" | "octo" | "outubro" | "out" | "octubre" | "octu" => Month::October(String::from("October")),
+            "november" | "nov" | "novembro" | "noviembre" => Month::November(String::from("November")),
+            "december" | "dec" | "dezembro" | "dez" | "diciembre" | "dic" => Month::December(String::from("December")),
             invalid => panic!("Invalid value for month: {}.", invalid),
         }
     }

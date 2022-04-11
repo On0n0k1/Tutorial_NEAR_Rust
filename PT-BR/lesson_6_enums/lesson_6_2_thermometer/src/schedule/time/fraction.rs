@@ -12,7 +12,8 @@ pub struct Fraction(f32);
 
 impl Fraction{
     pub fn new(fraction: f32) -> Self {
-        assert!(fraction > 0., "Error: Fraction of a second can not be negative. Value: {}.", fraction);
+        assert!(fraction >= 0., "Error: Fraction of a second can not be negative. Value: {}.", fraction);
+        assert!(fraction < 1., "Error: Fraction of a second must be between 0 and 1. Value: {}.", fraction);
 
         Fraction(fraction)
     }

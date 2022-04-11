@@ -6,7 +6,10 @@ use near_sdk::{
 
 use crate::{
     schedule::Schedule,
-    temperature::Temperature,
+    temperature::{
+        Temperature,
+        temp_format::TempFormat,
+    }
 };
 
 
@@ -15,6 +18,26 @@ use crate::{
 pub struct Entry{
     schedule: Schedule,
     temperature: Temperature,
+}
+
+
+impl Entry{
+    pub fn new(
+            time: (u8, u8, u8, f32),
+            date: (i32, String, u8),
+            temp_format: &TempFormat, 
+            value: f32, 
+            arg_temp: Option<String>,
+        ) -> Self {
+        
+        let schedule: Schedule = Schedule::new(date, time);
+        let temperature: Temperature = Temperature::new(value, temp_format, arg_temp);
+
+        Entry { 
+            schedule, 
+            temperature,
+        }
+    }
 }
 
 

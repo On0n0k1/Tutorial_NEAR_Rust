@@ -4,16 +4,12 @@ use near_sdk::{
 };
 
 
-// pub type Day = u8;
-
 use crate::schedule::date::{
     month::Month,
     year::Year,
 };
 
-// pub enum Day{
-//     Day(u8),
-// }
+
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Day(u8);
