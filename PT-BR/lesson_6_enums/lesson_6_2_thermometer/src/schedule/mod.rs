@@ -62,42 +62,68 @@ impl Schedule{
         (hours as u8, minutes as u8, seconds as u8, fraction as f32 / 1_000_000_000.)
     }
 
-    /// Transforma nanosegundos para Ano, mes e dias.
+    /// Acho que essa função irá calcular anos leap_year incorretamente. Provavelmente estará um dia errado.
     fn date_from_nanoseconds(nano: u64) -> (i32, String, u8) {
-        // Iremos começar do ano.
         let max: u64 = (365.25 as f64 * 24. * 60. * 60. * 1_000_000_000.) as u64;
         let (year, remainder) = Self::remainder_from_value(nano, max);
-        
-        let mut leap_years = 0;
+
         let mut is_leap_year = false;
-        
-        // Leap years começam de 1972 e contam de 4 em 4 anos
+
         if year >= 2 {
-            // Self::remainder_from_value retorna uma tupla. Acessamos o primeiro valor para saber quantos leap years.
-            // leap_years = Self::remainder_from_value(year - 2, 4).0;
-            // -2 porque os leap years começam em 2. +1 porque o valor 1972 é incluido aos leap years.
-            leap_years = (year - 2) % 4 + 1;
-            
             // Se for divisivel por 4 e após 1972, true.
             is_leap_year = ((year - 2) % 4) == 0;
         }
-        
-        let max = 24 * 60 * 60 * 1_000_000_000;
 
-        // Removendo os dias de leap year;
-        let remainder = remainder - leap_years * max;
+        let max = 24 * 60 * 60 * 1_000_000_000;
 
         // full_days é uma quantidade de dias entre 365 e 0.
         // O valor remainder (Horas, minutos, segundos, fração) é descartado.
         let (full_days, _) = Self::remainder_from_value(remainder, max);
-
         let (month, day) = Month::new_from_days(full_days, is_leap_year);
-
-        // let year: Year = Year::from_epoch(year);
-        // let day: Day = Day::new(day as u8, &month, &year);
         
         (year as i32 + 1970, month, day)
     }
+
+    // /// Transforma nanosegundos para Ano, mes e dias.
+    // fn date_from_nanoseconds(nano: u64) -> (i32, String, u8) {
+    //     // Iremos começar do ano.
+    //     let max: u64 = (365.25 as f64 * 24. * 60. * 60. * 1_000_000_000.) as u64;
+    //     let (year, remainder) = Self::remainder_from_value(nano, max);
+        
+    //     let mut leap_years = 0;
+    //     let mut is_leap_year = false;
+        
+    //     // Leap years começam de 1972 e contam de 4 em 4 anos
+    //     if year >= 2 {
+    //         // Self::remainder_from_value retorna uma tupla. Acessamos o primeiro valor para saber quantos leap years.
+    //         // leap_years = Self::remainder_from_value(year - 2, 4).0;
+    //         // -2 porque os leap years começam em 2. +1 porque o valor 1972 é incluido aos leap years.
+    //         leap_years = ((year - 2) - ((year - 2) % 4)) / 4 + 1;
+            
+    //         // Se for divisivel por 4 e após 1972, true.
+    //         is_leap_year = ((year - 2) % 4) == 0;
+    //     }
+
+    //     log(&format!("Detected {} leap years for year {}.", leap_years, year + 1970));
+
+        
+    //     let max = 24 * 60 * 60 * 1_000_000_000;
+
+    //     // Removendo os dias de leap year;
+    //     // let remainder = remainder - leap_years * max;
+    //     let remainder = remainder;
+
+    //     // full_days é uma quantidade de dias entre 365 e 0.
+    //     // O valor remainder (Horas, minutos, segundos, fração) é descartado.
+    //     let (full_days, _) = Self::remainder_from_value(remainder, max);
+
+    //     let (month, day) = Month::new_from_days(full_days, is_leap_year);
+
+    //     // let year: Year = Year::from_epoch(year);
+    //     // let day: Day = Day::new(day as u8, &month, &year);
+        
+    //     (year as i32 + 1970, month, day)
+    // }
 
 
     /// Schedule constructor.
