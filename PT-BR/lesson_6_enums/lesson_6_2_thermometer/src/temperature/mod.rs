@@ -19,6 +19,20 @@ pub struct Temperature {
 
 
 impl Temperature {
+    /// Constroi uma instância de temperatura. Não permite o valor ser menor do que zero absoluto.
+    fn new_assert_temp(value: f32, temp_format: TempFormat) -> Self {
+        let (minimum, name) = match &temp_format {
+            TempFormat::Celsius(t_format) => {(-273.15, t_format)},
+            TempFormat::Fahrenheit(t_format) => {(-459.67, t_format)},
+            TempFormat::Kelvin(t_format) => {(0., t_format)},
+        };
+        assert!(value >= minimum, "For temperature type {}, temperature value can not be lower than {}. Current: {}.", name, minimum, value);
+        
+        Temperature { 
+            value, 
+            temp_format,
+        }
+    }
 
     /// Cria uma instância de temperatura. O formato será definido pelo formato de sistema "temp_format".
     /// 
@@ -36,10 +50,12 @@ impl Temperature {
                 // let temp_format: String = format!("{}", temp_format);
                 let temp_format = temp_format.clone();
 
-                Temperature{
-                    value,
-                    temp_format,
-                }
+                // Temperature{
+                //     value,
+                //     temp_format,
+                // }
+
+                Temperature::new_assert_temp(value, temp_format)
             },
             Some(arg_string) => {
                 // Argumento descreve temperatura. Portanto, cria uma instância com essa temperatura.
@@ -48,10 +64,11 @@ impl Temperature {
                 // );
                 let arg_format = TempFormat::new(&arg_string);
 
-                let mut arg_temp = Temperature{
-                    value,
-                    temp_format: arg_format,
-                };
+                // let mut arg_temp = Temperature{
+                //     value,
+                //     temp_format: arg_format,
+                // };
+                let mut arg_temp = Temperature::new_assert_temp(value, arg_format);
 
                 // Converte a temperatura da mensagem para a temperatura do sistema.
                 arg_temp.convert(temp_format);
@@ -111,6 +128,8 @@ impl Temperature {
                 self.temp_format = TempFormat::new("c");
             },
             (_, _) => {
+                // Todas alternativas diferentes foram consideradas. Isso considera todas as situações em que os tipos são iguais.
+                // Portanto, não fazemos nada.
                 return;
             }
         }

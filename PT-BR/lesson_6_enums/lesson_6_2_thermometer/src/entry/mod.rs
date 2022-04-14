@@ -23,8 +23,8 @@ pub struct Entry{
 
 impl Entry{
     pub fn new(
-            time: (u8, u8, u8, f32),
-            date: (i32, String, u8),
+            time: Option<(u8, u8, u8, f32)>,
+            date: Option<(i32, String, u8)>,
             temp_format: &TempFormat, 
             value: f32, 
             arg_temp: Option<String>,

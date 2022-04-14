@@ -37,6 +37,11 @@ impl Year{
         Year(value, text)
     }
 
+    /// Numero de anos iniciando em 1970.
+    pub fn from_epoch(value: u64) -> Self {
+        Self::new(1970 + value as i32)
+    }
+
     pub fn get(&self) -> i32 {
         // Year é uma tupla, .0 acessa o primeiro valor da tupla.
         // i32 implementa copy, então não precisamos de escrever self.0.clone()
