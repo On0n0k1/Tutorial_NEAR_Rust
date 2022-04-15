@@ -69,7 +69,7 @@ impl Default for Contract {
 #[near_bindgen]
 impl Contract{
     fn assert_owner_only(&self){
-        let signer_id: AccountId = env::signer_account_id();
+        let signer_id: AccountId = env::predecessor_account_id();
         let owner_id: AccountId = AccountId::from(env::current_account_id());
 
         assert_eq!(signer_id, owner_id, "Only owner's account is allowed to make this function call.");
@@ -82,7 +82,7 @@ impl Contract{
     }
 
     fn assert_user_allowed(&self) {
-        let signer_id: AccountId = env::signer_account_id();
+        let signer_id: AccountId = env::predecessor_account_id();
         let owner_id: AccountId = env::current_account_id();
 
         // Se a conta dono do contrato está chamando a função.
@@ -146,13 +146,13 @@ impl Contract{
 
     /// Armazena um valor de temperatura associado à conta de usuário.
     /// Date e time são opcionais. Caso não informados, o sistema usará a data e horários do recebimento da mensagem.
-    /// arg_temp é opcional. Se não informado, usará o formato de temperatura do sistema.
+    /// format é opcional. Se não informado, usará o formato de temperatura do sistema.
     pub fn new_entry(
         &mut self, 
         time: Option<(u8, u8, u8, f32)>,
         date: Option<(i32, String, u8)>,
         value: f32, 
-        arg_temp: Option<String>,
+        format: Option<String>,
     ){
         self.assert_user_allowed();
         let user: AccountId = env::predecessor_account_id();
@@ -160,7 +160,7 @@ impl Contract{
         log("Called new_entry.");
 
         log("Creating Entry.");
-        let entry: Entry = Entry::new(time, date, &self.temp_format, value, arg_temp);
+        let entry: Entry = Entry::new(time, date, &self.temp_format, value, format);
 
         log("Acquiring entries for this user.");
         let mut entries = match self.entries.get(&user){
@@ -211,6 +211,38 @@ impl Contract{
         };
 
         entries.to_vec()
+    }
+
+    pub fn clear_entries(&mut self, account_id: Option<String>){
+        self.assert_owner_only();
+        
+        let account_id: String = match account_id {
+            None => env::predecessor_account_id(),
+            Some(value) => {
+                match ValidAccountId::try_from(value){
+                    Ok(account_id) => String::from(account_id),
+                    Err(err) => panic!("Invalid user account id: {}.", err),
+                }
+            }
+        };
+
+        assert!(self.users.contains(&account_id), "Account {} not found.", &account_id);
+        
+        let entries: Vector<Entry> = match self.entries.remove(&account_id){
+            None => panic!("Couldn't find entries for user {}.", account_id),
+            Some(mut value) => {
+                value.clear();
+                value
+            },
+        };
+
+        assert!(
+            self.entries.insert(&account_id, &entries).is_none(),
+            "Unexpected behavior, attempted to remove the vector for {}, but it wasn't removed.", 
+            &account_id,
+        );
+
+        log(&format!("Successfully removed all entries for {}.", &account_id));
     }
 }
 

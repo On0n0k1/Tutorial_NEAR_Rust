@@ -8,6 +8,7 @@ use near_sdk::{
 
 
 use temp_format::TempFormat;
+use crate::utils::log;
 
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
@@ -83,6 +84,7 @@ impl Temperature {
         let current: TempFormat = self.temp_format.clone();
 
         let value = self.value;
+        log(&format!("Temperature Format. System: {}, Message: {}.", temp_format, &current));
 
         match (current, temp_format) {
             (TempFormat::Kelvin(_), &TempFormat::Celsius(_)) => {
