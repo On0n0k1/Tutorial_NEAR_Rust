@@ -3,7 +3,7 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[serde(untagged)]
 pub enum TempFormat{
@@ -39,6 +39,20 @@ impl Default for TempFormat{
         TempFormat::new("k")
     }
 }
+
+
+impl PartialEq for TempFormat {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (TempFormat::Celsius(_), TempFormat::Celsius(_)) => true,
+            (TempFormat::Fahrenheit(_), TempFormat::Fahrenheit(_)) => true,
+            (TempFormat::Kelvin(_), TempFormat::Kelvin(_)) => true,
+            (_, _) => false,
+        }
+    }
+}
+
+impl Eq for TempFormat {}
 
 
 impl From<&TempFormat> for String{

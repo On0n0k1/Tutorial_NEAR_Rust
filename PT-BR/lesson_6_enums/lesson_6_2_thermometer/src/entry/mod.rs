@@ -13,7 +13,7 @@ use crate::{
 };
 
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Entry{
     schedule: Schedule,
@@ -37,6 +37,10 @@ impl Entry{
             schedule, 
             temperature,
         }
+    }
+
+    pub fn update_temp_format(&mut self, new_format: &TempFormat) -> bool{
+        self.temperature.update_temp_format(new_format)
     }
 }
 

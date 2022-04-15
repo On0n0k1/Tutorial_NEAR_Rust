@@ -11,7 +11,7 @@ use temp_format::TempFormat;
 use crate::utils::log;
 
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Temperature {
     value: f32,
@@ -78,13 +78,28 @@ impl Temperature {
         }
 
     }
+
+    // pub fn get_format(&self) -> TempFormat {
+    //     self.temp_format.clone()
+    // }
+
+    /// Atualiza temperatura se for diferente. Retorna true se houver mudança.
+    pub fn update_temp_format(&mut self, temp_format: &TempFormat) -> bool {
+        let comparison = self.temp_format == *temp_format;
+
+        if !comparison {
+            self.convert(temp_format);
+        }
+
+        !comparison
+    }
     
     /// Convert this type to another.
     pub fn convert(&mut self, temp_format: &TempFormat){
         let current: TempFormat = self.temp_format.clone();
 
         let value = self.value;
-        log(&format!("Temperature Format. System: {}, Message: {}.", temp_format, &current));
+        log(&format!("Converting temperature to system format. System: {}, Current: {}.", temp_format, &current));
 
         match (current, temp_format) {
             (TempFormat::Kelvin(_), &TempFormat::Celsius(_)) => {

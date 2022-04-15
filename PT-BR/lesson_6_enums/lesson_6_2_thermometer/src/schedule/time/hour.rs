@@ -4,7 +4,7 @@ use near_sdk::{
 };
 
 /// Tipo que representa hora.
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Hour(u8);
 

@@ -17,7 +17,7 @@ use minute::Minute;
 use second::Second;
 
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Time{
     fraction: Fraction,

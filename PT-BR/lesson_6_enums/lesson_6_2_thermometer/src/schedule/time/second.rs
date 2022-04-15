@@ -3,7 +3,7 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Second(u8);
 

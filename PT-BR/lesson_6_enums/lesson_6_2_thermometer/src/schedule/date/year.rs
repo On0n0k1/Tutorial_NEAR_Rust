@@ -8,7 +8,7 @@ use near_sdk::{
 /// 
 /// O primeiro valor é um inteiro para computação. 
 /// O segundo é um String representando o valor formatado.
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Year(i32, String);
 
@@ -37,10 +37,11 @@ impl Year{
         Year(value, text)
     }
 
-    /// Numero de anos iniciando em 1970.
-    pub fn from_epoch(value: u64) -> Self {
-        Self::new(1970 + value as i32)
-    }
+    // /// Numero de anos iniciando em 1970.
+    // pub fn from_epoch(value: u64) -> Self {
+    //     // No inicio do calculo de data por nanosegundos. Somamos 2 anos ao valor recebido, para garantir que está em sincronia com os leap years.
+    //     Self::new(1968 + value as i32)
+    // }
 
     pub fn get(&self) -> i32 {
         // Year é uma tupla, .0 acessa o primeiro valor da tupla.

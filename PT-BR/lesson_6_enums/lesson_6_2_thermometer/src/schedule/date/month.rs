@@ -4,7 +4,7 @@ use near_sdk::{
 };
 
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[serde(untagged)]
 pub enum Month{

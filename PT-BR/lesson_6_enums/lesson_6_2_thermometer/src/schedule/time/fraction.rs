@@ -5,7 +5,7 @@ use near_sdk::{
 
 
 /// Tipo que representa uma fração de segundo.
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Fraction(f32);
 

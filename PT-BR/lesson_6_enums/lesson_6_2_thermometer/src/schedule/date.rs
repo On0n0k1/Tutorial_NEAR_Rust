@@ -13,7 +13,7 @@ use day::Day;
 use month::Month;
 use year::Year;
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Date{
     day: Day,

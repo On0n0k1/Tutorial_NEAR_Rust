@@ -1,4 +1,7 @@
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    serde::{ Serialize, Deserialize },
+};    
 
 
 // As duas funções a seguir são declaradas para
@@ -28,7 +31,8 @@ pub fn log(message: &str){
 ///  - Example0::FOURTH
 ///  - Example0::FIFTH
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example0{
     First,
     Second,
@@ -102,7 +106,8 @@ impl Example0{
 /// Use enums para agrupar tipos diferentes que compartilham uma funcionalidade semelhante.
 /// 
 /// 
-#[derive(Clone, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example1{
     NoValue,
     AnInteger(i32),
@@ -207,7 +212,8 @@ impl Example1{
 /// 
 /// Criado apenas para mostrar um exemplo de implementação de struct em match.
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Employee{
     pub name: String,
     pub id: u32,
@@ -254,7 +260,8 @@ impl Default for Employee{
 ///  - Employee: passe (codificado) para acesso. Lista de ações. Lista de permissões no sistema.
 ///  - Client: apenas lista de pedidos.
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example2User{
     Admin{ name: String, id: u32, pass: String, actions: Vec<String> },
     Client{ name: String, id: u32, orders: Vec<String> },

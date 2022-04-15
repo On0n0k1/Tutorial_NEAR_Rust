@@ -13,7 +13,6 @@ use near_sdk::{
 };
 
 
-
 near_sdk::setup_alloc!();
 
 
@@ -68,6 +67,7 @@ impl Default for Contract {
 
 #[near_bindgen]
 impl Contract{
+
     fn assert_owner_only(&self){
         let signer_id: AccountId = env::predecessor_account_id();
         let owner_id: AccountId = AccountId::from(env::current_account_id());
@@ -75,11 +75,13 @@ impl Contract{
         assert_eq!(signer_id, owner_id, "Only owner's account is allowed to make this function call.");
     }
 
+
     fn assert_no_cross_contract(&self){
         let signer_id: AccountId = env::signer_account_id();
         let predecessor_id: AccountId = env::predecessor_account_id();
         assert_eq!(signer_id, predecessor_id, "Cross-contract calls not allowed.");
     }
+
 
     fn assert_user_allowed(&self) {
         let signer_id: AccountId = env::predecessor_account_id();
@@ -126,6 +128,45 @@ impl Contract{
         self.users.insert(&account_id);
     }
 
+
+    pub fn remove_user(&mut self, account_id: String){
+        self.assert_no_cross_contract();
+        self.assert_owner_only();
+
+        log("Called remove_user");
+
+        log("Validating Account ID.");
+        let account_id = match ValidAccountId::try_from(account_id){
+            Ok(value) => String::from(value),
+            Err(err) => panic!("Invalid user account id: {}.", err),
+        };
+
+        // Se usuario não estiver contido na lista de permissões, causa panic.
+        log("Checking if user exists.");
+
+        let contains: bool = self.users.contains(&account_id);
+        assert!(contains, "User {} not found.", &account_id);
+
+        // Remove vetor de entries referente ao usuario.
+        let entries: Option<Vector<Entry>> = self.entries.remove(&account_id);
+        assert!(entries.is_some(), "Unexpected Behavior. Found user, but didn't find entry list for user.");
+
+        // Ownership do vetor veio do LookupMap para aqui.
+        // Limpa o vetor para garantir segurança de memória.
+        // Vetor será liberado da memória no fim desta função.
+        let mut entries: Vector<Entry> = entries.unwrap();
+        entries.clear();
+
+        match self.users.remove(&account_id){
+            true => {
+                log("User successfully removed.");
+            },
+            false => {
+                log("Unexpected Behavior. Account exists in entries but doesn't exist in user list.");
+            },
+        };
+    }
+
     
     pub fn set_format(&mut self, temp_format: String) {
         self.assert_no_cross_contract();
@@ -142,6 +183,7 @@ impl Contract{
         self.temp_format = temp_format;
     }
     
+
     // Exemplo de argumento para esta função: '{"time": [11, 32, 10, 0.85], "date": [2022, "feb", 11], "value": 127, "arg_temp": "k" }'
 
     /// Armazena um valor de temperatura associado à conta de usuário.
@@ -175,14 +217,16 @@ impl Contract{
         log("Operation Successful.");
     }
 
+
     pub fn get_format(&self) -> String {
         let temp_format: String = String::from(&self.temp_format);
         
         temp_format
     }
 
+
     // pub fn new_entry(&mut self, )
-    pub fn list_entries(&self, account_id: Option<String>) -> Vec<Entry> {
+    pub fn list_entries(&mut self, account_id: Option<String>) -> Vec<Entry> {
         self.assert_user_allowed();
 
         // let account_id: AccountId = env::predecessor_account_id();
@@ -203,15 +247,35 @@ impl Contract{
                 value
             }
         };
-
         
-        let entries: Vector<Entry> = match self.entries.get(&account_id){
+        let mut entries: Vector<Entry> = match self.entries.get(&account_id){
             None => panic!("Couldn't find entries for user {}.", account_id),
             Some(value) => value,
         };
 
-        entries.to_vec()
+        let mut entries_vec = entries.to_vec();
+
+        let temp_format: TempFormat = self.temp_format.clone();
+        let mut changed: bool = false;
+        let mut index: u64 = 0;
+
+        // entries.to_vec()
+        for entry in entries_vec.iter_mut(){
+            if entry.update_temp_format(&temp_format) {
+                changed = true;
+                entries.replace(index, &entry);
+            };
+
+            index += 1;
+        };
+
+        if changed {
+            self.entries.insert(&account_id, &entries);
+        }
+        
+        entries_vec
     }
+
 
     pub fn clear_entries(&mut self, account_id: Option<String>){
         self.assert_owner_only();
@@ -219,6 +283,8 @@ impl Contract{
         let account_id: String = match account_id {
             None => env::predecessor_account_id(),
             Some(value) => {
+                log("Validating user account.");
+
                 match ValidAccountId::try_from(value){
                     Ok(account_id) => String::from(account_id),
                     Err(err) => panic!("Invalid user account id: {}.", err),
@@ -238,7 +304,7 @@ impl Contract{
 
         assert!(
             self.entries.insert(&account_id, &entries).is_none(),
-            "Unexpected behavior, attempted to remove the vector for {}, but it wasn't removed.", 
+            "Unexpected behavior, attempted to remove the vector for {}, but it still exists after removing.", 
             &account_id,
         );
 

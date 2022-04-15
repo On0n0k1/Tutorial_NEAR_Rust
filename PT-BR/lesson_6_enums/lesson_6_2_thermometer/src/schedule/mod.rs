@@ -15,7 +15,7 @@ use self::date::month::Month;
 use crate::utils::log;
 
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Schedule{
     date: Date,
@@ -44,15 +44,19 @@ impl Schedule{
 
     /// Acho que essa função irá calcular anos leap_year incorretamente. Provavelmente estará um dia errado.
     fn date_from_nanoseconds(nano: u64) -> (i32, String, u8) {
+        // Somamos 2 anos ao valor de nanosegundos. Dessa forma estará sincronizado com os leap years, em 1968, em vez de 1970.
+        let nano: u64 = nano + 2 * 365 * 24 * 60 * 60 * 1_000_000_000;
+
         let max: u64 = (365.25 as f64 * 24. * 60. * 60. * 1_000_000_000.) as u64;
         let (year, remainder) = Self::remainder_from_value(nano, max);
 
-        let mut is_leap_year = false;
+        // let mut is_leap_year = false;
+        let is_leap_year = year % 4 == 0;
 
-        if year >= 2 {
-            // Se for divisivel por 4 e após 1972, true.
-            is_leap_year = ((year - 2) % 4) == 0;
-        }
+        // if year >= 2 {
+        //     // Se for divisivel por 4 e após 1972, true.
+        //     is_leap_year = (year % 4) == 0;
+        // }
 
         let max = 24 * 60 * 60 * 1_000_000_000;
 
@@ -61,7 +65,8 @@ impl Schedule{
         let (full_days, _) = Self::remainder_from_value(remainder, max);
         let (month, day) = Month::new_from_days(full_days, is_leap_year);
         
-        (year as i32 + 1970, month, day)
+        // No inicio do calculo de data por nanosegundos. Somamos 2 anos ao valor recebido, para garantir que está em sincronia com os leap years.
+        (year as i32 + 1968, month, day)
     }
 
     /// Schedule constructor.

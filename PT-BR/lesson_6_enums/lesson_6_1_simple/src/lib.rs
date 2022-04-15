@@ -1,4 +1,7 @@
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    serde::{Deserialize, Serialize},
+};
 #[allow(unused_imports)]
 use near_sdk::{env, near_bindgen};
 
@@ -21,7 +24,8 @@ pub fn log_call(name: &str){
 
 
 #[near_bindgen]
-#[derive(Clone, Default, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, Default, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Contract {
     example_0: Example0,
     example_1: Example1,
