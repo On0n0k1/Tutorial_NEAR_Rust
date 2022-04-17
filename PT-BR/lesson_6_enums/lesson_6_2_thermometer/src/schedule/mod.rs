@@ -32,14 +32,14 @@ impl Schedule{
         (value, remainder)
     }
 
-    fn time_from_nanoseconds(nano: u64) -> (u8, u8, u8, f32) {
+    fn time_from_nanoseconds(nano: u64) -> (u8, u8, f32) {
         // recolhe todos a porção menor do que um dia.
         let (_, remainder) = Self::remainder_from_value(nano, 24 * 60 * 60 * 1_000_000_000);
         let (hours, remainder) = Self::remainder_from_value(remainder, 60 * 60 * 1_000_000_000);
-        let (minutes, remainder) = Self::remainder_from_value(remainder, 60 * 1_000_000_000);
-        let (seconds, fraction) = Self::remainder_from_value(remainder, 1_000_000_000);
+        let (minutes, seconds) = Self::remainder_from_value(remainder, 60 * 1_000_000_000);
+        // let (seconds, fraction) = Self::remainder_from_value(remainder, 1_000_000_000);
 
-        (hours as u8, minutes as u8, seconds as u8, fraction as f32 / 1_000_000_000.)
+        (hours as u8, minutes as u8, seconds as f32 / 1_000_000_000.)
     }
 
     /// Acho que essa função irá calcular anos leap_year incorretamente. Provavelmente estará um dia errado.
@@ -61,7 +61,7 @@ impl Schedule{
         let max = 24 * 60 * 60 * 1_000_000_000;
 
         // full_days é uma quantidade de dias entre 366 e 0.
-        // O valor remainder (Horas, minutos, segundos, fração) é descartado.
+        // O valor remainder (Horas, minutos, segundos) é descartado.
         let (full_days, _) = Self::remainder_from_value(remainder, max);
         let (month, day) = Month::new_from_days(full_days, is_leap_year);
         
@@ -72,9 +72,9 @@ impl Schedule{
     /// Schedule constructor.
     /// 
     /// date: tuple with format (year, month, day).
-    /// time: tuple with format (hour, minute, second, fraction of a second).
+    /// time: tuple with format (hour, minute, second).
     /// 
-    pub fn new(date: Option<(i32, String, u8)>, time: Option<(u8, u8, u8, f32)>) -> Self {
+    pub fn new(date: Option<(i32, String, u8)>, time: Option<(u8, u8, f32)>) -> Self {
         let block_time: u64 = env::block_timestamp();
         let (year, month, day) = match date{
             Some(value) => value,
@@ -83,7 +83,7 @@ impl Schedule{
                 Self::date_from_nanoseconds(block_time)
             },
         };
-        let (hour, minute, second, fraction) = match time{
+        let (hour, minute, second) = match time{
             Some(value) => value,
             None => {
                 log("Time wasn't specified, using current time");
@@ -93,10 +93,10 @@ impl Schedule{
 
         log(&format!("Epoch time is {}.", block_time));
         log(&format!("Day: {}, Month: {}, Year: {}", day, &month, year));
-        log(&format!("Hour: {}, Minute: {}, Second: {}, Fraction: {}", hour, minute, second, fraction));
+        log(&format!("Hour: {}, Minute: {}, Second: {}", hour, minute, second));
 
         let date: Date = Date::new(day, &month, year);
-        let time: Time = Time::new(hour, minute, second, fraction);
+        let time: Time = Time::new(hour, minute, second);
 
         Schedule { 
             date,

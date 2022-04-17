@@ -18,7 +18,10 @@ near_sdk::setup_alloc!();
 
 use crate::{
     temperature::temp_format::TempFormat,
-    utils::log,
+    utils::{
+        log,
+        ViewGet,
+    },
     entry::Entry,
 };
 
@@ -48,7 +51,7 @@ impl Default for Contract {
 
         let mut entries = LookupMap::new(StorageKey::Entries);
 
-        let owner_account: String = String::from(env::current_account_id());
+        let owner_account: String = env::current_account_id();
         let owner_vector: Vector<Entry> = Vector::new(StorageKey::UserEntry(String::from(&owner_account)));
         let inserting = entries.insert(&owner_account, &owner_vector);
         assert!(inserting.is_none(), "Something impossible just happened. Created a LookupMap that already had a value stored.");
@@ -69,10 +72,10 @@ impl Default for Contract {
 impl Contract{
 
     fn assert_owner_only(&self){
-        let signer_id: AccountId = env::predecessor_account_id();
+        let predecessor: AccountId = env::predecessor_account_id();
         let owner_id: AccountId = AccountId::from(env::current_account_id());
 
-        assert_eq!(signer_id, owner_id, "Only owner's account is allowed to make this function call.");
+        assert_eq!(predecessor, owner_id, "Only owner's account is allowed to make this function call.");
     }
 
 
@@ -133,6 +136,10 @@ impl Contract{
         self.assert_no_cross_contract();
         self.assert_owner_only();
 
+        // Conta dono é criada na inicialização de contrato. A possibilidade de remover a conta dono seria um problema.
+        let owner_id: AccountId = AccountId::from(env::current_account_id());
+        assert_ne!(&owner_id[..], &account_id[..], "Owner account can't be removed from contract.");
+
         log("Called remove_user");
 
         log("Validating Account ID.");
@@ -191,7 +198,7 @@ impl Contract{
     /// format é opcional. Se não informado, usará o formato de temperatura do sistema.
     pub fn new_entry(
         &mut self, 
-        time: Option<(u8, u8, u8, f32)>,
+        time: Option<(u8, u8, f32)>,
         date: Option<(i32, String, u8)>,
         value: f32, 
         format: Option<String>,
@@ -218,15 +225,8 @@ impl Contract{
     }
 
 
-    pub fn get_format(&self) -> String {
-        let temp_format: String = String::from(&self.temp_format);
-        
-        temp_format
-    }
-
-
     // pub fn new_entry(&mut self, )
-    pub fn list_entries(&mut self, account_id: Option<String>) -> Vec<Entry> {
+    pub fn list_update_entries(&mut self, account_id: Option<String>) -> Vec<Entry> {
         self.assert_user_allowed();
 
         // let account_id: AccountId = env::predecessor_account_id();
@@ -309,6 +309,41 @@ impl Contract{
         );
 
         log(&format!("Successfully removed all entries for {}.", &account_id));
+    }
+
+    // View Functions
+
+    /// Retorna formato de temperatura.
+    pub fn view_get_format(&self) -> String {
+        String::from(&self.temp_format)
+    }
+
+    /// Retorna Entry para usuario.
+    /// 
+    /// Se index não for especificado, retorna todos os valores associados ao usuário.
+    /// 
+    /// Não converte as temperaturas armazenadas (caso seja diferente do sistema.)
+    /// 
+    pub fn view_get(&self, index: Option<u64>, account_id: String) -> ViewGet {
+        match index{
+            None => {
+                let result = self.entries
+                    .get(&account_id)
+                    .unwrap()
+                    .to_vec();
+
+                ViewGet::Multiple(result)
+            },
+            Some(index) => {
+                let result = self.entries
+                    .get(&account_id)
+                    .unwrap()
+                    .get(index)
+                    .unwrap();
+
+                ViewGet::Single(result)
+            }
+        }
     }
 }
 
