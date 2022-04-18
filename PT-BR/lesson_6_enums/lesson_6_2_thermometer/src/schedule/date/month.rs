@@ -22,6 +22,7 @@ pub enum Month{
     December(String),
 }
 
+
 impl Month{
     pub fn new(month: &str) -> Self {
         let lower_case: String = month.to_ascii_lowercase();
@@ -120,8 +121,6 @@ impl Month{
     }
 }
 
-
-
 /// Nos permite usar String::from(nossoMonth)
 impl From<&Month> for String{
     fn from(month: &Month) -> String {
@@ -137,15 +136,9 @@ impl From<Month> for String{
     }
 }
 
-
-
-
 // Usado para converter o struct para String. Se usarmos instruções como format!, println! ou panic!, esta trait é usada.
 impl std::fmt::Display for Month {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", String::from(self))
     }
 }
-
-
-

@@ -3,10 +3,10 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Minute(u8);
+
 
 impl Minute {
     pub fn new(minute: u8) -> Minute{

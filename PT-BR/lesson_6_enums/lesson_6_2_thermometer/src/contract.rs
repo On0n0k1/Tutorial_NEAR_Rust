@@ -46,7 +46,6 @@ pub struct Contract {
 
 impl Default for Contract {
     fn default() -> Self {
-        // let temp_format = format!("{}", TempFormat::default());
         let temp_format = TempFormat::default();
 
         let mut entries = LookupMap::new(StorageKey::Entries);
@@ -180,7 +179,7 @@ impl Contract{
         self.assert_owner_only();
 
         log("Called set_format");
-        // let temp_format = String::from(TempFormat::from(temp_format));
+
         let temp_format = TempFormat::new(&temp_format);
 
         log(

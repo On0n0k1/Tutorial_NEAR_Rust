@@ -79,10 +79,6 @@ impl Temperature {
 
     }
 
-    // pub fn get_format(&self) -> TempFormat {
-    //     self.temp_format.clone()
-    // }
-
     /// Atualiza temperatura se for diferente. Retorna true se houver mudança.
     pub fn update_temp_format(&mut self, temp_format: &TempFormat) -> bool {
         let comparison = self.temp_format == *temp_format;
@@ -94,7 +90,7 @@ impl Temperature {
         !comparison
     }
     
-    /// Convert this type to another.
+    /// Converte o formato de temperatura para outro.
     pub fn convert(&mut self, temp_format: &TempFormat){
         let current: TempFormat = self.temp_format.clone();
 
@@ -105,43 +101,31 @@ impl Temperature {
             (TempFormat::Kelvin(_), &TempFormat::Celsius(_)) => {
                 // C = K − 273.15
                 self.value = value - 273.15;    
-                // self.temp_format = TempFormat::Celsius;
-                // self.temp_format = String::from(TempFormat::Celsius);
                 self.temp_format = TempFormat::new("c");
             },
             (TempFormat::Kelvin(_), &TempFormat::Fahrenheit(_)) => {
                 // F = (K – 273.15) × 9⁄5 + 32
                 self.value = (value - 273.15) * 9.0 / 5.0 + 32.0;
-                // self.temp_format = TempFormat::Fahrenheit;
-                // self.temp_format = String::from(TempFormat::Fahrenheit);
                 self.temp_format = TempFormat::new("f");
             },
             (TempFormat::Celsius(_), &TempFormat::Kelvin(_)) => {
                 // K = C + 273.15
                 self.value = value + 273.15;
-                // self.temp_format = TempFormat::Kelvin;
-                // self.temp_format = String::from(TempFormat::Kelvin);
                 self.temp_format = TempFormat::new("k");
             },
             (TempFormat::Celsius(_), &TempFormat::Fahrenheit(_)) => {
                 // F = C(9⁄5) + 32
                 self.value = value * (9.0 / 5.0) + 32.0;
-                // self.temp_format = TempFormat::Fahrenheit;
-                // self.temp_format = String::from(TempFormat::Fahrenheit);
                 self.temp_format = TempFormat::new("f");
             },
             (TempFormat::Fahrenheit(_), &TempFormat::Kelvin(_)) => {
                 // K = (F − 32) × 5⁄9 + 273.15
                 self.value = (value - 32.0) * 5.0 / 9.0 + 273.15;
-                // self.temp_format = TempFormat::Kelvin;
-                // self.temp_format = String::from(TempFormat::Kelvin);
                 self.temp_format = TempFormat::new("k");
             },
             (TempFormat::Fahrenheit(_), &TempFormat::Celsius(_)) => {
                 // C = (F − 32) × 5⁄9
                 self.value = (value - 32.0) * 5.0 / 9.0;
-                // self.temp_format = TempFormat::Celsius;
-                // self.temp_format = String::from(TempFormat::Celsius);
                 self.temp_format = TempFormat::new("c");
             },
             (_, _) => {

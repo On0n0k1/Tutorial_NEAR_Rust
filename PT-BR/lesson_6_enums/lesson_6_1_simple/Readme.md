@@ -768,6 +768,6 @@ Simplesmente selecionando borsh como serializador de resultado da função, evit
 
 [topo](#lição-6---1-uso-de-enums)
 
-A próxima seção será sobre Enums da biblioteca Standard. Option e Result.
+A [próxima seção](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer) será um exemplo prático utilizando Todos os conceitos discutidos anteriormente, mais alguns extras.
 
 A próxima lição será sobre Traits.

@@ -3,11 +3,9 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-
 pub mod day;
 pub mod month;
 pub mod year;
-
 
 use day::Day;
 use month::Month;

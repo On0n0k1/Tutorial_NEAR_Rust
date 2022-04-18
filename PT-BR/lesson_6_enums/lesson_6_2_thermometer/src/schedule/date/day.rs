@@ -3,17 +3,14 @@ use near_sdk::{
     serde::{ Serialize, Deserialize },
 };
 
-
 use crate::schedule::date::{
     month::Month,
     year::Year,
 };
 
-
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Day(u8);
-
 
 impl Day{
     pub fn new(day: u8, current_month: &Month, current_year: &Year) -> Self {
@@ -23,12 +20,8 @@ impl Day{
         day
     }
 
-
     /// panic se dia for invalido.
     pub fn assert_valid(&self, current_month: &Month, current_year: &Year) {
-        // let day = match self{
-        //     Day(value) => value,
-        // };
         let &Day(day) = self;
 
         // Coleta o valor do ano.
@@ -77,9 +70,6 @@ impl Day{
 /// Nos permite usar u8::from(nossoDay)
 impl From<&Day> for u8{
     fn from(day: &Day) -> u8 {
-        // let day: u8 = match day {
-        //     Day(value) => value,
-        // };
         let &Day(result) = day;
 
         result

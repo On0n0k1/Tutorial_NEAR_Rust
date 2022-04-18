@@ -33,11 +33,10 @@ impl Schedule{
     }
 
     fn time_from_nanoseconds(nano: u64) -> (u8, u8, f32) {
-        // recolhe todos a porção menor do que um dia.
+        // recolhe toda a porção menor do que um dia.
         let (_, remainder) = Self::remainder_from_value(nano, 24 * 60 * 60 * 1_000_000_000);
         let (hours, remainder) = Self::remainder_from_value(remainder, 60 * 60 * 1_000_000_000);
         let (minutes, seconds) = Self::remainder_from_value(remainder, 60 * 1_000_000_000);
-        // let (seconds, fraction) = Self::remainder_from_value(remainder, 1_000_000_000);
 
         (hours as u8, minutes as u8, seconds as f32 / 1_000_000_000.)
     }
@@ -50,13 +49,7 @@ impl Schedule{
         let max: u64 = (365.25 as f64 * 24. * 60. * 60. * 1_000_000_000.) as u64;
         let (year, remainder) = Self::remainder_from_value(nano, max);
 
-        // let mut is_leap_year = false;
         let is_leap_year = year % 4 == 0;
-
-        // if year >= 2 {
-        //     // Se for divisivel por 4 e após 1972, true.
-        //     is_leap_year = (year % 4) == 0;
-        // }
 
         let max = 24 * 60 * 60 * 1_000_000_000;
 

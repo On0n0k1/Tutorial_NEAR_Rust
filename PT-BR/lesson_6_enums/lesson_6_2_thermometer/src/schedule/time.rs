@@ -28,7 +28,6 @@ impl Time {
         let hour: Hour = Hour::new(hour);
         let minute: Minute = Minute::new(minute);
         let second: Second = Second::new(second);
-        // let fraction: Fraction = Fraction::new(fraction);
 
         Time{
             hour,
