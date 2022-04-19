@@ -4,6 +4,12 @@ use near_sdk::{
 };
 
 
+/// Representa um mês.
+/// 
+/// Devido a instrução "serde(untagged)" o valor deste enum é representado por um String.
+/// 
+/// Pode ser convertido de/para um String.
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[serde(untagged)]
@@ -24,6 +30,23 @@ pub enum Month{
 
 
 impl Month{
+    /// Constroi uma instância de Mês:
+    /// 
+    /// Os valores de String na esquerda são convertidos para os seguintes valores na direita:
+    /// 
+    ///  - "january", "jan", "janeiro", "enero", "ene" => Month::January("January")
+    ///  - "february", "feb", "fevereiro", "fev", "febrero" => Month::February("February")
+    ///  - "march", "mar", "março", "marzo" => Month::March("March")
+    ///  - "april", "apr", "abril", "abr" => Month::April("April")
+    ///  - "may", "maio", "mayo" => Month::May("May")
+    ///  - "june", "jun", "junho", "junio" => Month::June("June")
+    ///  - "july", "jul", "julho", "julio" => Month::July("July")
+    ///  - "august", "aug", "agosto", "ago" => Month::August("August")
+    ///  - "september", "sep", "setembro", "set", "septiembre" => Month::September("September")
+    ///  - "october", "octo", "outubro", "out", "octubre", "octu" => Month::October("October")
+    ///  - "november", "nov", "novembro", "noviembre" => Month::November("November")
+    ///  - "december", "dec", "dezembro", "dez", "diciembro", "dic" => Month::December("December")
+    /// 
     pub fn new(month: &str) -> Self {
         let lower_case: String = month.to_ascii_lowercase();
         
@@ -31,7 +54,7 @@ impl Month{
             "january" | "jan" | "janeiro" | "enero" | "ene" => Month::January(String::from("January")),
             "february" | "feb" | "fevereiro" | "fev" | "febrero" => Month::February(String::from("February")),
             "march" | "mar" | "março" | "marzo" => Month::March(String::from("March")),
-            "april" | "ap" | "abril" => Month::April(String::from("April")),
+            "april" | "apr" | "abril" | "abr" => Month::April(String::from("April")),
             "may" | "maio" | "mayo" => Month::May(String::from("May")),
             "june" | "jun" | "junho" | "junio" => Month::June(String::from("June")),
             "july" | "jul" | "julho" | "julio" => Month::July(String::from("July")),
@@ -58,6 +81,9 @@ impl Month{
     // dec 365
 
     /// Recebe um valor entre 0 e 365. Retorna o mês e dia do ano, baseado no dia do ano.
+    /// 
+    /// Se is_leap_year é true. Aceita uma valor entre 0 e 366. 29 fev é uma possibilidade de data.
+    /// 
     pub fn new_from_days(mut days: u64, is_leap_year: bool) -> (String, u8) {
         // 0 false 1 true
         let leap_year: u64 =  is_leap_year as u64;
@@ -103,6 +129,7 @@ impl Month{
         (String::from("dec"), (days - 334 - leap_year) as u8)  
     }
 
+    /// Retorna uma representação String deste Mês.
     pub fn get(&self) -> String {
         match self {
             Month::January(value) => value.clone(),

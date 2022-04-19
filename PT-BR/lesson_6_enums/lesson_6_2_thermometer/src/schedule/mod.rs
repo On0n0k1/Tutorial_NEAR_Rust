@@ -62,12 +62,15 @@ impl Schedule{
         (year as i32 + 1968, month, day)
     }
 
-    /// Schedule constructor.
+    /// Construtor de schedule (data e horario).
     /// 
-    /// date: tuple with format (year, month, day).
-    /// time: tuple with format (hour, minute, second).
+    /// date: tupla com estrutura (year, month, day).
+    /// time: tupla com estrutura (hour, minute, second).
     /// 
     pub fn new(date: Option<(i32, String, u8)>, time: Option<(u8, u8, f32)>) -> Self {
+        
+        // Retorna o momento exato da chamada dessa instrução.
+        // Valor em nanosegundos. Quantos nanosegundos desde: 1, jan, 1970.
         let block_time: u64 = env::block_timestamp();
         let (year, month, day) = match date{
             Some(value) => value,

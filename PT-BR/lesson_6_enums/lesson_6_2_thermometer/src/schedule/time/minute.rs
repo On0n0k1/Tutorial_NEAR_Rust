@@ -3,6 +3,12 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
+/// Representa um valor de minuto.
+/// 
+/// Serializado, este valor é apenas um u8.
+/// 
+/// Garante que é um valor inteiro entre 0 e 59.
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Minute(u8);

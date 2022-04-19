@@ -8,11 +8,23 @@ use crate::schedule::date::{
     year::Year,
 };
 
+/// Representa um valor de dia.
+/// 
+/// Quando serializado, este tipo é visto como um u8.
+/// 
+/// Garante que é um dia válido para o mês e ano.
+/// 
+/// Deve ser positivo e menor do que 28-31 dependendo do mês e ano.
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Day(u8);
 
 impl Day{
+    /// Constroi uma instância de dia.
+    /// 
+    /// panic se dia for inválido.
+    /// 
     pub fn new(day: u8, current_month: &Month, current_year: &Year) -> Self {
         let day = Day(day);
         day.assert_valid(current_month, current_year);

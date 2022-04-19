@@ -3,6 +3,12 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
+/// Representa um valor de segundo.
+/// 
+/// Serializado, este tipo é apenas um f32.
+/// 
+/// Garante que é um valor real entre 0. e 59.9999...
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Second(f32);

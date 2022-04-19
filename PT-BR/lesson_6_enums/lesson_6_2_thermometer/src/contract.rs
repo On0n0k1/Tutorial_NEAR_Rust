@@ -26,6 +26,12 @@ use crate::{
 };
 
 
+/// Utilizado para acessar o armazenamento do contrato.
+/// 
+/// Cada nova instância de Vector, LookupMap ou UnorderedSet precisa de um valor único de key.
+/// 
+/// Usamos este enum como key.
+/// 
 #[derive(BorshStorageKey, BorshSerialize)]
 enum StorageKey {
     Entries,

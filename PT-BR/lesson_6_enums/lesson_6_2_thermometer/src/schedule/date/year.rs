@@ -4,10 +4,12 @@ use near_sdk::{
 };
 
 
-/// Representa um valor de ano. 
+/// Tupla representando um valor de ano. 
 /// 
-/// O primeiro valor é um inteiro para computação. 
+/// O primeiro valor (i32) é um inteiro para computação.
+///  
 /// O segundo é um String representando o valor formatado.
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Year(i32, String);

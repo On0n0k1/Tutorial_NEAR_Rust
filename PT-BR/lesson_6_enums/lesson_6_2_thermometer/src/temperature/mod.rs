@@ -10,7 +10,12 @@ use near_sdk::{
 use temp_format::TempFormat;
 use crate::utils::log;
 
-
+/// Representa temperatura.
+/// 
+/// Possui um valor f32 para valor.
+/// 
+/// Possui um TempFormat para formato (Kelvin, Celsius ou Fahrenheit).
+/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Temperature {
@@ -20,7 +25,10 @@ pub struct Temperature {
 
 
 impl Temperature {
-    /// Constroi uma instância de temperatura. Não permite o valor ser menor do que zero absoluto.
+    /// Constrói uma instância de temperatura. 
+    /// 
+    /// panic se o valor for menor do que zero absoluto.
+    /// 
     fn new_assert_temp(value: f32, temp_format: TempFormat) -> Self {
         let (minimum, name) = match &temp_format {
             TempFormat::Celsius(t_format) => {(-273.15, t_format)},
@@ -47,28 +55,13 @@ impl Temperature {
     pub fn new(value: f32, temp_format: &TempFormat, arg_temp: Option<String>) -> Self {
         match arg_temp {
             None => {
-                // Argumento não descreve temperatura. Portanto, utiliza a definida no sistema.
-                // let temp_format: String = format!("{}", temp_format);
                 let temp_format = temp_format.clone();
-
-                // Temperature{
-                //     value,
-                //     temp_format,
-                // }
 
                 Temperature::new_assert_temp(value, temp_format)
             },
             Some(arg_string) => {
-                // Argumento descreve temperatura. Portanto, cria uma instância com essa temperatura.
-                // let arg_format = String::from(
-                //     TempFormat::from(arg_string)
-                // );
                 let arg_format = TempFormat::new(&arg_string);
 
-                // let mut arg_temp = Temperature{
-                //     value,
-                //     temp_format: arg_format,
-                // };
                 let mut arg_temp = Temperature::new_assert_temp(value, arg_format);
 
                 // Converte a temperatura da mensagem para a temperatura do sistema.
@@ -79,7 +72,10 @@ impl Temperature {
 
     }
 
-    /// Atualiza temperatura se for diferente. Retorna true se houver mudança.
+    /// Atualiza temperatura se for diferente. 
+    /// 
+    /// Retorna true se houver mudança.
+    /// 
     pub fn update_temp_format(&mut self, temp_format: &TempFormat) -> bool {
         let comparison = self.temp_format == *temp_format;
 
@@ -90,7 +86,8 @@ impl Temperature {
         !comparison
     }
     
-    /// Converte o formato de temperatura para outro.
+    /// Converte o formato de temperatura para temp_format.
+    /// 
     pub fn convert(&mut self, temp_format: &TempFormat){
         let current: TempFormat = self.temp_format.clone();
 

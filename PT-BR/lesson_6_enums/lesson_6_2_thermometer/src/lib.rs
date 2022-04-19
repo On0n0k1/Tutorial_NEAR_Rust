@@ -1,7 +1,8 @@
+// Não queremos que este módulo apareça na documentação. Módulo é público apenas internamente.
 pub(crate) mod contract;
-pub(crate) mod entry;
-pub(crate) mod schedule;
-pub(crate) mod temperature;
-pub(crate) mod utils;
+pub mod entry;
+pub mod schedule;
+pub mod temperature;
+pub mod utils;
 
 pub use contract::Contract;
