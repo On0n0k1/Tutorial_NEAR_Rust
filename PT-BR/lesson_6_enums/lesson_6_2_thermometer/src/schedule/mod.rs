@@ -1,3 +1,13 @@
+//! Módulo para um schedule (cronograma).
+//! 
+//! Um valor de temperatura não possui muita utilidade sem um tempo associado. Este é o objetivo desse tipo.
+//! 
+//! Composto por Date e Time. Usado em Entry.
+//! 
+//! Pode ser fornecido como parâmetro ou gerado automaticamente com o momento do sistema.
+//! 
+
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     env,
@@ -15,6 +25,7 @@ use self::date::month::Month;
 use crate::utils::log;
 
 
+/// Representa o momento de recebimento da temperatura.
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Schedule{
@@ -41,7 +52,6 @@ impl Schedule{
         (hours as u8, minutes as u8, seconds as f32 / 1_000_000_000.)
     }
 
-    /// Acho que essa função irá calcular anos leap_year incorretamente. Provavelmente estará um dia errado.
     fn date_from_nanoseconds(nano: u64) -> (i32, String, u8) {
         // Somamos 2 anos ao valor de nanosegundos. Dessa forma estará sincronizado com os leap years, em 1968, em vez de 1970.
         let nano: u64 = nano + 2 * 365 * 24 * 60 * 60 * 1_000_000_000;

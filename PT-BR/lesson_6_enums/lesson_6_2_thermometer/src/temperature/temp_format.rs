@@ -1,3 +1,21 @@
+//! Módulo que representa formato de temperatura.
+//! 
+//! Pode ser Kelvin, Celsius ou Fahrenheit.
+//! 
+//! O contrato é inicializado com formato Kelvin.
+//! 
+//! A instrução #[serde(untagged)] faz com que o enum seja serializado como String em json.
+//! 
+//!  - Default é implementado. Valor inicial é Celsius::Kelvin;
+//!  - PartialEq e Eq implementados. Permitindo comparações entre TempFormats a == b;
+//!  - String::from(&formato) converte uma referência &TempFormat para String;
+//!  - String::from(formato) converte um TempFormat para String;
+//!  - TempFormat::from("a str") para converter um &str para TempFormat;
+//!  - TempFormat::from(aString) para converter um String para TempFormat;
+//!  - TempFormat::from(&aString) para converter uma referência &String para TempFormat;
+//!  - std::fmt::Display implementado. Permitindo o uso desses tipos em macros como println!, format! e panic!;
+//! 
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Deserialize, Serialize },
@@ -30,6 +48,10 @@ impl TempFormat{
     ///  - "celsius", "c" => TempFormat::Celsius("Celsius")
     ///  - "fahrenheit", "f" => TempFormat::Fahrenheit("Fahrenheit")
     ///  - "kelvin", "k" => TempFormat::Kelvin("Kelvin")
+    /// 
+    /// # Panics
+    /// 
+    /// Se argumento for inválido.
     /// 
     pub fn new(temp_format: &str) -> Self{
         // Essa conversão de &str para TempFormat é possivel devido a implementação "impl From<&str> for TempFormat{..." abaixo.

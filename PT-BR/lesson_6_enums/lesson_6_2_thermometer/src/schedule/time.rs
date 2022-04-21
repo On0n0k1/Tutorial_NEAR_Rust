@@ -1,3 +1,11 @@
+//! Módulo que representa tempo.
+//! 
+//! Usado por Schedule.
+//! 
+//! Composto por por Hour, Minute, Second.
+//! 
+
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Deserialize, Serialize },
@@ -14,9 +22,6 @@ use minute::Minute;
 use second::Second;
 
 /// Representa tempo (hora, minuto, segundo).
-/// 
-/// Garante que os valores são válidos.
-/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Time{
@@ -29,11 +34,11 @@ pub struct Time{
 impl Time {
     /// Constroi uma instância de Time.
     /// 
-    /// panic se:
-    ///  - hora >= 24;
-    ///  - minute >= 60;
-    ///  - second >= 60. ;
-    ///  - second < 0. ;
+    /// # Panics
+    ///  - se hora >= 24;
+    ///  - se minute >= 60;
+    ///  - se second >= 60. ;
+    ///  - se second < 0. ;
     /// 
     pub fn new(hour: u8, minute: u8, second: f32) -> Time{
         let hour: Hour = Hour::new(hour);

@@ -1,3 +1,28 @@
+//! Módulo com todas as funcionalidades necessárias para a 
+//! representação de dia no contrato.
+//! 
+//! Usamos um inteiro u8 para representar um dia. Mas 
+//! precisamos garantir que este valor é válido.
+//! 
+//! Devido a isso, o tipo Day é representado por um struct 
+//! tupla Day(u8).
+//! 
+//! Quando serializado para json, o valor é visto como um 
+//! número u8. Ou seja, o usuário não perceberá essa 
+//! complexidade.
+//! 
+//! O tipo Day pode ser construido através da função 
+//! associada Day::new. Esta função precisa do mês e ano 
+//! para saber o limite máximo e se é leap year, 
+//! respectivamente. Seguem outras utilidades:
+//!  - u8::from(day) nos permite converter um Day para u8;
+//!  - String::from(day) nos permite converter um Day para 
+//! String;
+//!  - std::fmt::Display é implementado, portanto podemos 
+//! usar o tipo para macros como println!("{}", day) 
+//! ou panic!("{}", day) .
+//! 
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Serialize, Deserialize },
@@ -22,8 +47,12 @@ pub struct Day(u8);
 
 impl Day{
     /// Constroi uma instância de dia.
+    ///  - day: dia, valor entre 1 e 31, dependendo do mês/ano.
+    ///  - current_month: mês atual, para validação.
+    ///  - current_year: ano atual, para validação.
     /// 
-    /// panic se dia for inválido.
+    /// # Panics
+    /// Se dia for inválido.
     /// 
     pub fn new(day: u8, current_month: &Month, current_year: &Year) -> Self {
         let day = Day(day);
@@ -32,8 +61,9 @@ impl Day{
         day
     }
 
-    /// panic se dia for invalido.
-    pub fn assert_valid(&self, current_month: &Month, current_year: &Year) {
+    /// # Panics
+    /// Se dia for invalido.
+    fn assert_valid(&self, current_month: &Month, current_year: &Year) {
         let &Day(day) = self;
 
         // Coleta o valor do ano.
@@ -66,8 +96,7 @@ impl Day{
             &Month::December(_) => 31,
         };
 
-        // true se o valor do dia for válido.
-        // false se o valor do dia for maior que o valor referente ao mês.
+        // panic se o valor do dia for maior que o valor referente ao mês.
         assert!(day <= max_day,
             "Invalid values for day. Day: {}, Month: {}, Year: {}. Day for given month and year can not be higher than {}.",
                 day,
@@ -102,5 +131,3 @@ impl std::fmt::Display for Day {
         write!(f, "{}", String::from(self))
     }
 }
-
-

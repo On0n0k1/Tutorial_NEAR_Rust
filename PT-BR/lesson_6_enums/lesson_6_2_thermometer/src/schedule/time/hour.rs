@@ -1,14 +1,18 @@
+//! Módulo para hora.
+//! 
+//! O formato json desse tipo é apenas um u8.
+//! 
+//!  - u8::from(&hour) converte essa referência para um u8;
+//!  - u8::from(hour) converte este Hour para um u8;
+//!  - Hour::from(esteu8) converte um valor u8 para  Hour;
+//! 
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Deserialize, Serialize },
 };
 
 /// Tipo que representa hora.
-/// 
-/// Serializado, este tipo é apenas um u8.
-/// 
-/// Garante que é um valor inteiro entre 0 e 23.
-/// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Hour(u8);

@@ -1,3 +1,14 @@
+//! Módulo que representa temperatura.
+//! 
+//! Composto por um valor (value) e um formato de temperatura (temp_format).
+//! 
+//! O contrato armazena um formato de temperatura do sistema.
+//! 
+//! Se a mensagem não informar formato de temperatura, utiliza o do sistema.
+//! 
+//! Se o formato de temperatura for diferente do formato da mensagem, converte a temperatura da mensagem antes de armazenar/retornar.
+//! 
+
 pub mod temp_format;
 
 
@@ -27,7 +38,8 @@ pub struct Temperature {
 impl Temperature {
     /// Constrói uma instância de temperatura. 
     /// 
-    /// panic se o valor for menor do que zero absoluto.
+    /// # Panics
+    /// Se o valor for menor do que zero absoluto.
     /// 
     fn new_assert_temp(value: f32, temp_format: TempFormat) -> Self {
         let (minimum, name) = match &temp_format {
@@ -72,7 +84,7 @@ impl Temperature {
 
     }
 
-    /// Atualiza temperatura se for diferente. 
+    /// Atualiza temperatura se o formato for diferente. 
     /// 
     /// Retorna true se houver mudança.
     /// 
@@ -86,8 +98,7 @@ impl Temperature {
         !comparison
     }
     
-    /// Converte o formato de temperatura para temp_format.
-    /// 
+    /// Converte o formato de temperatura para o argumento.
     pub fn convert(&mut self, temp_format: &TempFormat){
         let current: TempFormat = self.temp_format.clone();
 

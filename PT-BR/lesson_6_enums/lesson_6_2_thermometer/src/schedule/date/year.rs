@@ -1,3 +1,17 @@
+//! Módulo com todas as funcionalidades necessárias para o 
+//! funcionamento de um ano no contrato.
+//! 
+//! Ano é representado por uma tupla com um inteiro e um 
+//! String.
+//! 
+//! - String::from(year) converte um Year para String;
+//! - String::from(&year) converte uma referência para 
+//! String;
+//! - std::fmt::Display é implementado. Portanto pode 
+//! ser usado em macros como format!, println! e panic!;
+//! 
+
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Deserialize, Serialize },
@@ -16,6 +30,7 @@ pub struct Year(i32, String);
 
 
 impl Year{
+    /// Constrói uma instância de Year.
     pub fn new(mut value: i32) -> Year {
         let is_negative = value < 0;
         if is_negative{
@@ -39,6 +54,7 @@ impl Year{
         Year(value, text)
     }
 
+    /// Retorna ano como i32.
     pub fn get(&self) -> i32 {
         // Year é uma tupla, .0 acessa o primeiro valor da tupla.
         // i32 implementa copy, então não precisamos de escrever self.0.clone()

@@ -1,3 +1,12 @@
+//! Módulo para segundo.
+//! 
+//! O formato json desse tipo é apenas um f32.
+//! 
+//!  - f32::from(&second) converte essa referência para um f32;
+//!  - f32::from(second) converte este Minute para um f32;
+//!  - Minute::from(estef32) converte um valor f32 para Second;
+//! 
+
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
     serde::{ Deserialize, Serialize },
@@ -7,7 +16,10 @@ use near_sdk::{
 /// 
 /// Serializado, este tipo é apenas um f32.
 /// 
-/// Garante que é um valor real entre 0. e 59.9999...
+/// # Panics
+/// 
+///  - Se valor for maior ou igual a 60;
+///  - Se o valor for negativo;
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
