@@ -22,6 +22,33 @@
 //! usar o tipo para macros como println!("{}", day) 
 //! ou panic!("{}", day) .
 //! 
+//! ## Examples
+//! 
+//! ```rust
+//! # use lesson_6_2_thermometer::schedule::date::day::Day;
+//! # use lesson_6_2_thermometer::schedule::date::month::Month;
+//! # use lesson_6_2_thermometer::schedule::date::year::Year;
+//! 
+//! // not leap year
+//! let month = Month::new("feb");
+//! let year = Year::new(1971);
+//! 
+//! let day = Day::new(28, &month, &year);
+//! assert_eq!(u8::from(&day), 28);
+//! assert_eq!(format!("{}", day), "28");
+//! assert_eq!(String::from(&day), "28");
+//! 
+//! // leap year
+//! let month = Month::new("feb");
+//! let year = Year::new(1972);
+//! 
+//! let day = Day::new(29, &month, &year);
+//! assert_eq!(u8::from(&day), 29);
+//! assert_eq!(format!("{}", day), "29");
+//! assert_eq!(String::from(&day), "29");
+//! 
+//! ```
+//! 
 
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
@@ -41,7 +68,7 @@ use crate::schedule::date::{
 /// 
 /// Deve ser positivo e menor do que 28-31 dependendo do mês e ano.
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Copy, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Day(u8);
 

@@ -10,6 +10,11 @@
 //! os casos. Primeiro, declaramos o enum da seguinte forma:
 //! 
 //! ```
+//!use near_sdk::{
+//!    borsh::{ self, BorshDeserialize, BorshSerialize },
+//!    serde::{ Deserialize, Serialize },
+//!};
+//! 
 //! #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 //! #[serde(crate = "near_sdk::serde")]
 //! pub enum Month{
@@ -37,6 +42,11 @@
 //! serde(untagged), da seguinte forma:
 //! 
 //! ```
+//!use near_sdk::{
+//!    borsh::{ self, BorshDeserialize, BorshSerialize },
+//!    serde::{ Deserialize, Serialize },
+//!};
+//! 
 //! #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 //! #[serde(crate = "near_sdk::serde")]
 //! #[serde(untagged)]

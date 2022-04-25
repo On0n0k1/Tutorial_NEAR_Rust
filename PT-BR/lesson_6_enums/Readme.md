@@ -6,9 +6,8 @@ Esta lição é dividida em 4 partes relacionadas a enums. Cada tópico é uma c
 
 As sessões são as seguintes:
  - [Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
- - Enums da biblioteca standard, Option e Result.
+ - [Usando Option para controlar input/output](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer/).
  - Como implementar erros de forma prática e eficiente.
- - Como usar enums para agrupar diversos tipos em um único enum.
 
 ---
 

@@ -173,7 +173,9 @@ impl Contract{
     /// # Panics
     ///  - Se for cross-contract;
     ///  - Se não for owner;
+    ///  - Se o nome de usuário for inválido;
     ///  - Se usuário informado não existir na lista de permissões;
+    ///  - Se o nome de usuário informado for o owner;
     /// 
     pub fn remove_user(&mut self, account_id: String){
         self.assert_no_cross_contract();
@@ -266,7 +268,7 @@ impl Contract{
     ///  - new_entry '{"temp_value": 100, "temp_format": "Celsius"}'
     ///  - new_entry '{"temp_value": 50.5, "temp_format": "Fahrenheit", "date: [2022, "feb", 11]"}'
     ///  - new_entry '{"temp_value": 11.5, "temp_format": "f", "date": [2018, "mar", 27], "time": [10, 50, 9.3453]}'
-    ///  - new_entry '{"temp_value": -45.4, "temp_format": "c", "time": [32, 41, 4.443]}'
+    ///  - new_entry '{"temp_value": -45.4, "temp_format": "c", "time": [23, 41, 4.443]}'
     ///  - new_entry '{"temp_value": 44.13, "temp_format": "kelvin"}'
     /// 
     pub fn new_entry(
@@ -306,7 +308,8 @@ impl Contract{
     /// 
     /// # Panics
     ///  - Se usuário não tiver permissão de acesso;
-    ///  - Se usuário não for owner estiver tentando atualizar as entries de outros;
+    ///  - Se usuário não for owner e estiver tentando atualizar as entries de outros;
+    ///  - Se usuário não for encontrado;
     /// 
     pub fn list_update_entries(&mut self, account_id: Option<String>) -> Vec<Entry> {
         self.assert_user_allowed();
@@ -366,7 +369,7 @@ impl Contract{
     /// 
     /// # Panics
     ///  - Se usuário não for owner;
-    ///  - Se conta não estiver na lista de permitidos;
+    ///  - Se id de conta não estiver na lista de permitidos;
     /// 
     pub fn clear_entries(&mut self, account_id: Option<String>){
         self.assert_owner_only();
