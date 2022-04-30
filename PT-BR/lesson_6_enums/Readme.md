@@ -5,9 +5,9 @@
 Esta lição é dividida em 4 partes relacionadas a enums. Cada tópico é uma crate. Aproveitaremos este momento para explicar sobre workspaces e como usá-los.
 
 As sessões são as seguintes:
- - [Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
- - [Usando Option para controlar input/output](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer/).
- - Como implementar erros de forma prática e eficiente.
+ - [Parte 1 - Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
+ - [Parte 2 - Termometro implementado com enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer/).
+ - Parte 3 - Como implementar erros de forma prática e eficiente.
 
 ---
 

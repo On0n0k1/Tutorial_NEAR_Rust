@@ -605,7 +605,7 @@ Abaixo vemos um fragmento do inicio do módulo ```Day```, localizado no caminho 
 //! 
 ```
 
-Comentários como este existir no início do arquivo.
+Comentários como este devem existir no início do arquivo.
 
 Recomenda-se que estes comentários tenha um resumo sobre toda funcionalidade disponivel no módulo.
 
