@@ -113,16 +113,16 @@ impl Contract{
 
     // Garante que apenas usuários permitidos podem chamar funções.
     fn assert_user_allowed(&self) {
-        let signer_id: AccountId = env::predecessor_account_id();
+        let predecessor_id: AccountId = env::predecessor_account_id();
         let owner_id: AccountId = env::current_account_id();
 
         // Se a conta dono do contrato está chamando a função.
-        if owner_id == signer_id {
+        if owner_id == predecessor_id {
             return;
         }
 
         // Se não for a conta dono, e não estiver incluido na lista de permitidos, causa panic.
-        assert!(self.users.contains(&signer_id), "User not allowed to make this call.");
+        assert!(self.users.contains(&predecessor_id), "User not allowed to make this call.");
     }
 
     /// Inclui usuário na lista de permissões, cria um Vector para armazenamento de entries para este usuário.
@@ -228,6 +228,7 @@ impl Contract{
     /// 
     /// # Panics
     ///  - Se for cross-contract;
+    ///  - Se o usuário informado não for encontrado na lista de permissões;
     ///  - Se o usuário não for owner;
     /// 
     pub fn set_format(&mut self, temp_format: String) {
@@ -311,7 +312,10 @@ impl Contract{
     ///  - Se usuário não for owner e estiver tentando atualizar as entries de outros;
     ///  - Se usuário não for encontrado;
     /// 
-    pub fn list_update_entries(&mut self, account_id: Option<String>) -> Vec<Entry> {
+    pub fn list_update_entries(
+        &mut self, 
+        account_id: Option<String>,
+    ) -> Vec<Entry> {
         self.assert_user_allowed();
 
         // let account_id: AccountId = env::predecessor_account_id();
@@ -371,7 +375,10 @@ impl Contract{
     ///  - Se usuário não for owner;
     ///  - Se id de conta não estiver na lista de permitidos;
     /// 
-    pub fn clear_entries(&mut self, account_id: Option<String>){
+    pub fn clear_entries(
+        &mut self, 
+        account_id: Option<String>,
+    ){
         self.assert_owner_only();
         
         let account_id: String = match account_id {
@@ -418,7 +425,11 @@ impl Contract{
     /// 
     /// Não converte as temperaturas armazenadas (caso seja diferente do sistema.)
     /// 
-    pub fn view_get(&self, index: Option<u64>, account_id: String) -> ViewGet {
+    pub fn view_get(
+        &self, 
+        index: Option<u64>, 
+        account_id: String,
+    ) -> ViewGet {
         match index{
             None => {
                 let result = self.entries

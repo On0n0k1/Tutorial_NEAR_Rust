@@ -89,6 +89,7 @@ impl Schedule{
                 Self::date_from_nanoseconds(block_time)
             },
         };
+        
         let (hour, minute, second) = match time{
             Some(value) => value,
             None => {
