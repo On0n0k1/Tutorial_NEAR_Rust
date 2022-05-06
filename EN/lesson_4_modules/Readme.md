@@ -1,236 +1,229 @@
-# Lição 4 - Módulos
+# Lesson 4: Modules
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
-Esta lição discute sobre como módulos são importados. 
+In this lesson we will talk about organizing our code and using modules.
 
-Podemos ter todo nosso código implementado no arquivo ```lib.rs```. Mas percebe-se como seria dificil de organizar um projeto grande dessa forma. 
+We could have all our code in a single `lib.rs` file, but this would file would increase in size and complexity very fast, and it would also be very difficult to organize a large project around a single file with all our code in it.
 
- - Podemos declarar módulos externos; 
- - Declarar diretórios externos como módulos;
- - Controlar quais módulos são públicos;
- - Controlar o caminho para cada módulo público;
- - Também podemos organizar nossos testes no diretório ```./tests/```.
+Here's some ways we can organize our code: 
+
+ - We can declare external modules; 
+ - We can declare directories as modules;
+ - We can control when our modules are public (can be used by anyone);
+ - We can control the path for each public module;
+ - We can put our tests in a `./tests/` directory. 
 
 ---
 
-## API de Contrato
+## Contract API
 
 ```rust
-/// Retorna a String armazenada.
+/// Returns the stored String
 pub fn get_phrase(&self) -> String;
 
-/// A função irá imprimir "Hello from crate::a_module" e 
-/// atribuir essa string ao valor armazenado.
+/// This function will print "Hello from crate::a_module"
+/// and store that value
 pub fn hello(&mut self);
 
-/// A função irá imprimir "Hello from 
-/// crate::a_module::specific_module" e atribuir essa string ao 
-/// valor armazenado.
+/// This function will print "Hello from crate::a_module::specific_module"
+/// and store that value
 pub fn hello1(&mut self);
 
-/// A função irá imprimir "Hello from another module" e 
-/// atribuir essa string ao valor armazenado.
+/// This function will print "Hello from another module" 
+/// and store that value
 pub fn hello2(&mut self);
 
-/// A função irá imprimir "Hello from yet_another_module" 
-/// e atribuir essa string ao valor armazenado.
+/// This function will print "Hello from yet_another_module" 
+/// and store that value
 pub fn hello3(&mut self);
 
-/// A função irá imprimir "Called a deep function" e 
-/// atribuir essa string ao valor armazenado.
+/// This function will print "Called a deep function"
+/// and store that value
 pub fn hello4(&mut self);
 
-/// Esta função irá entrar em pânico com a mensagem "A panic 
-/// just happened" quando chamado.
+/// This function will panic and print "A panic just happened"
+/// when called
 pub fn this_will_panic();
 ```
 
 ---
 
-## Tópicos
- - [Como declarar um módulo externo](#como-declarar-um-m%C3%B3dulo-externo)
- - [Como declarar e usar diretórios](#como-declarar-e-usar-diret%C3%B3rios)
- - [Usando/importando módulos](#usandoimportando-m%C3%B3dulos)
-   - [Apelidos](#apelidos)
-   - [Usos públicos](#usos-p%C3%BAblicos)
- - [Testes de integração](#testes-de-integra%C3%A7%C3%A3o)
-   - [Testes de integração NEAR](#testes-de-integra%C3%A7%C3%A3o-near)
-   - [Testes de integração Rust](#testes-de-integra%C3%A7%C3%A3o-rust)
-  - [Desativar avisos de compilador](#desativar-avisos-de-compilador)
-  - [Testando Falhas](#testando-falhas)
+## Topics
+ - [How to declare an external module](#how-to-declare-an-external-module)
+ - [How to use a file or directory as a module](#how-to-use-a-file-or-directory-as-a-module)
+ - [Using or Importing modules](#using-or-importing-modules)
+   - [Aliases](#aliases)
+   - [Public access](#public-access)
+ - [Tests](#tests)
+   - [NEAR integration tests](#near-integration-tests)
+   - [Rust tests](#rust-integration-tests)
+  - [Disable compiler warnings](#disable-compiler-warnings)
+  - [Testing errors](#testing-errors)
 
 ---
 
-## Como declarar um módulo externo
+## How to declare an external module
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Um módulo externo deve ser declarado antes de usado/importado.
+An external module must be declared prior to using or importing it.
 
 ```rust
 mod yet_another_module;
 ```
 
-Essa linha diz ao compilador que existe um módulo com este nome no mesmo diretório. Existem três formas de se declarar um módulo. Se dois módulos ou mais com mesmo nome forem encontrados, um erro de ambiguidade será gerado.
+This declaration tells the compiler there is a module with this name in the same directory. There are three ways to declare a module. If two or more modules with the same name are found, an ambiguity error will be raised.
 
-O módulo acima é privado. Só pode ser usado onde foi declarado. O módulo abaixo é público:
+The module above is private, so it can be used where it was declared. We can turn it public by using:
 
 ```rust
 pub mod a_module;
 ```
 
-```a_module``` é público aqui. Ou seja, pode ser importado por outros. Isso inclui crates externas. O exemplo abaixo restringe isso.
+`a_module` is now public... this means that it can be imported by other code, including external crates.
+If you want to restrict that, you can write:
 
 ```rust
 pub(crate) fn hello() -> String{
     String::from("Hello from crate::a_module::specific_module")
 }
 ```
-
-```pub(crate)``` significa que esta função é pública apenas nessa crate. Ou seja, se ```lesson_4_modules``` for dependência de um outro projeto rust, o crate externo não terá acesso a essa função.
-
----
-
-## Como declarar e usar diretórios
-
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
-
-Podemos declarar diretórios como módulos também. Existem duas formas para isso. A primeira é:
- - Criar um diretório com o nome do seu módulo.
- - Criar um arquivo com nome ```mod.rs``` dentro desse diretório. Este arquivo possui a implementação do módulo.
-
-![Imagem de um diretório com um arquivo mod.rs](../static/images/mod-diretorios.png)
-
-```a_module``` é uma implementação de módulo. 
-
-A segunda forma é:
-
- - Criar um diretório com o nome do seu módulo.
- - Criar um arquivo rust com o mesmo nome do seu módulo junto com o diretório. Este arquivo possui a implementação do módulo.
-
-![Imagem de um diretório com um arquivo de mesmo nome ao lado](../static/images/mod-diretorios2.png)
-
-```internal_module``` é outra implementação de módulo.
-
-O arquivo rust fica dentro ou fora do diretório? Essa é a questão.
+`pub(crate)` means this function will only be public in this crate. This means that if `lesson_4_modules` was a dependency of another project, that crate would not have access to this function.
 
 ---
 
-## Usando/Importando módulos
+## How to use a file or directory as a module
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Qualquer item (módulos, funções, structs, traits, enums, et cetera) pode ser importado com a instrução use.
+We can use a file or directory as a module, and there are two ways to do it. 
 
-No exemplo abaixo, acessamos o caminho ```near_sdk``` (uma crate neste caso), e incluimos ```env``` e ```near_bindgen``` no nosso namespace.
+The first one: 
+ - Create a directory with the name we want for our module.
+ - Create a file with name `mod.rs` inside that directory. This file will be our module's implementation.
+
+![Image of a directory with mod.rs file](../static/images/mod-diretorios.png)
+
+ In the above image, directory `a_module` with a `mod.rs` is our module.
+
+The second one:
+  - Create a Rust file with the same name as our module. This file is the module's implementation.
+
+![Image of a directory with a Rust file that is also a module](../static/images/mod-diretorios2.png)
+
+`internal_module.rs` is our module and the file contains the module's implementation.
+
+---
+
+## Using or Importing modules
+
+[top](#topics)
+
+You can import modules, functions, structs, traits and enums by using the `use` keyword.
+
+Let's look at an example: below, we are bringing both `env` and `near_bindgen` from `near_sdk` (which happens to be a crate in this case) into scope. 
 
 ```rust
 use near_sdk::{env, near_bindgen};
 ```
-
-Não é necessário usar a instrução use. Porém, se quiséssemos acessar o módulo ```env```, teriamos que escrever ```near_sdk::env``` todas as vezes.
+Just keep in mind that you actually don't have to use `use` (pun intended). If we wanted to, we could access `env` by writing `near_sdk::env` every time we needed it (meaning, write the full path).
 
 ---
 
-### Apelidos
+### Aliases
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Podemos dar um apelido ao item importado:
+We can use the `as` keyword to alias an import to another name:
 
 ```rust
 use a_module::specific_module::hello as hello1;
 ```
-
-Existem várias funções ```hello``` neste exemplo. Então alteramos o nome de cada uma com o operador ```as```. Ou seja, importando dessa forma, a instrução ```hello1()``` é o mesmo que ```a_module::specific_module::hello()```.
+There are a few `hello` functions in this example. Let's alias their names using the `as` keyword. In the above example, calling `hello1()` will be the same as calling `a_module::specific_module::hello()`.
 
 ---
 
-### Usos públicos
+### Public access
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-As instruções
+Let's see some ways to organize access to modules and functions:
 
 ```rust
 pub use another_module::hello as hello2;
 pub use yet_another_module::hello as hello3;
 ```
 
-Trazem as duas funções hello para este namespace, alteram o nome para ```hello2``` e ```hello3```, e as tornam públicas, como se tivessem sido declaradas neste módulo. Isso é uma boa forma de organizar nosso projeto. Por exemplo, no arquivo ```yet_another_module```:
+The above will bring both `hello` functions into scope, aliasing `hello2` and `hello3` while making them public; just as-if they were declared in this module. 
 
+If we had a file `yet_another_module.rs` with:
 ```rust
 mod internal_module;
 
 pub use internal_module::a_deep_module::a_deep_function;
 ```
+We are declaring `internal_module` exists and is private. However, we are also bringing `a_deep_function` into scope **and** making it public; and so, you can access this function using the path `yet_another_module::a_deep_function` without even knowing (or caring) that function resides in a completely different directory. 
 
-Declaramos que o módulo ```internal_module``` existe, e é privado. Mas a função ```a_deep_function``` é pública. Um usuário pode acessar esse item pelo caminho ```yet_another_module::a_deep_function```. Sem saber que a função está em um diretório completamente diferente.
+Organize your modules (and directories) according to your project's needs, and then use `pub use` to export or make items available for external users. 
 
-Organize módulos e diretórios de acordo com as necessidades do seu projeto. Use ```pub use``` para organizar os itens disponíveis de acordo com as necessidades dos usuários externos.
+:hand: `pub use` and `pub mod` are used for public modules and crates when using them as libraries in other projects. These are language features and have no relation to NEAR contracts. 
 
-**Detalhe**: ```pub use``` e ```pub mod``` são usados para módulos públicos e crates feitos para serem importados (library) por outros projetos rust. Não possui nenhuma interação no contexto de contratos NEAR.
-
----
-
-## Testes de Integração
-
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
-
-A linguagem rust tem um formato para testes de integração, e o formato NEAR possui outro.
-
-Isso porque testes de integração em NEAR consistem na interação entre diversos contratos em uma simulação de estrutura blockchain.
+:warning: Remember Rust changes often, so be sure to keep up-to-date. You can always check the docs for the [Rust Editions](https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html).
 
 ---
 
-### Testes de Integração NEAR
+## Tests
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Para isso usamos uma ferramenta chamada [workspaces-rs](https://github.com/near/workspaces-rs)
-
-Agora, como se ja não estivesse confuso o suficiente, workspaces em rust e workspaces-rs são duas coisas diferentes. [Workspaces](https://doc.rust-lang.org/cargo/reference/workspaces.html) em rust são uma forma de organizar várias crates em um único pacote, todas compartilhando um diretório ```./target/``` e um arquivo ```Cargo.lock```. [workspaces-rs](https://github.com/near/workspaces-rs) é uma forma de realizar testes de integração de contratos NEAR utilizando a linguagem rust.
-
-Testes de integração eram feitos com a crate [near-sdk-sim](https://www.near-sdk.io/testing/simulation-tests), mas esta ferramenta será deprecada pela [sandbox](https://docs.near.org/docs/develop/contracts/sandbox). Use a ferramenta que lhe servir melhor.
+NEAR has its own way to do testing which is different than Rust's tests; the former are more so integration tests while the latter are unit tests. This is because NEAR's tests are more about simulating interaction between different smart contracts on the blockchain.
 
 ---
 
-### Testes de integração Rust
+### NEAR integration tests
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Geralmente declaramos testes no mesmo arquivo. da seguinte forma:
+The testing tool commonly used for testing NEAR Smart Contracts is called [workspaces-rs](https://github.com/near/workspaces-rs).
+
+But just to complicate things, there's _also_ something called **workspaces** in Rust, but they are very different things. A [Workspace](https://doc.rust-lang.org/cargo/reference/workspaces.html) in Rust is a collection of one or more packages that share dependencies, target and other settings such as profiles.
+
+Integration testing was done with the crate [near-sdk-sim](https://www.near-sdk.io/testing/simulation-tests), but this tool will deprecated in favor of the [sandbox](https://docs.near.org/docs/develop/contracts/sandbox).
+
+---
+
+### Rust integration tests
+
+[top](#topics)
+
+We usually declare our tests in the same file: 
 
 ```rust
 #[cfg(test)]
 mod tests{
-    // carrega tudo que está neste arquivo, fora deste módulo.
+    // load everything from this module
     use super::*;
 
     #[test]
     fn hello_test(){
 ```
 
-Mas as vezes, precisamos declarar testes em sua própria estrutura de arquivos e diretórios.
+But most of the time, we declare tests in their own directory and with their own file structure. 
+We can create a directory `tests` alongside `src`.
 
-Podemos criar um diretório ```tests``` junto com o ```src```.
+![Image of root directory with directory "tests" highlighted](../static/images/testsdirectory.png)
 
-![Imagem do diretório root com destaque no diretório "tests"](../static/images/testsdirectory.png)
+We can then execute `cargo test`, and every `.rs` file will be treated as a test. All functions with an attribute of `#[test]` will be executed automatically. You can just place tests in `.rs` files, there's no need to create a `mod` for them. 
 
-Quando executarmos o comando ```cargo test```, cada arquivo ```.rs``` será tratado como um módulo de teste. Todas as funções marcadas com ```#[test]``` serão executadas automaticamente.
-
-Os arquivos ```.rs``` não precisam ser declarados com a instrução ```mod``` para serem compilados.
-
-O diretório ```tests``` age como uma crate separada. Podemos importar módulos no mesmo diretório:
+For our lesson, the directory `tests` acts as a separate crate. Let's import the `common` module found under `tests`, and bring it into scope in `contract.rs`.
 
 ```rust
 mod common;
 
 use common::env_setup;
 ```
-
-Para importarmos módulos na crate principal, referimos à essa pelo nome da crate:
+To import modules in the same create, we can use the crate's name: 
 
 ```rust
 use lesson_4_modules::Contract;
@@ -238,41 +231,39 @@ use lesson_4_modules::Contract;
 
 ---
 
-## Desativar avisos de compilador
+## Disable compiler warnings
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Avisos ("warnings") são gerados durante a compilação. Podemos desativar avisos da seguinte forma:
+Warnings are sometimes generated during compilation, but you can opt-out of them by using attributes before code: 
 
 ```rust
 #[allow(unused)]
 ```
+The above attribute would allow unused code to exist following the attribute and not generate a compiler warning.
 
-O exemplo acima permite uma falha de código "não utilizado" na linha abaixo.
-
-O recomendado é corrigir avisos do compilador. Mas existem situações em que talvez isso seja útil. Por exemplo, a convenção para funções javascript é ```CamelCase```, mas a convenção para funções em rust é ```snake_case```. Quando comunicarmos com o nosso contrato através do near-api-js, talvez seja melhor ter as funções na convenção javascript.
+However, you should always fix any compiler warnings and not ignore them. But here's an example when these attributes come in handy: the naming convention for JavaScript is to use `CamelCase`, while the naming convention for Rust is `snake_case`. If we are interacting with a contract using near-api-js, readability could be improved by using JavaScript's naming convention. 
 
 ```rust
 #[allow(non_snake_case)]
 pub fn ACamelCaseFunction() {    
 ```
 
-Podemos permitir avisos de imports não utilizados:
+We could also allow to ignore any warnings related to imports not being used:
 
 ```rust
 #[allow(unused_imports)]
 use near_sdk::{env, near_bindgen};
 ```
-
-Repetindo, avisos existem para nos ajudar. O recomendado é **corrigir** os avisos, não escondê-los.
+While these can sometimes be useful, **please** get into the habit of **fixing any warnings**, and do not ignore or hide them from the compiler by using attributes.
 
 ---
 
-## Testando falhas
+## Testing errors
 
-[topo](#li%C3%A7%C3%A3o-4---m%C3%B3dulos)
+[top](#topics)
 
-Criamos testes para garantir que erros aconteçam quando erros devem acontecer também.
+We can also create tests that expect an error, and therefore testing in this manner guarantees that we are also taking care of any possible (expected) errors in our functions. 
 
 ```rust
     #[test]
@@ -282,8 +273,10 @@ Criamos testes para garantir que erros aconteçam quando erros devem acontecer t
     }
 ```
 
-O teste acima irá causar pânico, mas esperamos pânico. Então o teste será um sucesso.
+The function above is **expected** to panic, and therefore when it does, our test passes.
 
-Se a operação não causar pânico, ou causar pânico com uma mensagem diferente do esperado ("expected"). O teste irá falhar.
+On the flip side, if our functions doesn't panic or does so with a different message that the one we specified, our test will fail. 
 
-A [próxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage) será sobre uso de macros.
+Lesson 4 :white_check_mark: ... **Done! Congratulations!**
+
+Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage) will be about Rust's modules.

@@ -10,7 +10,7 @@ use near_sdk::{
 pub fn env_setup(){
     let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-    // attributes we can set with the builder:
+    // fields than can be set with the builder
     // current_account_id
     // signer_account_id
     // signer_account_pk

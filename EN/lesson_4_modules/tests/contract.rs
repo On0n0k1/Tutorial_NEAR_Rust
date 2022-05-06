@@ -1,12 +1,11 @@
-//! Este módulo irá testar a funcionalidade do contrato.
+//! This module tests the Smart Contract
 
-// common será um módulo com funções úteis para todos outros testes.
+// the 'common' module contains utility functions to be used in all our tests
 mod common;
 
-// Diretório tests age como a própria crate.
-// So when we import our own modules, 
-// Então quando importamos nossos próprios módulos,
-// referimos a estes como "lesson_4_modules::" em vez de "crates::"
+// The 'test' directory is its own crate, 
+// So when we import our own modules we need to refer to them as
+// "lesson_4_modules::" instead of "crates::"
 use lesson_4_modules::Contract;
 
 use common::env_setup;
@@ -18,13 +17,13 @@ pub fn get_phrase() {
 
     let contract: Contract = Contract::default();
 
-    // Usamos derive(Default) para Contract.
-    // o padrão derivado para String é uma string vazia.
+    // we used derive(Default) in our contract
+    // and the default for String is an empty string
     assert_eq!(contract.get_phrase(), "");
 }
 
 
-/// Esta função irá atribuir "Hello from crate::a_module".
+/// Assigns "Hello from crate::a_module" to phrase and test the value afterwards
 #[test]
 pub fn hello() {
     env_setup();
@@ -40,7 +39,7 @@ pub fn hello() {
 }
 
 
-/// Esta função irá atribuir "Hello from crate::a_module::specific_module".
+/// Assigns "Hello from crate::a_module::specific_module"  to phrase and test the value afterwards
 #[test]
 pub fn hello1() {
     env_setup();
@@ -56,7 +55,7 @@ pub fn hello1() {
 }
 
 
-/// Esta função irá atribuir "Hello from another_module".
+/// Assigns "Hello from another_module"  to phrase and test the value afterwards
 #[test]
 pub fn hello2() {
     env_setup();
@@ -72,7 +71,7 @@ pub fn hello2() {
 }
 
 
-/// Esta função irá atribuir "Hello from yet_another_module".
+/// Assigns "Hello from yet_another_module"  to phrase and test the value afterwards
 #[test]
 pub fn hello3() {
     env_setup();
@@ -87,8 +86,7 @@ pub fn hello3() {
     );
 }
 
-
-/// Esta função irá atribuir "Called a deep function".
+/// Assigns "Called a deep function"  to phrase and test the value afterwards
 #[test]
 pub fn hello4() {
     env_setup();
@@ -104,9 +102,9 @@ pub fn hello4() {
 }
 
 
-/// Esta função entrará em panico com a messagem "A panic has just happened" quando chamado.
-// Podemos testar situações que causam pânico.
-// expected garante que estamos entrando em pânico pelo motivo certo.
+// We can also test error situations, known as 'panic'
+// This function will raise an error (panic) with the message "A panic just happened"
+// Our test checks if indeed panic happened, and will pass if this was the case
 #[test]
 #[should_panic(expected = "A panic has just happened")]
 pub fn this_will_panic() {

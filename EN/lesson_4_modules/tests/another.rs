@@ -1,8 +1,8 @@
-//! Cada arquivo rusts no diretório tests é testado individualmente.
-//! Não há necessidade de incluí-los usando mod.
+//! Each rust file in the tests directory will be run individually
 
-// Descomente a linha abaixo e verá um aviso de erro "privado".
-// Isso é porque é público apenas dentro da crate. E "tests" age como a própria crate.
+
+// Uncomment the line below to get a 'private' warning from the compiler
+// this happens because this module is public within the same crate, but 'tests' is its own crate
 // use lesson_4_modules::a_module::specific_module::hello;
 
 #[test]

@@ -1,50 +1,49 @@
-//! Este exemplo foca na administração de módulos.
+//! This example focused on module management
 //! 
 //! 
 //!
-//! A ordem para importação de crates e modulos é, normalmente:
+//! The search order for crates and modules is normally:
 //! 
-//!  - padrão (std), 
-//!  - outras crates (como near-sdk), 
-//!  - crates nesta workspace, 
-//!  - e módulos locais.
+//!  - default (std), 
+//!  - other crates (like near-sdk), 
+//!  - crates in the workspace, 
+//!  - local modules.
 //!
 //! 
-//! "mod file" diz ao compilador que o arquivo nesse diretório local deve ser compilado também.
-//! Para usarmos o módulo utilizamos "use".
+//! 'mod modname' tells the compiler to compile files in the directory, or file, with that name
+//! and to use bring into scope the module we then use the keyword 'use'
 //! 
-//! "pub mod" quer dizer que outros módulos podem usar dito módulo, senão é privado.
-//! "pub use" pode ser usado para o mesmo propósito.
-//! A diferença sendo que arquivos podem ser organizados de certa forma, e módulos de library em outra, mais conveniente.
-//! 
+//! 'pub mod' allows other modules to access and use the module
+//! 'pub use' works like the above (bring into scope)
 
-// Esta linha está dizendo que existe um arquivo ou diretório com nome "a_module" e deve ser compilado.
-// "mod.rs" é uma forma necessária de um diretório ser reconhecido como módulo.
+// Here we declare there's a module called 'a_module' and it is public
+// (which can be either a file with that name, or a directory with that name and a mod.rs file inside the directory)
 pub mod a_module;
-// Esta linha esta dizendo que o arquivo "another_module.rs" é parte deste projeto e deve ser compilado.
+// Here we declare 'another_module' (in our example, a file called 'another_module.rs')
 mod another_module;
 
-// Esta linha é outra forma de declarar módulos, não precisa de "mod.rs", mas acho mais desorganizado.
+// and one more file based module
 mod yet_another_module;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 #[allow(unused_imports)]
 use near_sdk::{env, near_bindgen};
 
-// Podemos usar "as" para dar apelidos a funções ou módulos importados.
+// we can use the 'as' keyword to alias functions
 use a_module::hello as hello;
 use a_module::specific_module::hello as hello1;
 
-// pub use torna a função disponível para crates externos.
+// and we can use 'pub use' to export function as public to external crates
 pub use another_module::hello as hello2;
 pub use yet_another_module::hello as hello3;
 
 
-// A localização atual de "a_deep_function"  é "yet_another_module::internal_module::a_deep_module::a_deep_function."
-// Mas este endereço é privado, e "yet_another_modulo" chamou "pub use" para a função. Em outras palavras, mais limpo.
+// the actual location (path) of 'a_deep_function' is 'yet_another_module::internal_module::a_deep_module::a_deep_function'
+// but this full path is private. 
+// however, remember we used 'pub use' for this function on 'yet_another_module' and so we can use that shorter path 
 use yet_another_module::a_deep_function as hello4;
 
-// Descomente a linha adiante para receber um aviso de erro "isto é privado".
+// uncomment the following line to get a compiler error (private access)
 // use another_module::this_is_private;
 
 pub use a_module::specific_module::this_will_panic;
@@ -53,7 +52,7 @@ pub use a_module::specific_module::this_will_panic;
 near_sdk::setup_alloc!();
 
 
-// Esta função irá fazer nosso código menos bagunçado.
+// this function will help to keep cleaner code
 pub fn log(message: &str) {
     env::log(message.as_bytes());
 }
@@ -68,52 +67,50 @@ pub struct Contract {
 
 #[near_bindgen]
 impl Contract{
-    /// Retorna a String armazenada.
+    /// Returns the stored string value
     pub fn get_phrase(&self) -> String {
         self.stored_phrase.clone()
     }
 
-    /// A função irá imprimir "Hello from crate::a_module" e 
-    /// atribuir essa string ao valor armazenado.
+    /// Logs "Hello from crate::a_module" and 
+    /// stores that string value 
     pub fn hello(&mut self) {        
         self.stored_phrase = hello();
         log(&hello());
     }
 
-    /// A função irá imprimir "Hello from 
-    /// crate::a_module::specific_module" e atribuir essa string ao 
-    /// valor armazenado.
+    /// Logs "Hello from crate::a_module::specific_module" and 
+    /// stores that string value 
     pub fn hello1(&mut self) {
         self.stored_phrase = hello1();
         log(&hello1());
     }
 
-    /// A função irá imprimir "Hello from another module" e 
-    /// atribuir essa string ao valor armazenado.
+    /// Logs "Hello from another module" and 
+    /// stores that string value 
     pub fn hello2(&mut self) {
         self.stored_phrase = hello2();
         log(&hello2());
     }
 
-    /// A função irá imprimir "Hello from yet_another_module" 
-    /// e atribuir essa string ao valor armazenado.
+    /// Logs "Hello from yet_another_module" and 
+    /// stores that string value 
     pub fn hello3(&mut self) {
         self.stored_phrase = hello3();
         log(&hello3());
     }
 
-    /// A função irá imprimir "Called a deep function" e 
-    /// atribuir essa string ao valor armazenado.
+    /// Logs "Called a deep function" and 
+    /// stores that string value 
     pub fn hello4(&mut self) {
         self.stored_phrase = hello4();
         log(&hello4());
     }
 
-    /// Esta função irá entrar em pânico com a mensagem "A panic 
-    /// just happened" quando chamado.
+    /// this function will panic when called, with a message "A panic just happened"
     pub fn this_will_panic() {    
         this_will_panic();
     }
 }
 
-// Testes estão no diretório tests. Muito útil para projetos grandes.
+// Tests can be found in the 'tests' directory. This best practice helps with keeping our code organized. 

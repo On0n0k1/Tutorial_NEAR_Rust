@@ -1,8 +1,6 @@
-//! Entre usar mod.rs ou um arquivo rust com mesmo nome. 
-//! É apenas uma questão de manter o arquivo rust no diretorio pai ou filho.
-//! 
-//! 
-
+//! Declaring modules:
+//! Use a directory name for the module you want and put a mod.rs file in it, 
+//! or create a .rs file with the same filename as the module you want
 pub mod specific_module;
 
 
