@@ -11,7 +11,7 @@
 
 // imports
 use near_sdk::{
-    // Arugments received and return values will be converted to/from JSON with borsh
+    // Arguments received and return values will be converted to/from JSON with borsh
     borsh::{
         self,
         BorshDeserialize,

@@ -1,4 +1,4 @@
-# Lesson 3 - Structs
+# Lesson 3: Structs
 
 [back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
@@ -98,6 +98,8 @@ pub struct Contract {
 }
 ```
 See how this Smart Contract is annotated with `derive`? When you `derive`, it means the compiler is able to provide a basic implementation for some traits, but you can manually implement them if more complex behavior is needed. Here, `derive` for `Default` will make sure **all fields** of `Contract` have a `.default()` function. This also means that `StructExample` must also implement the `Default` trait. 
+
+:hand: Be sure to read about [Serialization Protocols](https://www.near-sdk.io/contract-interface/serialization-interface) if you want a deeper understanding of how BorshSerialize and BorshDeserialize works in NEAR. 
 
 ```rust
 impl Default for StructExample{

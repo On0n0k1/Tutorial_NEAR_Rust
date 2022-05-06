@@ -3,7 +3,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 
 
-// Macro que gera codigo boilerplate para o projeto. Vai ser deprecado nas proximas versões.
+// A Macro that generates boilerplate code for NEAR. For v.4 setup_alloc() will be deprecated. 
 near_sdk::setup_alloc!();
 
 
@@ -15,7 +15,7 @@ pub struct Contract {
 
 impl Default for Contract{
     fn default() -> Self {
-        // Inicializar com a String "A default string" como exemplo
+        // Initialize name with a value of "A default string"
         return Contract {
             name: String::from("A default string"),
         };
@@ -25,69 +25,69 @@ impl Default for Contract{
 
 #[near_bindgen]
 impl Contract{
-    // &str é uma referencia para uma string
-    // strings entre aspas " " são 'static &str
-    // então ter &str como parâmetro permite ter tanto &String como "uma string estatica como essa"
-    /// Retorna o tamanho da string.
+    // &str is a string reference
+    // strings between " " are string literals or 'static &str
+    // and having a &str as a parameter allows for &String as well as String literals such as "a string like this"
+    /// Returns the length of a string
     fn this_takes_a_reference(name: &str) -> usize { 
         return name.len();
     }
 
-    // Essa função faz o mesmo que o de cima, mas recebe uma String como parâmetro.
-    // Teriamos que converter para uma String dessa forma: String::from("essa")
-    /// Retorna o tamanho da string.
+    // This functions does the same as the previous one, but uses a String parameter
+    // We can create a String by using the function String::from("our text")
+    /// Returns the size of a string
     fn this_takes_the_ownership(name: String) -> usize {
-        // retorna usize, usize é u32 em sistemas 32 bit, u64 em sistemas 64 bit
+        // return usze, which is u32 in 32-bit systems, and u64 in 64-bit sytems
         name.len()
     }
 
-    /// Retorna o tamanho da string armazenada.
+    /// Returns the size of the string stored in the name variable
     pub fn get_length(&self) -> u32 {
-        // Irá chamar ambos os métodos para mostrar que ambos fazem a mesma coisa.
+        // Let's call both functions to show they do the same thing
         //
-        // Adicionando & antes de cada parametro é o mesmo que dizer:
-        // "Estou dando permissão para esta função olhar o valor dessa variável, mas não estou dando permissão para modificá-lo".
+        // Borrowing: Adding & to each argument is allowing the function to use the variable's value, but not modify it
         let length_reference: usize = Self::this_takes_a_reference(&self.name);
 
-        // this_takes_the_ownership quer ter possessão de uma String, então precisamos criar uma cópia para essa.
+        // Ownership: this function takes ownership of the string, and therefore we need to clone it 
+        // notice there's no &
         let length_ownership: usize = Self::this_takes_the_ownership(self.name.clone());
 
-        // Chamando assert_eq para provar que ambas são iguais.
-        // Se os valores são diferentes, o código entra em pânico.
+        // Let's use assert_eq to test both functions returned the same value
+        // if they are different, the code will panic
         assert_eq!(
-            // primeiro parâmetro para comparar
+            // first value to compare
             length_reference, 
-            // segundo parâmetro para comparar
+            // second value to compare
             length_ownership, 
-            // Se ambas não são iguais, entra em pânico com a mensagem de erro abaixo
-            "Ambos tamanhos não são o mesmo {} e {}", length_reference, length_ownership,
+            // if they're not equal, panic with the provided message
+            "The are not the same size {} and {}", length_reference, length_ownership,
         );
 
-        // Converter para u32 porque é um formato simples para json
-        // tipos podem ser convertidos usando as traits "into" e "from" também
+        // Convert to u32, this is simple format for json serialization
+        // types can be converted using traits, by implementing "into" and "from"
         length_reference as u32
     }
 
 
-    /// Retorna o tamanho da String armazenada. Também muda o nome para "Changed name"
+    /// Return the size of the string stored in the name variable, but change its value
     pub fn get_length_again(&mut self) -> u32 {
-        // podemos declarar variaveis que armazenam referencias para um outro valor.
+        // we can declare variables that store references to another value
         let a_reference: &String = &self.name;
         let _another_reference: &String = &self.name;
         let _yet_another_reference: &String = &self.name;
 
 
-        // Podemos ter varias referências imutaveis ao mesmo tempo.
-        // Mas não podemos alterar uma variavel enquanto referências imutáveis existirem.
-        // Se precisarmos tirar uma referência mutavel, não devem haver referências imutaveis existindo.
+        // We can have many immutable references
+        // but we can't change a variable's value while these references exist
+        // If we needed a mutable reference, you can't have any existing immutable references
 
-        // Descomente a linha adiante para receber um erro devido a referências existentes.
+        // Uncomment the following line to raise an error: existing borrow
         // self.name = String::from("Changed name");
 
         let length = Self::this_takes_a_reference(a_reference);
 
-        // A linha adiante é ok porém, porque as referências acima não são usadas novamente.
-        // Como não são usadas novamente, o compilador sabe que pode liberá-las da memória.
+        // this next line is Ok, since a reference is no longer used (borrow)
+        // and the compiler can drop the borrow
         self.name = String::from("Changed name");
 
         length as u32
@@ -109,7 +109,7 @@ mod tests{
     fn env_setup(){
         let mut builder: VMContextBuilder = VMContextBuilder::new();
 
-        // atributos que podemos modificar com o builder
+        // fields that can be changed via the builder
         // current_account_id
         // signer_account_id
         // signer_account_pk
@@ -150,13 +150,13 @@ mod tests{
     
         let mut contract: Contract = Contract::default();
     
-        // Ambas funções fazem a mesma coisa, então ambas devem retornar o mesmo valor.
+        // Both functions to the same thing, so both must return the same value
         assert_eq!(
             contract.get_length(),
             contract.get_length_again()
         );
 
-        // get_length_again também modifica a string armazenada.
+        // get_length_again also modified the stored string value or the name field
         assert_eq!(
             contract.name,
             "Changed name"
