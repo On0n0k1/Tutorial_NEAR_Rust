@@ -1,4 +1,7 @@
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    serde::{ Serialize, Deserialize },
+};    
 
 
 // As duas funções a seguir são declaradas para
@@ -28,7 +31,8 @@ pub fn log(message: &str){
 ///  - Example0::FOURTH
 ///  - Example0::FIFTH
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example0{
     First,
     Second,
@@ -102,7 +106,8 @@ impl Example0{
 /// Use enums para agrupar tipos diferentes que compartilham uma funcionalidade semelhante.
 /// 
 /// 
-#[derive(Clone, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example1{
     NoValue,
     AnInteger(i32),
@@ -123,7 +128,7 @@ impl Example1{
     // Porem, vale lembrar que um método ou função deve retornar apenas um tipo de resultado especificado.
     //
     // Um desenvolvedor pode tentar criar uma função get que retorna o valor armazenado.
-    // Isso será dificil de implementar.
+    // Isso pode ser dificil de implementar.
     // 
     // A forma mais simples de uma função get seria converter para um mesmo tipo.
     // Seguem alguns exemplos:
@@ -147,10 +152,7 @@ impl Example1{
         }
     }
 
-
-    // Também pode-se criar uma função para retornar cada tipo.
-
-    /// true se o valor do enum
+    /// true se o enum for Example1::NoValue.
     pub fn is_no_value(&self) -> bool{
         log("Calling Example1::is_no_value");
 
@@ -210,7 +212,8 @@ impl Example1{
 /// 
 /// Criado apenas para mostrar um exemplo de implementação de struct em match.
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Employee{
     pub name: String,
     pub id: u32,
@@ -257,7 +260,8 @@ impl Default for Employee{
 ///  - Employee: passe (codificado) para acesso. Lista de ações. Lista de permissões no sistema.
 ///  - Client: apenas lista de pedidos.
 /// 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Example2User{
     Admin{ name: String, id: u32, pass: String, actions: Vec<String> },
     Client{ name: String, id: u32, orders: Vec<String> },
@@ -324,11 +328,11 @@ impl Example2User{
 
     /// Retorna a lista de ações se for Admin ou Employee.
     /// 
-    /// Como exemplo, digamos que o design de projeto necessita de retornar
+    /// Como exemplo, digamos que o sistema precisa retornar
     /// um erro, se o usuário for um Client.
     /// 
     /// Result é semelhante a Option. Mas é usado para representar ações que podem causar erros.
-    /// Explicado na proxima sub-seção.
+    /// Explicado na proxima seção.
     pub fn get_actions(&self) -> Result<Vec<String>, String> {
         log("Calling Example2User::get_actions");
         

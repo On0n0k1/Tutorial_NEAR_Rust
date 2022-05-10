@@ -1,312 +1,308 @@
-# Lição 5 - Uso de Macros
+# Lesson 5 - Macros
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/)
 
-Macros são a ferramenta principal para a utilização efetiva da linguagem rust. Não é necessário saber como criar macros. Mas é essencial entender o que são e como usá-los.
+Macros are a fundamental tool if you want to be an effective Rust developer. While it is not necessary to learn how to create them, you definitely need to learn how to use them.
 
 ---
 
-## API de Contrato
+## Smart Contract API
 
 ```rust
-/// Esta função mostra as diferenças entre println e env::log
-/// Execute com ```cargo test -- --nocapture```, compile, implante e execute em Near.
-/// Note como algumas mensagens aparecem e outras não.
+/// This function shows the differences between println and env::log
+/// Run `cargo test -- --nocapture`, compile, deploy and run in NEAR.
+/// Note how some messages will show up and some will not. 
 pub fn print_examples();
 
-/// Exemplos de format. Compare o output com a implementação.
+/// Format examples. Check the output depending on how it is implemented.
 pub fn format_examples();
 
-/// Exemplo de panico.
+/// Panic examples.
 pub fn panic_example();
 
-/// Exemplo de usos de vec.
+/// Using Vec (vectors) examples
 pub fn vec_examples();
 ```
 
-## Tópicos
+## Topics
 
- - [O que são macros](#o-que-são-macros)
+ - [What is a Macro?](#what-is-a-macro)
  - [Macros "function-like"](#macros-"function-like")
- - [Vantagens](#vantagens)
- - [Desvantagens](#desvantagens)
- - [Exemplos](#exemplos)
-   - [format, println e panic](#format-println-e-panic)
-   - [vec](#vec)
+ - [Advantages](#vantagens)
+ - [Disadvantages](#desvantagens)
+ - [Examples](#exemplos)
+   - [format, println and panic](#format-println-and-panic)
+   - [Compound types](#compound-types)
    - [setup_alloc](#setup_alloc)
- - [Extra: String e str](#extra-string-e-str) 
+ - [Extra: String and str](#extra-string-and-str) 
 
 ---
 
-## O que são macros
+## What is a Macro?
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
-Macros são ferramentas que geram código. Macros são executados em tempo de compilação. 
+Quite simply, a **macro** is a tool run at compile time that generates code. They're part of something called _metaprogramming_, which helps you write less code, which in turn also decreases the amount of code you have to maintain down the road.
 
-As instruções derive são um macro:
+The annotation `derive` is a Macro: 
 
 ```rust
 #[derive(Clone, Default, BorshDeserialize, BorshSerialize)]
 pub struct Contract {
 ```
+In this case, the `derive` annotation is used to apply a trait to new types. 
 
-Instruções derive servem para aplicar traits a novos tipos. A instrução a seguir é outro tipo de macro chamado "atributo":
+There's another type of Macro, in which you annotate types with "attributes":
 
 ```rust
 #[near_bindgen]
 impl Contract{
 ```
 
-Mas discutiremos macros "function-like" (semelhantes a funções). Como o nome descreve, são usados com a mesma lógica do chamado de funções. Alguns exemplos:
+Finally, let's go over some "function-like" macros. As the name implies, these resemble a function call where you can even provide arguments. Some examples would be:
 
 ```rust
-// Imprime o string formatado ao output padrão
+// Prints a string using the provided format pattern
 println!("{}", message);
 
-// Formata os argumentos em um String
+// Format arguments as a String
 format!("7");
 
-// Formata uma String e entra em pânico com a mensagem formatada
-// "Entrar em pânico" Encerra o runtime retornando uma mensagem de erro.
-panic!("Panico com alguns argumentos: {} {} {}", 1, second, 3);
+// Panic and provide an error message formatted to match the given pattern
+panic!("Panic with arguments: {} {} {}", 1, second, 3);
 
-// Recebe uma lista de argumentos e retorna um Vec com os valores alocados.
+// Creates a Vec with the the list of arguments
 vec![1, 2, 3, 4];
 
-// Gera código de fôrma (boilerplate) necessário para o funcionamento do contrato
+// Create boilerplate code for Smart Contract
 near_sdk::setup_alloc!();
 
-// Usado em testes.
-// Usa o argumento Context para gerar o contexto de ambiente da máquina virtual.
+// Used in Tests.
+// Uses the builder argument to create a Context for the virtual machine environment
 testing_env!(builder.build());
 
 ``` 
-
 ---
 
-## Macros "function-like"
+## "function-like" Macros
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
-Esses macros são usados como funções, mas existem algumas diferenças.
+These macros are used like functions, but there are some differences between them. For one, they are more flexible since they can take an unknown number of arguments. 
 
-Podem ter um número variado de parâmetros. Rust é uma linguagem "statically typed", ou seja, o compilador precisa saber exatamente onde memória é criada e onde é liberada. Porém, macros podem retornar código. Ou seja, um macro como ```println``` ou ```format``` recebem os argumentos e montam um bloco de código antes do compilador checar por erros.
-
-Outra diferença que pode ser vista com o exemplo de ```vec```:
+Let's use `vec` to see another difference: 
 
 ```rust
 vec![1, 2, 3, 4];
 ```
-
-Esta implementação vec é demarcada com ``` [ ] ``` em vez de ``` ( ) ```, macros também podem ser demarcados com ``` { } ```. Macros podem ter literalmente qualquer tipo de texto dentro dos demarcadores. Um desenvolvedor pode escrever qualquer coisa como argumento macro, contanto que a implementação entenda os parâmetros.
-
----
-
-## Vantagens
-
-[topo](#lição-5---uso-de-macros)
-
- - Simplifica o código.
- - É executado durante compilação. Se bem implementado, macros podem ser eficientes com pouco ou nenhum overhead.
+`Vec!` uses square brackets `[]` instead of parentheses `()`, but remember that macros also use curly brackets `{}` in their definition. Macros can use any type of text inside these delimiters, and a developer can pass anything as an argument as long as the macro implementation understands it. 
 
 ---
 
-## Desvantagens
+## Advantages
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
- - Um desenvolvedor precisa pesquisar a documentação de cada novo macro que encontram.
- - Podem ser mais dificeis de "debugar".
- - Aumentam o tempo de compilação.
- - Podem "inflar" o código com implementação "invisivel".
+ - Simplifies code.
+ - They're run at compilation time, so if they are well implemented, they are very efficient and carry little or no overhead. 
 
 ---
 
-## Exemplos
+## Disadvantages
 
-A seguir recomendamos alguns macros "function-like" úteis.
+[top](#topics)
+
+ - A developer need to take a close look at the documentation for each macro that is in the code. 
+ - They can make debugging harder. 
+ - They increase overall compilation time.
+ - They can "blow up" your code base with "ghost" (invisible) code. 
 
 ---
 
-### format, println e panic
+## Useful Macros
 
-[topo](#lição-5---uso-de-macros)
+Here are some macros we find very useful
 
-Os macros ```panic```, ```println``` e ```format``` são escritos da mesma forma.
+---
 
- - ```format``` retorna um String.
- - ```println``` imprime o String no output padrão.
- - ```panic``` encerra a execução e retorna o String como mensagem de erro.
+### `format!`, `println!` and `panic!`
+
+[top](#topics)
+
+ - `format!` returns a formatted String.
+ - `println!` prints a String using a formatting pattern.
+ - `panic!` stops execution and prints a String as an error message.
 
 ```rust
-println!("Isso é um println!, não aparece na máquina virtual");
+println!("This is println!, it wont show up in the virtual machine");
 
-// Criamos uma variavel "message" e associamos uma String de valor "format retorna uma String formatada".
-let message: String = format!("format retorna uma string formatada.");
+// We create a "message" variable of type String with a value of "format returns a formatted string."
+let message: String = format!("remember format {}", "returns a formatted string");
 
-// Encerra execução com a mensagem de erro "Panico com alguns argumentos: 1 2 3"
+// Stops execution with an error message "Panic with some arguments: 1 2 3"
 let second = 2;
-panic!("Panico com alguns argumentos: {} {} {}", 1, second, 3);
+panic!("Panic with some arguments: {} {} {}", 1, second, 3);
 
 ```
+Using these macros is quite simple: your first argument would be a formatting string, which includes placeholders "{}" for arguments you'll be providing as arguments later. 
 
-A utilização destes macros é bem simples. Um str como primeiro argumento ([detalhes](#extra-string-e-str)). Cada "{}" é substituido pelos argumentos após o primeiro.
-
-Podemos customizar a formatação de diversas formas. Mais informações, cheque o [link de documentação sobre formatação](https://doc.rust-lang.org/std/fmt/index.html). Abaixo incluimos algumas úteis utilizações:
+You can customize string formatting in several ways, so be sure to learn more about [formatting](https://doc.rust-lang.org/std/fmt/index.html). Here are some examples:
 
 ```rust
-// Exemplos de format
+// format Examples
 log("\n\nformat_examples:\n");
  
-let message: String = format!("Format retorna uma String formatada");
+let message: String = format!("Format returns a formatted string");
 
 let an_arg = "third";
 
-// format pode receber argumentos usando {} 1 second third
-let message = format!("format pode receber argumentos usando {{}}: {}, {}, {}.", 1, "second", an_arg);
+// format! can receive sequential arguments using {}. 
+let message = format!("format can receive argument using {{}}: {}, {}, {}.", 1, "second", an_arg);
 
 let (first, second, third) = (1, "second", an_arg);
 
-// Podemos especificar argumentos dessa forma: 1 second third
-let message = format!("Podemos especificar argumentos dessa forma: {first}, {second}, {third}.");
+// we can specify arguments by using their names
+let message = format!("We can also specify argument by variable names: {first}, {second}, {third}.");
 
-// Podemos especificar a ordem de argumentos de format: 1 second third
-let message = format!("Podemos especificar a ordem de argumentos de format: {1}, {2}, {0}.", third, first, second);
+// we can also specify them by position
+let message = format!("We can also specify them by position: {1}, {2}, {0}.", third, first, second);
 
 let (first, second, third) = (1, 2, 3);
-// Podemos fazer inteiros mostrarem um número arbitrário de digitos: 01 0002      3
-let message = format!("Podemos fazer inteiros mostrarem um número arbitrário de digitos: {:02}, {:04}, {:6}.", first, second, third);
+// we can also specify formatting options, in this case, number-formatting (digits)
+let message = format!("We can specify digits for numbers: {:02}, {:04}, {:6}.", first, second, third);
 
-// Escolhendo número de digitos e ordem: 01    2 000003
-let message = format!("Escolhendo número de digitos e ordem: {2:02}, {0:4}, {1:06}.", second, third, first);
+// specifying position and number-formatting
+let message = format!("And specify digits and ordering: {2:02}, {0:4}, {1:06}.", second, third, first);
 
 let (first, second, third) = (0.1, 1.23, -2.45);
-// Podemos escolhar a precisão de números racionais: 0.10 1.230 -2.450000
-let message = format!("Podemos escolhar a precisão de números racionais: {:.2}, {:.4}, {:.6}", first, second, third);
+// we can also specify precision for floating points
+let message = format!("We can specify precision for floating points: {:.2}, {:.4}, {:.6}", first, second, third);
 
-// Podemos escolher a precisão e número de digitos: 0.10 0001.2300 -00002.450000
-let message = format!("Podemos escolher a precisão e número de digitos: {:2.2}, {:04.4}, {:06.6}", first, second, third);
+// specify precision and number of digits
+let message = format!("And specify precision and number of digits: {:2.2}, {:04.4}, {:06.6}", first, second, third);
 
-// Podemos escolher a precisão, o número de digitos e a ordem dos argumentos: 00.10    1.2300 -00002.450000
-let message = format!("Podemos escolher a precisão, o número de digitos e a ordem dos argumentos: {1:02.2}, {2:4.4}, {0:06.6}", third, first, second);
+// specify precision, number of digits and argument position
+let message = format!("We can specify precision, digits and ordering of arguments: {1:02.2}, {2:4.4}, {0:06.6}", third, first, second);
 
-// Mesmo que o acima:  0.10 0001.2300      -2.450000
-let message = format!("Mesmo que o acima: {first:2.2}, {second:04.4}, {third:6.6}");
+// same as the previous one, but using argument names
+let message = format!("Same as the previous one, but using argument names: {first:2.2}, {second:04.4}, {third:6.6}");
 
 ```
 
 ---
 
-### vec
+### Compound types
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
-Uma rápida discussão sobre algumas formas de agrupar valores. 
+Let's go over some ways to group data (formally called compound types).
 
-Tuplas possuem tamanho imutavel:
+Tuples are fixed-length (they cannot grow or shrink):
 
 ```rust
-// Uma tupla com inteiros
-let tupla: (u32, u32, u32) = (0, 1, 4);
+// an integer tuple
+// you can have different types for each of the tuple's elements
+// tuples use ()
+let a_tuple: (u32, u32, u32) = (0, 1, 4);
 
-// Acessando um valor
-// O segundo valor é 1
-println!("O segundo valor é {}", tupla.1);
+// we can access tuple values by index number
+println!("The 2nd value is {}", a_tuple.1);
 ```
 
-Arrays possuem tamanho imutável, são armazenados na pilha (stack).
+Arrays are also fixed-length, and are stored on the stack. 
+Unlike tuples, every element of an array must have the same type.
 
 ```rust
-// Uma forma de declarar um array
-let lista = [0, 1, 2];
+// declaring an array
+// arrays use []
+let an_array = [0, 1, 2];
 
-// Acessando um valor
-// O terceiro valor é 2
-println!("O terceiro valor é {}", lista[2]);
+// we access array values using indices
+// remember we start at 0
+println!("The 3rd value is {}", an_array[2]);
 
-// um array com 10 inteiros inicializados com 0.
-// Esse método só permite inicializar com valores iguais, não tente inicializar com uma função.
-let mut lista: [i32; 10] = [0; 10];
+// here we declare an array with 10 integers that have a default value of 0
+let mut another_array: [i32; 10] = [0; 10];
 
-// Alterando um valor
-lista[0] = -1;
+// let's change the first element, at index 0
+another_array[0] = -1;
 
-// Acessando um valor
-// O primeiro valor é -1
-println!("O primeiro valor é {}", lista[0]);
+// let's get the first element's value, which we changed from 0 to -1 above
+println!("The first element's value is {}", another_array[0]);
 ```
+Arrays and Tuples are primitive types, and always keep in mind that these are fixed length. If we needed more flexibility, we can use collections. We have Rust collections and NEAR collections; the former are a part of the language, while the latter are stored on a data structure called a ["trie"](https://en.wikipedia.org/wiki/Trie). You need to learn about Rust collections in order to come up with quality code and logic, and you need to learn NEAR collections to come up with the most efficient way to save state on the blockchain.
 
-Arrays e tuplas são primitivos. Não podemos alterar o número de elementos desses grupos. Para armazenar conjuntos de valores de forma mais prática usamos coleções. Temos coleções rust, que são mais generalizadas, e coleções Near, que são armazenadas na "trie". O entendimento de coleções rust é importante para uma boa lógica de funções. O entendimento de coleções Near é importante para armazenamento eficiente de estado.
 
- - [Detalhes](https://doc.rust-lang.org/std/collections/) sobre coleções Rust para bom funcionamento de métodos.
- - [Detalhes](https://docs.rs/near-sdk/latest/near_sdk/collections/index.html) sobre coleções Near para bom armazenamento de estado.
+ - Learn about [Rust collections]((https://doc.rust-lang.org/std/collections/)).
+ - Learn about [NEAR collections](https://docs.rs/near-sdk/latest/near_sdk/collections/index.html) (use these when developing Smart Contracts).
 
-A coleção rust mais utilizada é ```Vec```([detalhes](https://doc.rust-lang.org/std/vec/struct.Vec.html)). Com este tipo, podemos armazenar dados, observar a quantidade de elementos, acessar e alterar os elementos. O que é uma boa solução para a maior parte dos casos.
+Probably the most useful (and used) collection in Rust is `Vec`. [Learn more](https://doc.rust-lang.org/std/vec/struct.Vec.html) about it. Using this type, we can store data, known as elements, count them, access and change them too. 
 
-**Detalhe:** ```vec``` (letra minuscula) é o macro para criação de vetores ```Vec```. ```Vec``` (letra maiuscula) refere-se ao tipo do vetor.
+:hand: **NOTE:** lowercase `vec!` is a macro to generate vectors (note the ! at the end), while uppercase `Vec` is a type (a struct actually).
 
-Podemos criar um ```Vec``` da seguinte forma:
-
+We can create a vector specifying explicit values: 
 ```rust
-// Vec com os números 1 2 3 4
+// Vec with integers 1 2 3 4
 let example = vec![1, 2, 3, 4];
 ```
 
-Podemos criar um ```Vec``` com vários valores iguais:
-
+We can also create a vector specifying the default value and the quantity of elements we want:
 ```rust
-// Vec com os números 0 0 0 0 0
+// Vec with 5 elements, default value of 0, which is then vector [0, 0, 0, 0, 0]
 let example = vec![0;5];
 ```
-
-Imprimir valores de conjuntos pode demandar muito tempo de processamento. Devido a isso, para usar um conjunto de elementos em um ```println```, ```format``` ou ```panic```, precisamos explicitar que é impresso em modo debug.
+Formatting and printing values can be a bother, but Rust comes to our rescue by providing out-of-the-box solutions with Debug and Pretty-print formatting utilities that work with `println!`, `format!` and `panic!`. 
 
 ```rust
 let example = vec![1, 2, 3, 4];
 
-log(&format!("Podemos imprimir vetores com modo debug:\n{:?}\n\n", example));
+// using debug formatting
+log(&format!("Let's print a vector with debug formatting:\n{:?}\n\n", example));
+// using pretty-print formatting
+log(&format!("Let's print it using \"pretty print\":\n{:#?}\n\n", example));
 
-log(&format!("Podemos imprimir vetores em \"formato legivel\":\n{:#?}\n\n", example));
-
-log(&format!("Podemos fazer o mesmo com tuplas:\n{:#?}\n\n", (1, 2, 3)));
-
-log(&format!("Podemos criar vetores com valores padrão:\n{:?}\n\n", vec![0;5]));
+// using debug formatting
+log(&format!("We can do the same with tuples:\n{:#?}\n\n", (1, 2, 3)));
+// using debug formatting
+log(&format!("Let's create vectors with default values:\n{:?}\n\n", vec![0;5]));
 ```
 
-Formatação ```{:?}``` é "formatação debug".
+When you specify `{:?}`, that means apply debug formatting.
+You can also use `{:#?}` for pretty-print formatting, which makes the values more legible. Most of the time pretty-print will output an element per line.
 
-Formatação ```{:#?}``` é "formatação pretty print". É o mesmo que o acima, porém escrito de uma forma mais legivel para um usuário. Normalmente simplesmente significa um elemento por linha.
+Feel free to learn more about [module std::fmt](https://doc.rust-lang.org/std/fmt/index.html), and deep dive into utilities for formatting and printing strings.
 
-Para implementar formatação debug em um struct ou enum, cheque o [link sobre formatação](https://doc.rust-lang.org/std/fmt/trait.Debug.html).
+You can also learn more about implementing the [Debug trait](https://doc.rust-lang.org/std/fmt/trait.Debug.html) on structs or enums.
 
 ---
 
 ### setup_alloc
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
-Deve ser usado antes da declaração do contrato. Gera código que deveria ser escrito repetidas vezes em cada contrato.
+This macro needs to be placed prior to declaring a Smart Contract. Its will generate the boilerplate code needed for everthing to work. 
 
 ```rust
 near_sdk::setup_alloc!();
 ```
 
-É necessário na versão de near_sdk atual (```3.1.0```). Nas versões seguintes, será deprecado.
+:warning: **NOTE:** Starting from version 4.x of the NEAR SDK, this macro will be deprecated. However, adding the `setup_alloc!()` macro is needed for version 3.x.
 
 ---
 
-## Extra: String e str
+## Extra: `String` and `str`
 
-[topo](#lição-5---uso-de-macros)
+[top](#topics)
 
-```String``` e ```str``` são dois tipos diferentes. String é um tipo que mantem ownership de uma string. ```str``` é um tipo usado para referências a strings. Estes tipos existem para minimizar cópias de strings durante o runtime.
+`String` e `str` are two very different types. `String` is a type which keeps ownership of a string, but `str` (known as a string slice), is commonly used to keep references to strings; this type exists to minimize string copies at runtime. 
 
-Lembrar: 
- - ```str``` é sempre usado como ```&str```. ```&str``` aplica para "strings como essa" e ```&String```;
- - Sempre que for precisar de uma referência para uma ```String``` em uma função, use ```&str```. Não use ```&String```.
- - "Strings como essa" são do tipo ```&'static str```. Mais detalhes na seção sobre lifetimes. Teoricamente, são strings que nunca são removidas da memória, mas isso depende da otimização do compilador.
+:warning: **Remember:**
+ - The `str` type will be used as `&str`. This applies to a "string like this one in quotes" but also `&String`.
+ - Anytime you need a reference to a `String` in a function, use `&str` and not `&String`. 
+ - String literals like "this one in quotes" are actually `&'static str`. If this looks complicated, don't worry, you'll learn all about this when we discuss Lifetimes. In theory, this type of strings will never be dropped from memory, but that behavior will actually depend on optimizations done by the compiler. 
 
-A [proxima lição](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums) será sobre enums.
+ 
+Lesson 5 :white_check_mark: ... **Done! Congratulations!**
 
+Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums) will be about Enums.
 
