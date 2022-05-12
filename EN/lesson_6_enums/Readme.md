@@ -5,9 +5,10 @@
 This lesson is sub-divided into four sessions. As each session will be a crate of its own, we will take the time to learn about workspaces and how to use them.
 
 Here's a quick overview of sessions:
- - [Session 1 - Declaring and usig Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
+ - [Session 1 - Declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
  - [Session 2 - Implementing a Thermometer using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_2_thermometer/).
  - Session 3 - Pragmatic and Efficient error handling.
+ - Session 4 - TBD.
 
 ---
 
@@ -45,7 +46,7 @@ members = [
 members = ["member1", "path/to/member2", "crates/*"]
 exclude = ["crates/foo", "path/to/other"]
 ```
-In the example above, we included 3 paths, and excluded 2. You can also see there's support for wildcards, called [globs](https://docs.rs/glob/0.3.0/glob/struct.Pattern.html) (or Unix shell style patterns), to match multiple paths. 
+In the example above, we included 3 paths, and excluded 2. There's support for wildcards, called [globs](https://docs.rs/glob/0.3.0/glob/struct.Pattern.html) (or Unix shell style patterns), to match multiple paths. 
 
 ---
 
@@ -90,7 +91,7 @@ All documentation will be located in './target/doc/lesson_6_1_simple/index.html'
 
 Lesson 6 Intro :white_check_mark: ... **Done! Congratulations!**
 
-Let's move on to next section to learn more about [declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
+Let's move on to the next section to learn more about [declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
 
 
 Or you can move even further and jump to Lesson 7, which will be about Traits.
