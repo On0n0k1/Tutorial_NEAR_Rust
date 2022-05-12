@@ -114,7 +114,7 @@ impl Contract{
         log("\n\n----------------------------------------------------------------------\n\n");
     }
 
-    /// Exemplo de panico.
+    /// Example for panic!
     pub fn panic_example() {
         log("\n\npanic_example:\n\n\n");
 
@@ -125,7 +125,7 @@ impl Contract{
 
     }
 
-    /// Exemplo de usos de vec.
+    /// Example for vec!
     pub fn vec_examples() {
         log("\n\nvec_examples:\n");
 

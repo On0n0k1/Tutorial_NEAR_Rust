@@ -277,6 +277,8 @@ The function above is **expected** to panic, and therefore when it does, our tes
 
 On the flip side, if our functions doesn't panic or does so with a different message that the one we specified, our test will fail. 
 
+
+---
 Lesson 4 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage) will be about Rust's modules.

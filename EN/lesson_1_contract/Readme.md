@@ -289,6 +289,8 @@ You can probably see there's a pattern in these tests:
 
 The function `get` was tested first and this is because it will be used in the following tests. If this function would have not passed the test, we would have to fix it first, before moving on to the other functions. 
 
+
+---
 Lesson 1 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership) will be about Rust's concept of **Ownership**.

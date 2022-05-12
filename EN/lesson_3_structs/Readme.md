@@ -205,6 +205,8 @@ However, as we used `self` instead of `&self`, as well as `&mut self` as an argu
 
 :hand: **NOTE:** a beginner will probably get a confusing error from the compiler while attempting to write the code above, such as "value used here after move".
 
+
+---
 Lesson 3 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules) will be about Rust's modules.

@@ -27,10 +27,10 @@ pub fn vec_examples();
 ## Topics
 
  - [What is a Macro?](#what-is-a-macro)
- - [Macros "function-like"](#macros-"function-like")
- - [Advantages](#vantagens)
- - [Disadvantages](#desvantagens)
- - [Examples](#exemplos)
+ - ["function-like" Macros](#"function-like"-macros)
+ - [Advantages](#advantages)
+ - [Disadvantages](#disadvantages)
+ - [Useful Macros](#useful-macros)
    - [format, println and panic](#format-println-and-panic)
    - [Compound types](#compound-types)
    - [setup_alloc](#setup_alloc)
@@ -121,9 +121,7 @@ vec![1, 2, 3, 4];
 
 ## Useful Macros
 
-Here are some macros we find very useful
-
----
+Here are some macros we find very useful.
 
 ### `format!`, `println!` and `panic!`
 
@@ -301,7 +299,8 @@ near_sdk::setup_alloc!();
  - Anytime you need a reference to a `String` in a function, use `&str` and not `&String`. 
  - String literals like "this one in quotes" are actually `&'static str`. If this looks complicated, don't worry, you'll learn all about this when we discuss Lifetimes. In theory, this type of strings will never be dropped from memory, but that behavior will actually depend on optimizations done by the compiler. 
 
- 
+
+--- 
 Lesson 5 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums) will be about Enums.

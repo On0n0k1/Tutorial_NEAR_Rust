@@ -266,6 +266,7 @@ pub fn get_length_again(&mut self) -> u32 {
 Calls `this_takes_a_reference` and changes the value of `name` stored in the Smart Contract. You can see that there can be many references to the same variable, but be sure to change these as specified [in the code's comments](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_2_ownership/src/lib.rs) to see how the compiler reacts.
 
 
+---
 Lesson 2 :white_check_mark: ... **Done! Congratulations!**
 
 Our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_3_structs) will be about Rust's structs.
