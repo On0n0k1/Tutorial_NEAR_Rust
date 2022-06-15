@@ -1,6 +1,7 @@
 use near_sdk::{
     borsh::{ BorshDeserialize, BorshSerialize, self,},
     env,
+    serde::{ Deserialize, Serialize },
 };
 
 
@@ -28,7 +29,8 @@ pub type Level = u32;
 
 
 // Attributes are ordered according to priority here, not alphabetic order
-#[derive(Clone, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, BorshDeserialize, BorshSerialize, Deserialize, Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Character{
     name: Name,
     class: Class,

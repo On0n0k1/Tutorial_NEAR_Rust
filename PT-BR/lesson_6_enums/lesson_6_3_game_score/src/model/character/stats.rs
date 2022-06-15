@@ -1,13 +1,17 @@
-use near_sdk::borsh::{
-    BorshDeserialize,
-    BorshSerialize,
-    self,
+use near_sdk::{
+    borsh::{
+        BorshDeserialize,
+        BorshSerialize,
+        self,
+    },
+    serde::{ Deserialize, Serialize },
 };
 
 use crate::model::character::Class;
 
 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Stats{
     dexterity: u32,
     // How much it increases each level

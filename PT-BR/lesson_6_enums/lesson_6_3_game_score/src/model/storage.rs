@@ -10,5 +10,4 @@ pub enum StorageKey {
     Players,
     Characters(AccountId),
     CharacterNames(AccountId),
-    Ranking,
 }

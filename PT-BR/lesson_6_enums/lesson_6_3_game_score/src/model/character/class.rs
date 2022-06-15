@@ -1,7 +1,10 @@
-use near_sdk::borsh::{
-    BorshDeserialize,
-    BorshSerialize,
-    self,
+use near_sdk::{
+    borsh::{
+        BorshDeserialize,
+        BorshSerialize,
+        self,
+    },
+    serde::{ Deserialize, Serialize },
 };
 
 
@@ -12,8 +15,9 @@ use crate::model::{
     Errors,
 };
 
-
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+/// classes: "Warrior" | "Druid" | "Rogue" | "Priest"
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Class{
     Warrior,
     Druid,

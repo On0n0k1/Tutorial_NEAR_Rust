@@ -1,6 +1,7 @@
 use near_sdk::{
     AccountId,
     borsh::{ BorshDeserialize, BorshSerialize, self },
+    serde::{ Deserialize, Serialize },
 };
 
 use crate::model::{
@@ -11,7 +12,8 @@ use crate::model::{
 
 
 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct HighScore{
     character: Character,
     score: Score,
@@ -52,46 +54,34 @@ impl HighScore{
         }
     }
 
-    /// If a high score has been achieved, return a new one. Else, return None.
-    pub fn score_comparison(&self, score: Score, character: &Character, player: AccountId) -> Option<HighScore> {
-        if score > self.score {
-            return Some(HighScore::new(
-                score, 
-                character,
-                player,
-            ));
-        }
+    /// Makes a comparison between the new and old high scores. If a new high_score for the player is achieved, return it.
+    pub fn update_highscore(
+        current_highscore: &mut Option<HighScore>,
+        new_high_score: Option<HighScore>,
+    ) -> Result<Option<HighScore>, Errors> {
 
-        None
-    }
-
-    pub fn update_highscore(current_highscore: &mut Option<HighScore>, character: &Character, score: Score, player: AccountId) -> Result<Option<HighScore>, Errors> {
-        match &current_highscore {
-            None => {
-                let high_score: HighScore = HighScore::new(
-                    score, 
-                    &character,
-                    player,
-                );
-
-                Ok(Some(high_score))
+        // This match will stop assigning the new highscore if one has not been achieved.
+        match (&current_highscore, &new_high_score) {
+            (_, None) => { 
+                // No highscore was achieved by the character.
+                return Ok(None); 
             },
-            Some(value) => {
-                let high_score = value.score_comparison(score, &character, player);
-
-                match high_score{
-                    None => {
-                        return Ok(None);
-                    }
-                    Some(value) => {
-                        *current_highscore = Some(value.clone());
-                        Ok(Some(value))
-                    }
+            (None, Some(_)) => {},
+            (Some(old_high_score), Some(new_high_score)) => {
+                // A character achieved a highscore
+                // there is a highscore recorded.
+                // makes a comparison and maintain the highest.
+                if old_high_score > new_high_score {
+                    return Ok(None);
                 }
-            }
+            },
         }
-    }
 
+        // assign the new highscore
+        *current_highscore = new_high_score.clone();
+
+        return Ok(new_high_score);
+    }
 
     pub fn get_score(&self) -> Score {
         self.score
@@ -102,3 +92,19 @@ impl HighScore{
     }
 
 }
+
+
+// impl std::fmt::Display for HighScore {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         // let mut description: String = format!("Ranking: \n");
+
+//         // for entry in self.values.iter(){
+//         //     // description = format!("   \n{}{}\n", description, String::from_utf8(entry.try_to_vec().unwrap()).unwrap());
+//         //     description = format!("    {}{}\n", description, entry);
+//         // }
+
+//         // description = format!("{}\n", description);
+
+//         write!(f, "{\n    {}\n}\n", description)
+//     }
+// }

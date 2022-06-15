@@ -12,6 +12,8 @@ use near_sdk::{
     env,
 };
 
+mod view;
+
 use crate::model::{
     chapter::Chapter,
     character,
@@ -25,6 +27,8 @@ use crate::StorageKey;
 
 
 pub type Name = AccountId;
+
+pub use view::View;
 
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Player{
@@ -83,7 +87,7 @@ impl Player{
         Ok(())
     }
 
-    fn load_character(&self, name: character::Name) -> Result<Character, Errors> {
+    pub fn load_character(&self, name: character::Name) -> Result<Character, Errors> {
         match self.characters.get(&name){
             None => Err(Errors::CharacterNotFound(name.to_string())),
             Some(character) => Ok(character),
@@ -105,7 +109,10 @@ impl Player{
         let character_name = character.get_name();
         
         self.assert_character_doesnt_exist(&character_name)?;
-        self.characters.insert(&character_name, &character).unwrap();
+        // If this error happens. It's an unexpected server error. That means that something else is going wrong.
+        // It should be reported.
+        assert!(self.characters.insert(&character_name, &character).is_none(), "Server error: Character doesn't exist. Please Report.");
+        self.character_names.insert(&character_name);
 
         Ok(())
     }
@@ -129,25 +136,54 @@ impl Player{
         // validation_report: ValidationReport,
     ) -> Result<Option<HighScore>, Errors> {
         let mut character: Character = self.load_character(character)?;
-        let player: Name = self.name.clone();
 
         let exp: character::EXP = self.latest_chapter.validate_match(
             &character, 
             &score,
         )?;
 
-        // We compute the high score before rewarding the character so 
-        let high_score : Result<Option<HighScore>, Errors> = 
-            HighScore::update_highscore(&mut self.high_score, &character, score, player);
+        let new_character_highscore: Option<HighScore> = character.check_highscore(score);
+
+        let high_score: Option<HighScore> = HighScore::update_highscore(
+            &mut self.high_score, 
+            new_character_highscore,
+        )?;
+
+        // let (old_high_score, new_high_score) = (self.high_score.clone(), high_score.clone());
+
+        // match (old_high_score, new_high_score) {
+        //     (None, Some(value)) => {
+        //         self.high_score = Some(value);
+        //     },
+        //     (Some(old_score), Some(new_score)) => {
+        //         if old_score < new_score {
+        //             self.high_score = Some(new_score)
+        //         };
+        //     },
+        //     _ => {},
+        // };
+
 
         character.reward_exp(exp);
         self.save_character(&character)?;
 
-        high_score
+        Ok(high_score)
     }
 
     pub fn get_name(&self) -> Name {
         self.name.clone()
     }
-}
 
+    pub fn get_view(&self) -> Result<View, Errors> {
+        let name: Name = self.name.clone();
+        let high_score: Option<HighScore> = self.high_score.clone();
+        let mut characters: Vec<Character> = Vec::with_capacity(self.character_names.len() as usize);
+
+        for character_name in self.character_names.iter() {
+            let character: Character = self.load_character(character_name)?;
+            characters.push(character);
+        };
+
+        Ok(View { name, high_score, characters })
+    }
+}

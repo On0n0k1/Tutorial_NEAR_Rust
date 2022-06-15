@@ -2,9 +2,11 @@ mod reward;
 
 use near_sdk::{
     borsh,
-    borsh::{BorshDeserialize, BorshSerialize},
+    borsh::{ BorshDeserialize, BorshSerialize },
     env,
+    serde::{ Deserialize, Serialize },
 };
+
 pub use reward::ChapterReward;
 use crate::model::{
     character::{
@@ -18,7 +20,8 @@ use crate::model::{
 
 // Calculates score/rewards for each match (chapter)
 
-#[derive(BorshDeserialize, BorshSerialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum Chapter{
     Chapter1(Option<u64>),
     Chapter2(Option<u64>),

@@ -20,6 +20,7 @@ use crate::{
         },
         Errors,
         Chapter,
+        player_view,
         Player,
         score::{
             HighScore,
@@ -61,11 +62,18 @@ impl Default for Contract {
 #[near_bindgen]
 impl Contract{
 
+    fn is_owner() -> bool {
+        let predecessor_account_id: AccountId =  env::predecessor_account_id();
+        let current_account_id: AccountId = env::current_account_id();
+
+        predecessor_account_id == current_account_id
+    }
+
     /// Guarantees that the user is not registered.
-    fn assert_user_not_registered(&self) -> Result<(), Errors>{
+    fn assert_user_not_registered(&self) -> Result<(), Errors> {
         let predecessor_account_id = env::predecessor_account_id();
 
-        if self.players.contains_key(&predecessor_account_id) {
+        if self.players.contains_key(&predecessor_account_id) ||  Self::is_owner() {
             // Panic because account already exists.
             return Err(Errors::AccountIsAlreadyRegistered(predecessor_account_id));
         }
@@ -74,6 +82,10 @@ impl Contract{
     }
 
     fn assert_user_registered(&self) -> Result<(), Errors> {
+        if Self::is_owner(){
+            return Ok(());
+        }
+
         let predecessor_account_id = env::predecessor_account_id();
 
         if ! self.players.contains_key(&predecessor_account_id) {
@@ -108,6 +120,8 @@ impl Contract{
         }
     }
 
+    
+
     #[handle_result]
     pub fn register_user(&mut self) -> Result<(), Errors> {
         log!("Register User function called.");
@@ -115,25 +129,17 @@ impl Contract{
 
         // While technically we are calling env::predecessor_account_id twice, LLVM compiler will optimize it away.
         // We can write both low level and high level code efficiently in rust. 
-        // We just need to know when a function represents a low level or high level need.
+        // We just need to decide when a function represents a low level or high level need.
         let predecessor_account_id = env::predecessor_account_id();
         let player = Player::default();
-        self.players.insert(&predecessor_account_id, &player).unwrap();
+        assert!(self.players.insert(&predecessor_account_id, &player).is_none(), "Smart contract error: Expected None after asserting user is not registered. Got some.");
 
         log!("User successfully registered.");
         
         Ok(())
     }
 
-
-    /// Loads and returns an instance of player.
-    #[handle_result]
-    pub fn check_status(&self) -> Result<Player, Errors>{
-        log!("Check Player Status function called.");
-
-        Self::load_player(&self)
-    }
-
+    /// classes: "Warrior" | "Druid" | "Rogue" | "Priest"
     #[handle_result]
     pub fn create_character(&mut self, name: String, class: String) -> Result<(), Errors> {
         log!("Create Character function called.");
@@ -150,6 +156,26 @@ impl Contract{
 
         Ok(())
 
+    }
+
+    /// Loads and returns an instance of player.
+    #[handle_result]
+    pub fn check_status(&self) -> Result<player_view, Errors>{
+        log!("Check Player Status function called.");
+
+        Self::load_player(&self)?
+            .get_view()
+    }
+
+    #[handle_result]
+    pub fn load_character(&self, name: String) -> Result<Character, Errors> {
+        let player = self.load_player()?;
+
+        player.load_character(name)
+    }
+
+    pub fn get_ranking(&self) -> Ranking {
+        self.ranking.clone()
     }
 
     /// Get information about the next match.
@@ -190,19 +216,9 @@ impl Contract{
 
         self.save_player(&player)?;
 
-        match high_score {
-            None => { 
-                // Player didn't achieve a high score.
-                Ok(false) 
-            },
-            Some(high_score) => {
-                log!("New High Score for this Player.");
-
-                self.ranking.new_entry(&high_score);
-
-                Ok(self.ranking.contains(&high_score))
-            }
-        }
+        // So, if player didn't achieve a highscore of their own, it won't checked in the rankings. 
+        // This is to stop a few players from overwhelming the ranking with their name.
+        Ok(self.ranking.check_highscore(&high_score))
     }
 
 
