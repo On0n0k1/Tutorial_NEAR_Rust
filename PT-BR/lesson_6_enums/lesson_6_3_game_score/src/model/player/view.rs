@@ -13,6 +13,7 @@ use crate::model::{
 };
 
 
+/// This type exists only to be returned when player makes a GET request for the player.
 #[derive(Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct View {

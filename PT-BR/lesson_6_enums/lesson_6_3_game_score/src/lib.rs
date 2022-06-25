@@ -122,6 +122,9 @@ impl Contract{
 
     
 
+    /// A user that is not registered can't access the smart contract.
+    /// 
+    /// Add the predecessor to the smart contract.
     #[handle_result]
     pub fn register_user(&mut self) -> Result<(), Errors> {
         log!("Register User function called.");
@@ -139,7 +142,12 @@ impl Contract{
         Ok(())
     }
 
+    /// User must be registered before using this.
+    /// 
+    /// Create a character with given name and class.
+    /// 
     /// classes: "Warrior" | "Druid" | "Rogue" | "Priest"
+    /// 
     #[handle_result]
     pub fn create_character(&mut self, name: String, class: String) -> Result<(), Errors> {
         log!("Create Character function called.");
@@ -155,7 +163,6 @@ impl Contract{
         log!("Character successfully created.");
 
         Ok(())
-
     }
 
     /// Loads and returns an instance of player.
@@ -167,6 +174,7 @@ impl Contract{
             .get_view()
     }
 
+    /// Load a character with the given name and return it.
     #[handle_result]
     pub fn load_character(&self, name: String) -> Result<Character, Errors> {
         let player = self.load_player()?;
@@ -174,6 +182,7 @@ impl Contract{
         player.load_character(name)
     }
 
+    /// Get current ranking.
     pub fn get_ranking(&self) -> Ranking {
         self.ranking.clone()
     }
@@ -221,5 +230,15 @@ impl Contract{
         Ok(self.ranking.check_highscore(&high_score))
     }
 
+    /// Change how many players can be stored in the ranking. The larger the list, the more expensive sorting is.
+    #[handle_result]
+    pub fn set_max_highscore_players(&mut self, max_size: usize) -> Result<(), Errors> {
+        if env::signer_account_id() != env::current_account_id() {
+            return Result::Err(Errors::OwnerOnly);
+        }
 
+        self.ranking.set_max_highscore_players(max_size)?;
+
+        Ok(())
+    }
 }

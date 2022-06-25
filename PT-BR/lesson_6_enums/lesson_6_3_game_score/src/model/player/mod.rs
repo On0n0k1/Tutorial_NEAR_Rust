@@ -30,6 +30,8 @@ pub type Name = AccountId;
 
 pub use view::View;
 
+
+/// Holds information pertaining to a single user.
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Player{
     name: Name,
@@ -43,6 +45,7 @@ pub struct Player{
     latest_chapter: Chapter,
 }
 
+// Initial state of the player.
 impl Default for Player{
     fn default() -> Self {
         let name = env::predecessor_account_id();
@@ -69,6 +72,7 @@ impl Default for Player{
     }
 }
 
+
 impl Player{
     /// Will panic if a character with that name already exists.
     fn assert_character_doesnt_exist(&self, character_name: &character::Name) -> Result<(), Errors> {
@@ -87,6 +91,7 @@ impl Player{
         Ok(())
     }
 
+    /// Returns the character state. Should be replaced by pointer access later.
     pub fn load_character(&self, name: character::Name) -> Result<Character, Errors> {
         match self.characters.get(&name){
             None => Err(Errors::CharacterNotFound(name.to_string())),
@@ -109,6 +114,7 @@ impl Player{
         let character_name = character.get_name();
         
         self.assert_character_doesnt_exist(&character_name)?;
+
         // If this error happens. It's an unexpected server error. That means that something else is going wrong.
         // It should be reported.
         assert!(self.characters.insert(&character_name, &character).is_none(), "Server error: Character doesn't exist. Please Report.");
@@ -117,6 +123,7 @@ impl Player{
         Ok(())
     }
 
+    /// Move to the next chapter.
     pub fn next_match(&mut self){
         self.latest_chapter.next_match();
     }
@@ -149,31 +156,20 @@ impl Player{
             new_character_highscore,
         )?;
 
-        // let (old_high_score, new_high_score) = (self.high_score.clone(), high_score.clone());
-
-        // match (old_high_score, new_high_score) {
-        //     (None, Some(value)) => {
-        //         self.high_score = Some(value);
-        //     },
-        //     (Some(old_score), Some(new_score)) => {
-        //         if old_score < new_score {
-        //             self.high_score = Some(new_score)
-        //         };
-        //     },
-        //     _ => {},
-        // };
-
-
         character.reward_exp(exp);
         self.save_character(&character)?;
 
         Ok(high_score)
     }
 
+    /// Get characters' name.
     pub fn get_name(&self) -> Name {
         self.name.clone()
     }
 
+    /// Returns information about this player as json.
+    /// 
+    /// LookupMap and UnorderedSet can't be serialized into json. We create a View with serializable data types and return it instead.
     pub fn get_view(&self) -> Result<View, Errors> {
         let name: Name = self.name.clone();
         let high_score: Option<HighScore> = self.high_score.clone();

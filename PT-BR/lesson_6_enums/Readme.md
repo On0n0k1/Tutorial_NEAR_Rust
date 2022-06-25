@@ -7,7 +7,7 @@ Esta lição é dividida em 4 partes relacionadas a enums. Cada tópico é uma c
 As sessões são as seguintes:
  - [Parte 1 - Declarando e usando enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
  - [Parte 2 - Termometro implementado com enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer/).
- - Parte 3 - Como implementar erros de forma prática e eficiente.
+ - [Parte 3 - Como implementar erros de forma prática e eficiente](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_3_game_score/).
 
 ---
 

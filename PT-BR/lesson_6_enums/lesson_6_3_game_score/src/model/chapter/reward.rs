@@ -1,21 +1,20 @@
 use crate::model::{
     character::{
         EXP,
-        Level,    
-        Character,
+        Level,
     },
     score::Score,
 };
 
 pub struct ChapterReward{
     /// Base exp reward.
-    exp: EXP,
+    pub exp: EXP,
     /// More exp the higher the score.
-    score_multiplier: f32,
+    pub score_multiplier: f32,
     /// The level character is expected to be.
-    expected_level: Level,
+    pub expected_level: Level,
     /// Less exp the higher the level. More exp the lower the level.
-    level_multiplier: f32,
+    pub level_multiplier: f32,
 }
 
 
@@ -82,7 +81,7 @@ impl ChapterReward{
 
     pub fn compute_reward(
         &self, 
-        character: &Character,
+        character_level: Level,
         score: &Score,
     ) -> EXP {
         let exp = self.exp;
@@ -93,10 +92,66 @@ impl ChapterReward{
 
         let computed_multiplier = Self::compute_level_multiplier(
             level_multiplier, 
-            character.get_level(), 
+            character_level,
             expected_level,
         );
 
         ((exp as f32 + score_bonus as f32) * computed_multiplier) as EXP
+    }
+}
+
+
+#[cfg(test)]
+mod tests{
+    use super::ChapterReward;
+
+
+    fn setup_test() -> ChapterReward {
+        let (
+            exp,
+            score_multiplier,
+            expected_level,
+            level_multiplier,
+        ) = (10, 0.8, 10, 0.9);
+
+        ChapterReward::new(exp, score_multiplier, expected_level, level_multiplier)
+    }
+
+    #[test]
+    fn chapter_reward_new(){
+        
+        let chapter_reward: ChapterReward = setup_test();
+
+        assert_eq!(chapter_reward.exp, 10);
+        assert_eq!(chapter_reward.score_multiplier, 0.8);
+        assert_eq!(chapter_reward.expected_level, 10);
+        assert_eq!(chapter_reward.level_multiplier, 0.9);
+    }
+
+    #[test]
+    fn chapter_reward_compute_reward(){
+        let chapter_reward: ChapterReward = setup_test();
+
+        // Lower level means more exp, up to 5 levels of difference.
+        assert_eq!(chapter_reward.compute_reward(10, &100), 90);
+        assert_eq!(chapter_reward.compute_reward(9, &100), 99);
+        assert_eq!(chapter_reward.compute_reward(8, &100), 108);
+        assert_eq!(chapter_reward.compute_reward(7, &100), 119);
+        assert_eq!(chapter_reward.compute_reward(6, &100), 131);
+        assert_eq!(chapter_reward.compute_reward(5, &100), 144);
+        assert_eq!(chapter_reward.compute_reward(4, &100), 144);
+        assert_eq!(chapter_reward.compute_reward(3, &100), 144);
+        assert_eq!(chapter_reward.compute_reward(2, &100), 144);
+
+        // Higher level means less exp, up to 5 levels of difference.
+        assert_eq!(chapter_reward.compute_reward(10, &100), 90);
+        assert_eq!(chapter_reward.compute_reward(11, &100), 81);
+        assert_eq!(chapter_reward.compute_reward(12, &100), 72);
+        assert_eq!(chapter_reward.compute_reward(13, &100), 65);
+        assert_eq!(chapter_reward.compute_reward(14, &100), 59);
+        assert_eq!(chapter_reward.compute_reward(15, &100), 53);
+        assert_eq!(chapter_reward.compute_reward(16, &100), 53);
+        assert_eq!(chapter_reward.compute_reward(17, &100), 53);
+        assert_eq!(chapter_reward.compute_reward(18, &100), 53);
     }
 }

@@ -15,7 +15,7 @@ use crate::model::{
     Errors,
 };
 
-/// classes: "Warrior" | "Druid" | "Rogue" | "Priest"
+/// classes: "Warrior" | "Druid" | "Rogue" | "Priest".
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub enum Class{

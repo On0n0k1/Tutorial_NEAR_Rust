@@ -29,6 +29,8 @@ pub type Level = u32;
 
 
 // Attributes are ordered according to priority here, not alphabetic order
+
+/// Represents a playable character in the game.
 #[derive(Clone, BorshDeserialize, BorshSerialize, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Character{
@@ -57,6 +59,7 @@ impl Character {
         }
     }
 
+    /// Create a new character to be used by the player.
     pub fn new(name: Name, class: Class) -> Result<Character, Errors> {
         let level: Level = 1;
         let xp: EXP = 0;

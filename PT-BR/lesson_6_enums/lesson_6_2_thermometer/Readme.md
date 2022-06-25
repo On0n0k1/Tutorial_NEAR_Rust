@@ -1089,7 +1089,7 @@ A trait ```std::fmt::Display``` parece complicado, mas simplesmente permite o us
 
 [topo](#lição-6---2-termômetro)
 
-A próxima seção mostrará aplicações úteis para Result.
+A [próxima seção](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_3_game_score/) mostrará aplicações úteis para Result.
 
 A próxima lição será sobre traits.
 

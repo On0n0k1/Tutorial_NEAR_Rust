@@ -7,17 +7,27 @@ use near_sdk::{
 
 use crate::model::{
     score::HighScore,
+    Errors,
     // StorageKey,
 };
 
 // Just for this exampĺe, we just want max 10 values in the ranking.
-const RANKSIZE: usize = 10;
+// const RANKSIZE: usize = 10;
 
+
+/// Contains the top ranked matches stored in the smart contract.
+/// 
+/// It's just a vector. So to avoid high costs sorting.
+/// 
+/// We limit the max number of entries to RANKSIZE.
+/// 
+/// Suggestion for change. Store the score of the lowest highscore in the ranking. 
+/// Only update and sort the list when a value higher than such is included.
 #[derive(BorshDeserialize, BorshSerialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Ranking{
-    // values: Vector<HighScore>,
     values: Vec<HighScore>,
+    max_size: usize,
 }
 
 impl Serialize for Ranking {
@@ -32,42 +42,37 @@ impl Serialize for Ranking {
 impl Default for Ranking{
     fn default() -> Self {
         // let values: Vec<HighScore> = Vector::new(StorageKey::Ranking);
-        let values: Vec<HighScore> = Vec::with_capacity(RANKSIZE);
+        let max_size: usize = 10;
+        let values: Vec<HighScore> = Vec::with_capacity(max_size);
 
-        Self { values }
+        Self { 
+            values,
+            max_size,
+        }
     }
 }
 
 impl Clone for Ranking{
     fn clone(&self) -> Self {
-        let mut values: Vec<HighScore> = Vec::with_capacity(RANKSIZE);
+        let max_size: usize = self.max_size.clone();
+        let mut values: Vec<HighScore> = Vec::with_capacity(max_size);
         
         for value in self.values.iter(){
             values.push(value.clone());
         }
 
-        Self { values }
+        Self { 
+            values,
+            max_size,
+        }
     }
 }
 
 
-
-
 impl Ranking{
     fn sort_and_resize(&mut self) {
-        // let mut values: Vec<HighScore> = self.values.to_vec();
-        // values.sort();
-
-        // for index in 0..values.len(){
-        //     self.values.replace(index as u64, &values[index]);
-        // }
-
-        // Remove excessive values.
-        // values.truncate(RANKSIZE);
-
-
         self.values.sort();
-        self.values.truncate(RANKSIZE);
+        self.values.truncate(self.max_size);
     }
 
     fn new_entry(&mut self, entry: HighScore) {
@@ -85,6 +90,18 @@ impl Ranking{
         }
 
         false
+    }
+
+    pub fn set_max_highscore_players(&mut self, max_size: usize) -> Result<(), Errors>{
+        let limit = 1000;
+
+        if max_size > limit {
+            return Err(Errors::ExcessiveMaxRankingPlayers(limit, max_size));
+        }
+
+        self.max_size = max_size;
+
+        Ok(())
     }
 
     pub fn check_highscore(
@@ -110,19 +127,3 @@ impl Ranking{
     }
 
 }
-
-
-// impl std::fmt::Display for Ranking {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         let mut description: String = format!("Ranking: \n");
-
-//         for entry in self.values.iter(){
-//             // description = format!("   \n{}{}\n", description, String::from_utf8(entry.try_to_vec().unwrap()).unwrap());
-//             description = format!("    {}{}\n", description, entry);
-//         }
-
-//         description = format!("{}\n", description);
-
-//         write!(f, "{}", description)
-//     }
-// }

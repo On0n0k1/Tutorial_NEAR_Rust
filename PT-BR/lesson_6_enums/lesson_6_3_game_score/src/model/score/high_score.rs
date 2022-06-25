@@ -11,7 +11,7 @@ use crate::model::{
 };
 
 
-
+/// Represents a highscore for a player or character.
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct HighScore{
@@ -20,27 +20,37 @@ pub struct HighScore{
     player: AccountId,
 }
 
+// Used for ordering HighScores within a Vec
 impl Ord for HighScore {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.score.cmp(&other.score)
     }
 }
 
+// Required by Ord.
 impl PartialOrd for HighScore {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
 
+// Used for partial comparisons between HighScores. Required by Ord and Eq.
+//
+// A = B sometimes doesn't mean B = A.
 impl PartialEq for HighScore {
     fn eq(&self, other: &Self) -> bool {
         self.score == other.score
     }
 }
 
+// Used for comparisons between HighScores. Required by Ord.
+//
+// This implies that A = B means B = A.
 impl Eq for HighScore {}
 
+
 impl HighScore{
+    /// Returns a new instance of Highscore.
     pub fn new(
         score: Score,
         character: &Character,
@@ -54,7 +64,7 @@ impl HighScore{
         }
     }
 
-    /// Makes a comparison between the new and old high scores. If a new high_score for the player is achieved, return it.
+    /// Makes a comparison between the new and old high scores. If a new high_score for the player is achieved, update current and return a copy.
     pub fn update_highscore(
         current_highscore: &mut Option<HighScore>,
         new_high_score: Option<HighScore>,
@@ -83,28 +93,14 @@ impl HighScore{
         return Ok(new_high_score);
     }
 
+    /// Returns score achieved.
     pub fn get_score(&self) -> Score {
         self.score
     }
 
+    /// Returns character for this highscore.
     pub fn get_character(&self) -> Character {
         self.character.clone()
     }
 
 }
-
-
-// impl std::fmt::Display for HighScore {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         // let mut description: String = format!("Ranking: \n");
-
-//         // for entry in self.values.iter(){
-//         //     // description = format!("   \n{}{}\n", description, String::from_utf8(entry.try_to_vec().unwrap()).unwrap());
-//         //     description = format!("    {}{}\n", description, entry);
-//         // }
-
-//         // description = format!("{}\n", description);
-
-//         write!(f, "{\n    {}\n}\n", description)
-//     }
-// }
