@@ -35,7 +35,6 @@ impl Default for Chapter{
 }
 
 impl Chapter {
-
     fn get_time(&self) -> Option<u64> {
         match self{
             Chapter::Chapter1(value) => value.clone(),

@@ -6,7 +6,6 @@ use near_sdk::{
 
 use crate::model::{
     character::Character,
-    Errors,
     score::Score,
 };
 
@@ -68,13 +67,13 @@ impl HighScore{
     pub fn update_highscore(
         current_highscore: &mut Option<HighScore>,
         new_high_score: Option<HighScore>,
-    ) -> Result<Option<HighScore>, Errors> {
+    ) -> Option<HighScore> {
 
         // This match will stop assigning the new highscore if one has not been achieved.
         match (&current_highscore, &new_high_score) {
             (_, None) => { 
                 // No highscore was achieved by the character.
-                return Ok(None); 
+                return None; 
             },
             (None, Some(_)) => {},
             (Some(old_high_score), Some(new_high_score)) => {
@@ -82,7 +81,7 @@ impl HighScore{
                 // there is a highscore recorded.
                 // makes a comparison and maintain the highest.
                 if old_high_score > new_high_score {
-                    return Ok(None);
+                    return None;
                 }
             },
         }
@@ -90,7 +89,7 @@ impl HighScore{
         // assign the new highscore
         *current_highscore = new_high_score.clone();
 
-        return Ok(new_high_score);
+        return new_high_score;
     }
 
     /// Returns score achieved.

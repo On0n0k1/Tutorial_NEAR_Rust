@@ -154,7 +154,7 @@ impl Player{
         let high_score: Option<HighScore> = HighScore::update_highscore(
             &mut self.high_score, 
             new_character_highscore,
-        )?;
+        );
 
         character.reward_exp(exp);
         self.save_character(&character)?;

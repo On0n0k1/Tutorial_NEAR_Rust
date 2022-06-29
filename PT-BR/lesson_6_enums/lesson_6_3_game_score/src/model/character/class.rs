@@ -25,20 +25,6 @@ pub enum Class{
     Priest,
 }
 
-impl Class{
-    pub fn new(class: &str) -> Result<Class, Errors> {
-        let class = match &class.to_ascii_lowercase()[..]{
-            "warrior" => { Class::Warrior },
-            "druid" => { Class::Druid },
-            "rogue" => { Class::Rogue },
-            "priest" => { Class::Priest },
-            invalid => { return Err(Errors::InvalidClassName(String::from(invalid))) },
-        };
-
-        Ok(class)
-    }
-}
-
 
 impl From<&str> for Class{
     fn from(class: &str) -> Class{
@@ -75,6 +61,18 @@ impl From<&Class> for String {
 }
 
 impl Class {
+    pub fn new(class: &str) -> Result<Class, Errors> {
+        let class = match &class.to_ascii_lowercase()[..]{
+            "warrior" => { Class::Warrior },
+            "druid" => { Class::Druid },
+            "rogue" => { Class::Rogue },
+            "priest" => { Class::Priest },
+            invalid => { return Err(Errors::InvalidClassName(String::from(invalid))) },
+        };
+
+        Ok(class)
+    }
+
     /// Return base stats for given class, used by Character;
     pub fn get_stats(&self) -> Stats {
 

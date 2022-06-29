@@ -1,6 +1,6 @@
 use near_sdk::{
     borsh::{ BorshDeserialize, BorshSerialize, self},
-    // collections::Vector,
+    env,
     log, 
     serde::{Deserialize, Serialize},
 };
@@ -28,6 +28,7 @@ use crate::model::{
 pub struct Ranking{
     values: Vec<HighScore>,
     max_size: usize,
+    lowest_high_score: Option<HighScore>,
 }
 
 impl Serialize for Ranking {
@@ -44,10 +45,12 @@ impl Default for Ranking{
         // let values: Vec<HighScore> = Vector::new(StorageKey::Ranking);
         let max_size: usize = 10;
         let values: Vec<HighScore> = Vec::with_capacity(max_size);
+        let lowest_high_score: Option<HighScore> = None;
 
         Self { 
             values,
             max_size,
+            lowest_high_score,
         }
     }
 }
@@ -56,6 +59,7 @@ impl Clone for Ranking{
     fn clone(&self) -> Self {
         let max_size: usize = self.max_size.clone();
         let mut values: Vec<HighScore> = Vec::with_capacity(max_size);
+        let lowest_high_score: Option<HighScore> = self.lowest_high_score.clone();
         
         for value in self.values.iter(){
             values.push(value.clone());
@@ -64,32 +68,36 @@ impl Clone for Ranking{
         Self { 
             values,
             max_size,
+            lowest_high_score,
         }
     }
 }
 
 
 impl Ranking{
+
     fn sort_and_resize(&mut self) {
         self.values.sort();
         self.values.truncate(self.max_size);
     }
 
+    /// This is only called when the ranking list is full.
+    /// Add the entry to the list, sort it, then remove all the excess elements.
+    /// Finally, set the lowest high score value to the element at the end of the list.
     fn new_entry(&mut self, entry: HighScore) {
         self.values.push(entry);
 
         // Sort the highscores and resize it to RANKSIZE (If it has more values than RANKSIZE)
         self.sort_and_resize();
-    }
 
-    fn contains(&self, other: &HighScore) -> bool {
-        for  entry in self.values.iter(){
-            if *other == *entry {
-                return true;
+        let lowest_high_score = self.values.last();
+
+        match lowest_high_score {
+            None => env::panic_str("Smart contract implementation error. This should never happen. Called Ranking::new_entry and got a None."),
+            Some(lowest) => {
+                self.lowest_high_score = Some(lowest.clone());
             }
         }
-
-        false
     }
 
     pub fn set_max_highscore_players(&mut self, max_size: usize) -> Result<(), Errors>{
@@ -116,12 +124,38 @@ impl Ranking{
             Some(high_score) => {
                 log!("New High Score for this Player.");
 
-                // Ranking has a max number of top scores.
-                // This will include an entry. Sort the top scores and remove any excess entries.
-                self.new_entry(high_score.clone());
+                // Compiler will apply branchless optimization to all these if/else statements.
+                if self.lowest_high_score.is_none() {
+                    // This is the first entry, so just include it.
+                    self.new_entry(high_score.clone());
 
-                // If the current high score is included in the top scores, a new one has been achieved.
-                self.contains(&high_score)
+                    return true;
+                } else {
+                    // This is not the first entry.
+                    // The list may be full or not.
+                    let ranking_is_full: bool = self.values.len() == self.max_size;
+
+                    if !ranking_is_full {
+                        // If the list is not full, just include it.
+                        self.new_entry(high_score.to_owned());
+
+                        return true;
+                    } else {
+                        // .unwrap will never panic because of the first "if" above. It is always Some.
+                        // We are cloning because unwrap will take ownership of this mutable reference.
+                        let lowest_high_score = self.lowest_high_score
+                            .clone()
+                            .unwrap();
+
+                        if lowest_high_score < *high_score {
+                            self.new_entry(high_score.clone());
+
+                            return true;
+                        }
+                        
+                        false
+                    }
+                }
             }
         }
     }

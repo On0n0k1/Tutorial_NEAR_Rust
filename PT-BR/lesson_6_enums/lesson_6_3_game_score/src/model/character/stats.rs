@@ -22,9 +22,9 @@ pub struct Stats{
     strength: u32,    
     strength_rate: u32,
     strength_base: u32,
-    inteligence: u32, 
-    inteligence_rate: u32,
-    inteligence_base: u32,
+    intelligence: u32, 
+    intelligence_rate: u32,
+    intelligence_base: u32,
 }
 
 impl Stats{
@@ -33,10 +33,10 @@ impl Stats{
         dexterity_rate: u32,
         strength_base: u32,
         strength_rate: u32,
-        inteligence_base: u32,
-        inteligence_rate: u32,
+        intelligence_base: u32,
+        intelligence_rate: u32,
     ) -> Self {
-        let (dexterity, strength, inteligence) = (dexterity_base, strength_base, inteligence_base);
+        let (dexterity, strength, intelligence) = (dexterity_base, strength_base, intelligence_base);
 
         Stats { 
             dexterity, 
@@ -45,9 +45,9 @@ impl Stats{
             strength,
             strength_rate,
             strength_base,
-            inteligence,
-            inteligence_rate,
-            inteligence_base,
+            intelligence,
+            intelligence_rate,
+            intelligence_base,
         }
     }
 
@@ -59,11 +59,11 @@ impl Stats{
 
         let dexterity: u32 = self.dexterity_base + self.dexterity_rate * level;
         let strength: u32 = self.strength_base + self.strength_rate * level;
-        let inteligence: u32 = self.inteligence_base + self.inteligence_rate * level;
+        let inteligence: u32 = self.intelligence_base + self.intelligence_rate * level;
 
         self.dexterity = dexterity;
         self.strength = strength;
-        self.inteligence = inteligence;
+        self.intelligence = inteligence;
     }
 }
 
