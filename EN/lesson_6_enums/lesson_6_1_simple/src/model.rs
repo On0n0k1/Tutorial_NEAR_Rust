@@ -48,17 +48,17 @@ impl Default for Example0{
 }
 
 
-// Semelhante a structs, implementamos métodos no namespace de Exemplo0 a seguir:
+// Similar to structs, let's implement some function on our enum Example0
 impl Example0{
 
-    /// Observa o valor de si mesmo e retorna um número entre 1 e 5.
+    /// Check its own value and returns a number from 1..5.
     /// 
-    /// Note o &self, significando que a função acessa o valor, mas não altera.
+    /// We use a reference &self, meaning we only access the value, not modify it
     /// 
     pub fn get_number(&self) -> u32 {
         log("Calling Example0::get_number");
 
-        // Instruções match são semelhantes a uma 
+        // and here we match enum choices/options to return values
         match self {
             Example0::First => {1},
             Example0::Second => {2},
@@ -68,27 +68,26 @@ impl Example0{
         }
     }
 
-    /// true se o valor for Exemplo0::THIRD
+    /// true if own enum value is set to Example0::Third
     pub fn is_third(&self) -> bool {
 
         log("Calling Example0::is_third");
 
-        // match compara os valores iniciando do topo
-        // se colocarmos um nome de variavel, o branch acerta
-        // e a variavel possui o valor no bloco associado.
+        // match compares value in the order specified, 
+        // and if assign a variable to a match, that variable will have the return value
+        // of the match block.
         //
-        // Uma variável que começa com o caracter _ é uma variável que
-        // não pretendemos utilizar.
+        // A variable starting with an underscore, is a variable whose value we don't care about
+        // and that we will probably not be using later on
         //
-        // Devido a isso, _ sempre será "matched", as alternativas
-        // abaixo nunca serão acessadas.
+        // So, a _ for our last case, as seen below, will match to anything else
         match self {
             Example0::Third => true,
             _ => false,
             // Exemplo0::SECOND => {
-            //     // Descomente esse bloco e receberá um aviso
-            //     // Essa branch nunca será alcançada
-            //     // Porque a branch acima aplica a qualquer pattern.
+            //     // uncomment the above
+            //     // and you'll get an error beause _ is above it 
+            //     // and that means this SECOND enum option will never be reached
             //     false
             // },
         }
@@ -96,15 +95,14 @@ impl Example0{
 }
 
 
-/// Um enum permite um objeto representar vários tipos diferentes:
+/// An enum allows different typs to be grouped into a single concept or entity
 /// 
-/// Este exemplo possui o objetivo de mostrar que usar um enum como conteiner de valores não é uma boa ideia.
+/// This example shows that using enums for complex types (composability) is not really a good idea.
 /// 
-/// Os métodos de enum devem retornar resultados simples.
-/// Tentar retirar os valores armazenados em enums para serem usados fora adiciona complexidade desnecessária ao código.
+/// Function in enums should return simple results.
+/// Having to 'extract' the underlying values in enums so they can be used only adds complexity.
 /// 
-/// Use enums para agrupar tipos diferentes que compartilham uma funcionalidade semelhante.
-/// 
+/// Use enums to group different types that seem to share similar concepts.
 /// 
 #[derive(Clone, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -125,20 +123,20 @@ impl Default for Example1{
 
 
 impl Example1{
-    // Porem, vale lembrar que um método ou função deve retornar apenas um tipo de resultado especificado.
+    // Remember that functions must return one specific result type
     //
-    // Um desenvolvedor pode tentar criar uma função get que retorna o valor armazenado.
-    // Isso pode ser dificil de implementar.
+    // A developer might be tempted to create a get function to return the stored value but that 
+    // can be difficult to implement.
     // 
-    // A forma mais simples de uma função get seria converter para um mesmo tipo.
-    // Seguem alguns exemplos:
-    //  - Retornar o valor como String
-    //  - Usar Borsh ou serde para serializar o valor para bytes, deserializando após o recebimento.
-    //  - Implementar genéricos. serão explicados em outra lição.
-    //  - Retornar um ponteiro? A possibilidade disso ser necessário é baixa. O custo de complexidade é muito alto.
+    // The simplest way to go about it is to have your function convert enum options as needed into a single (common) return type
+    // Here are some examples:
+    //  - Return a value as a String
+    //  - Use borsh or serde to serialize the value to bytes, to later deserialize after receiving the result
+    //  - Implement generic. We'll go over this in a future lesson.
+    //  - Return a "pointer"? There's a VERY low probability that is really necessary, and the complexity increases a lot.
     // 
 
-    // O método a seguir retorna apenas um tipo, isso é aceitável para o compilador.
+    // Our function will return just a String type 
     pub fn get(&self) -> String {
         log("Calling Example1::get");
 
@@ -152,7 +150,7 @@ impl Example1{
         }
     }
 
-    /// true se o enum for Example1::NoValue.
+    /// true if enum is Example1::NoValue.
     pub fn is_no_value(&self) -> bool{
         log("Calling Example1::is_no_value");
 
@@ -163,17 +161,18 @@ impl Example1{
     }
 
 
-    /// Retorna um inteiro, se o enum for essa alternativa.
+    /// Return an integer, if the enum value is that choice
     ///
-    /// Option será explicado em detalhes na próxima seção.
+    /// Option will be exlained in a future lesson. 
     ///
-    /// Option é um enum da biblioteca padrão (standard).
-    /// Representa a possibilidade de possuir um valor ou não.
-    /// Option pode ser Option::Some(valor) ou Option::None.
+    /// Option is an enum of the std library.
+    /// It means that we can have a value or not
+    /// Option could be Option::Some(value) or Option::None.
+    /// There's no NULL in Rust!
     pub fn get_an_integer(&self) -> Option<i32>{
         log("Calling Example1::get_an_integer");
 
-        // valor será uma referência, clonamos o valor para não retornar uma referência.
+        // value is a reference, so we clone the value to return an actual value and not a reference.
         match self{
             Example1::AnInteger(valor) => Some(valor.clone()),
             _ => None
@@ -181,7 +180,7 @@ impl Example1{
     }
 
 
-    /// Retorna true se possui algum numero inteiro impar,
+    /// Returns true if the enum represents an odd number
     pub fn has_an_odd_number(&self) -> bool {
         log("Calling Example1::has_an_odd_number");
 
@@ -200,7 +199,7 @@ impl Example1{
                 return (valor0%2 == 1) || (valor1%2 == 1);
             },
             Example1::ACLikeStruct { first, second: _ } => {
-                // Não temos interesse no segundo valor que é String
+                // We don't care about the second value, so we use an underscore
                 first%2 == 1
             },
         }
@@ -208,9 +207,7 @@ impl Example1{
 }
 
 
-/// Tipo criado para o exemplo abaixo.
-/// 
-/// Criado apenas para mostrar um exemplo de implementação de struct em match.
+/// A simple struct with Default
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -242,23 +239,19 @@ impl Default for Employee{
     }
 }
 
-/// Exemplo mais prático. 
+/// A user for an application.
 /// 
-/// Representa o Usuário de um aplicativo.
+/// A user can be any of these three:
+///  - Client
+///  - Employee
+///  - Administrator
 /// 
-/// Digamos que um usuário possa ser os seguintes tipos:
-///  - Cliente
-///  - Funcionario
-///  - Administrador
+/// We cantrol permission of each of them using enums
 /// 
-/// Podemos controlar as permissões de cada com um enum.
-/// 
-/// Seria melhor termos tipos struct pra cada valor, mas estamos com pressa.
-/// 
-/// Todos possuem nome e id, alem disso, cada um possui:
-///  - Admin: passe (codificado, claro) para acesso. Lista de ações no sistema.
-///  - Employee: passe (codificado) para acesso. Lista de ações. Lista de permissões no sistema.
-///  - Client: apenas lista de pedidos.
+/// All have name and id, and each has in addition:
+///  - Admin: password (encrypted) and  a list of action they can do in the app. 
+///  - Employee: password (encrypted), a list of actions they can do and a list of permissions for the app.
+///  - Client: only list of orders.
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -278,10 +271,9 @@ impl Default for Example2User{
 
 
 impl Example2User{
-
-    /// Retorna nome do usuário.
+    /// Returns the user name
     /// 
-    /// O bloco que chama o método não precisa de saber o que o usuário é.
+    /// The caller doesn't need to know the type of the user.
     pub fn get_name(&self) -> String {
         log("Calling Example2User::get_name");
 
@@ -292,16 +284,13 @@ impl Example2User{
         }
     }
 
-    /// Checa se usuário possui permissão para ação.
+    /// Check if an user has a permission.
     /// 
-    /// Não é uma boa ideia usar String para permissões. Devido a possivel erros de caracteres, etc. Enums seriam melhor.
+    /// Having Strings to keep permissions is not a good idea, due to possible errors. A better choice would be enums
     /// 
-    /// Mas o código ja está complexo o suficiente.
-    /// 
-    /// Neste exempĺo:
-    ///  - Clientes não possuem permissão. Sempre retorna falso.
-    ///  - Administradores sempre possuem permissão. Sempre retorna true.
-    ///  - Empregados podem ou não possuir permissão. Checa por permissões.
+    ///  - Clientes don't have permissions. Always return false.
+    ///  - Administrators have all permissions (can do anything). Always returns true.
+    ///  - Employees might have the permission. 
     /// 
     pub fn has_permission(&self, permission: String) -> bool{
         log("Calling Example2User::has_permission");
@@ -311,10 +300,10 @@ impl Example2User{
             Example2User::Admin { name: _, id: _, pass: _, actions: _ } => { true },
             Example2User::Employee(employee) => {
 
-                // Vec implementa a trait IntoIterator.
-                // Isso disponibiliza o método .iter ao vetor.
-                // Este método nos permite iterar referencias de String.
-                // Nenhuma cópia de String é feita.
+                // Vec implement the Iterator trait, 
+                // so we have the iter() function available.
+                // This functions allows to iterate over references to strings,
+                // but no copies are made while iterating 
                 for employee_permission in employee.permissions.iter(){
                     if permission == *employee_permission {
                         return true;
@@ -326,18 +315,14 @@ impl Example2User{
         }
     }
 
-    /// Retorna a lista de ações se for Admin ou Employee.
+    /// Returns a list of actions for Admin or Employee. 
     /// 
-    /// Como exemplo, digamos que o sistema precisa retornar
-    /// um erro, se o usuário for um Client.
-    /// 
-    /// Result é semelhante a Option. Mas é usado para representar ações que podem causar erros.
-    /// Explicado na proxima seção.
+    /// Result is similar to Option, but is used to provide more detail into the outcome while also accounting for errors
     pub fn get_actions(&self) -> Result<Vec<String>, String> {
         log("Calling Example2User::get_actions");
         
-        // Se for client, retorna um erro (Como exemplo).
-        // Se for admin ou employee, retorna referencia para o Vec.
+        // If user is Client, return error Err()
+        // If user is Admin or Employee, return reference to Vec.
         let actions = match self{
             Example2User::Client { name: _, id: _, orders: _ } => { return Err(format!("User is Client")); },
             Example2User::Admin { name: _, id: _, pass: _, actions, } => { actions },
@@ -345,7 +330,7 @@ impl Example2User{
         };
 
         let mut result: Vec<String> = Vec::new();
-        // Usa a referência para criar uma cópia do Vec.
+        // Create a copy of vec, using references
         for action in actions{
             result.push(action.clone());
         }
@@ -390,7 +375,7 @@ mod tests{
     // ACLikeStruct{first: u32, second: String},
 
 
-    /// Cria 6 instâncias diferentes de Example1 para servir de exemplo.
+    /// Create some instance to test
     fn example1_create() -> (
         Example1,
         Example1,
@@ -399,7 +384,7 @@ mod tests{
         Example1,
         Example1,
     ){
-        // Retorna uma tupla com um exemplo de cada um dos valores.
+        // Return a tuple with different types available
         (
             Example1::NoValue,
             Example1::AnInteger(10),
@@ -411,7 +396,7 @@ mod tests{
     }
 
     #[test]
-    /// Garante que a função get retorna as Strings esperadas.
+    /// Check for valid return strings
     fn example1_get(){
         let (
             no_value,
@@ -438,7 +423,8 @@ mod tests{
         assert!(a_c_like_struct.eq_ignore_ascii_case(&format!("{{\nfirst: 1,\nsecond: \"second\",\n}}\n")));
     }
 
-    /// Garante que apenas retorna true para no_value.
+    `   
+    /// Check that only true is returned for no_value
     #[test]
     fn example1_is_novalue(){
         let (
@@ -506,7 +492,7 @@ mod tests{
     // Client{ name: String, id: u32, orders: Vec<String> },
     // Employee( Employee ),
 
-    /// Cria 3 instâncias diferentes de Example2User para serem usadas nos testes.
+    /// Create 3 instances of Example2User for our tests
     fn example2_user_create() -> [Example2User; 3] {
         [
             Example2User::Admin { 
@@ -544,19 +530,19 @@ mod tests{
 
     #[test]
     fn example2_user_get_name(){
-        // Cria 3 instâncias de example2 e aplica-os aos 3 tipos abaixo.
+        // Create three users for testing below
         let [admin, employee, client] = example2_user_create();
 
-        // Executa get_name para as 3 instâncias.
+        // destructure names into variables
         let (result_admin, result_employee, result_client) = (
             admin.get_name(),
             employee.get_name(),
             client.get_name(),
         );
 
-        // Garante que o valor adiquirido para os 3 é "Lucas"
-        // Detalhe extra: Estamos comparando um String com um &str,
-        // isso é possivel porque implementam a trait partial_eq para os tipos.
+        // check all names are OK 
+        // we are comparing a String against a &str
+        // because we implemented the trait partial_eq
         assert_eq!(result_admin, "Lucas");
         assert_eq!(result_employee, "Lucas");
         assert_eq!(result_client, "Lucas");
@@ -564,10 +550,10 @@ mod tests{
 
     #[test]
     fn example2_has_permission(){
-        // Cria 3 instâncias de example2 e aplica-os aos 3 tipos abaixo.
+        // Create three users for testing below
         let [admin, employee, client] = example2_user_create();
 
-        // Executa has_permission para as 3 instâncias.
+        // Check if users have the log permission
         let (result_admin, result_employee, result_client) = (
             admin.has_permission(String::from("Access client logs")),
             employee.has_permission(String::from("Access client logs")),
@@ -579,12 +565,10 @@ mod tests{
         assert_eq!(result_client, false);
     }
 
-    // pub fn get_actions(&self) -> Result<Vec<String>, String> {
-    
     #[test]
     fn example2_get_actions(){
 
-        // Função para comparar vetores
+        // helper function to compare vectors
         fn vec_eq(first: Result<Vec<String>, String>, second: Result<Vec<String>, String>) -> bool {
             let (first, second) = match (first, second) {
                 (Err(first), Err(second)) => {
@@ -598,7 +582,7 @@ mod tests{
                 }
             };
 
-            // Ambos os vetores devem ter o mesmo número de elementos
+            // vectors must have the same number of elements
             assert_eq!(first.len(), second.len(), "len is different");
 
             let length: usize = first.len();
@@ -610,17 +594,17 @@ mod tests{
             return true;
         }
 
-        // Cria 3 instâncias de example2 e aplica-os aos 3 tipos abaixo.
+        // Create three users for testing below
         let [admin, employee, client] = example2_user_create();
 
-        // Executa has_permission para as 3 instâncias.
+        // get actions for each user
         let (result_admin, result_employee, result_client) = (
             admin.get_actions(),
             employee.get_actions(),
             client.get_actions(),
         );
 
-        // Garante que a função retorna um Ok contendo os respectivos valores.
+        // check admin actions
         assert!(
             vec_eq(
                 result_admin, 
@@ -631,7 +615,7 @@ mod tests{
             )
         );
 
-        // Mesmo para employee.
+        // check employee actions
         assert!(
             vec_eq(
                 result_employee,
@@ -643,7 +627,7 @@ mod tests{
             )
         );
 
-        // No caso de client, garante que retorna um erro.
+        // check client, and make sure it returns an error.
         assert!(
             vec_eq(
                 result_client,

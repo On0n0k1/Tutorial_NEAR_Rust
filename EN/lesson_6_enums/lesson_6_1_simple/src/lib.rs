@@ -17,7 +17,7 @@ use model::{
 };
 
 
-/// Imprime a função sendo chamada.
+/// logs the function being called
 pub fn log_call(name: &str){
     log(&format!("Calling {}", name));
 }
@@ -35,16 +35,12 @@ pub struct Contract {
 
 #[near_bindgen]
 impl Contract{
-    /// Podemos usar instruções match para Strings e &str.
-    /// 
-    /// Esta função é um exemplo. 
-    /// 
-    /// Retorna 1, 2, 3, 4, 5, se o argumento for o número.
-    /// 
-    /// Causa panic se for outro valor.
+    /// We can use this function to match Strings and string slices &str
+    /// return 1, 2, 3, 4, 5, if the parameter given is one of those values
+    /// otherwise, panic!
     pub fn string_match_example(&self, arg: String) -> u32 {
 
-        // Trata a referencia &String como &str
+        // Handle &String as &str
         return match &arg as &str {
             "1" => 1,
             "2" => 2,
@@ -55,49 +51,49 @@ impl Contract{
         }
     }
 
-    /// Retorna example_0.
+    /// Returns example_0.
     pub fn get_example_0(&self) -> Example0 {
         log_call("get_example_0");
         self.example_0.clone()
     }
 
-    /// Retorna example_1.
+    /// Returns example_1.
     pub fn get_example_1(&self) -> Example1 {
         log_call("get_example_1");
         self.example_1.clone()
     }
 
-    /// Retorna example_2.
+    /// Returns example_2.
     pub fn get_example_2(&self) -> Example2User {
         log_call("get_example_2");
         self.example_2_user.clone()
     }
 
-    /// Chama Example0::get_number.
+    /// Call Example0::get_number.
     pub fn example_0_get_number(&self) -> u32 {
         log_call("get_example_0_get_number");
         self.example_0.get_number()
     }
 
-    /// Chama Example0::is_third.
+    /// Call Example0::is_third.
     pub fn example_0_is_third(&self) -> bool {
         log_call("get_example_0_is_third");
         self.example_0.is_third()
     }
 
-    /// Chama Example1::get.
+    /// Call Example1::get.
     pub fn example_1_get(&self) -> String {
         log_call("get_example_1_get");
         self.example_1.get()
     }
 
-    /// Chama Example1::is_novalue.
+    /// Call Example1::is_novalue.
     pub fn example_1_is_novalue(&self) -> bool {
         log_call("get_example_1_is_novalue");
         self.example_1.is_no_value()
     }
 
-    /// Chama Example1::get_an_integer.
+    /// Call Example1::get_an_integer.
     pub fn example_1_get_an_integer(&self) -> String {
         log_call("get_example_1_get_an_integer");
         let the_integer : Option<i32> = self.example_1.get_an_integer();
@@ -112,29 +108,29 @@ impl Contract{
         }
     }
 
-    /// Chama Example1::has_an_odd_number.
+    /// Calls Example1::has_an_odd_number.
     pub fn example_1_has_an_odd_number(&self) -> bool {
         log_call("get_example_1_has_an_odd_number");
         self.example_1.has_an_odd_number()
     }
 
-    /// Chama Example2User::get_name.
+    /// Calls Example2User::get_name.
     pub fn example_2_get_name(&self) -> String {
         log_call("get_example_2_get_name");
         self.example_2_user.get_name()
     }
 
-    /// Chama Example2User::has_permission.
+    /// Calls Example2User::has_permission.
     pub fn example_2_has_permission(&self, permission: String) -> bool {
         log_call("get_example_2_has_permission");
         self.example_2_user.has_permission(permission)
     }
 
-    /// Chama Example2User::get_actions.
+    /// Calls Example2User::get_actions.
     /// 
     /// 
-    /// Quando retornamos um Vec, o serializer tentará usar serde::json.
-    /// A instrução #[result_serializer] nos permite selecionar borsh como serializador.
+    /// When returing vec, the default serializer is serde (serde::json).
+    /// So let's be explicit about using borsh.
     #[result_serializer(borsh)]
     pub fn example_2_get_actions(&self) -> Vec<String>{
         log_call("get_example_2_get_actions");
@@ -222,7 +218,7 @@ mod tests{
         assert_eq!(contract.string_match_example(a5), 5);
     }
 
-    /// Testa situação de erro com argumento 0.
+    /// Test an error using argument with 0
     #[test]
     #[should_panic(expected="Received 0. Must be 1, 2, 3, 4 or 5.")]
     fn string_match_example_error(){

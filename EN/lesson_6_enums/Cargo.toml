@@ -1,5 +1,9 @@
 [workspace]
-members=["lesson_6_1_simple", "lesson_6_2_thermometer"]
+members=[
+    "lesson_6_1_simple", 
+    "lesson_6_2_thermometer",
+    "lesson_6_3_game_score"
+]
 
 
 [profile.release]

@@ -7,9 +7,8 @@ This lesson is sub-divided into four sessions. As each session will be a crate o
 Here's a quick overview of sessions:
  - [Session 1 - Declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
  - [Session 2 - Implementing a Thermometer using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_2_thermometer/).
- - Session 3 - Pragmatic and Efficient error handling.
- - Session 4 - TBD.
-
+ - [Session 3 - Pragmatic and Efficient error handling.](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_3_game_score/).
+ 
 ---
 
 ## Workspaces
@@ -89,9 +88,9 @@ All documentation will be located in './target/doc/lesson_6_1_simple/index.html'
 
 ---
 
-Lesson 6 Intro :white_check_mark: ... **Done! Congratulations!**
+Lesson 6 - Intro :white_check_mark: ... **Done! Congratulations!**
 
-Let's move on to the next section to learn more about [declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_1_simple/).
+Let's move on to the next section to learn more about [declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
 
 
 Or you can move even further and jump to Lesson 7, which will be about Traits.

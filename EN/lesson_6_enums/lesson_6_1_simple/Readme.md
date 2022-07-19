@@ -1,108 +1,100 @@
-# Lição 6 - 1 Uso de Enums
+# Lesson 6 - Using Enums
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/)
 
-Essa lição descreve enums e instruções ```match```.
+In this lesson, we will learn all about enums and the ```match``` keyword.
 
 ---
 
-## API de contrato
+## Contract API
 
 ```rust
 // /src/lib.rs
 
-/// Podemos usar instruções match para Strings e &str.
-/// 
-/// Esta função é um exemplo. 
-/// 
-/// Retorna 1, 2, 3, 4, 5, se o argumento for o número.
-/// 
-/// Causa panic se for outro valor.
+/// We can use this function to match Strings and string slices &str
+/// return 1, 2, 3, 4, 5, if the parameter given is one of those values
+/// otherwise, panic!
 pub fn string_match_example(&self, arg: String) -> u32;
 
-/// Retorna example_0.
+/// Returns example_0.
 pub fn get_example_0(&self) -> Example0;
 
-/// Retorna example_1.
+/// Returns example_1.
 pub fn get_example_1(&self) -> Example1;
 
-/// Retorna example_2.
+/// Returns example_2.
 pub fn get_example_2(&self) -> Example2User;
 
-/// Chama Example0::get_number.
+/// Calls Example0::get_number.
 pub fn example_0_get_number(&self) -> u32;
 
-/// Chama Example0::is_third.
+/// Calls Example0::is_third.
 pub fn example_0_is_third(&self) -> bool;
 
-/// Chama Example1::get.
+/// Calls Example1::get.
 pub fn example_1_get(&self) -> String;
 
-/// Chama Example1::is_novalue.
+/// Calls Example1::is_novalue.
 pub fn example_1_is_novalue(&self) -> bool;
 
-/// Chama Example1::get_an_integer.
+/// Calls Example1::get_an_integer.
 pub fn example_1_get_an_integer(&self) -> String;
 
-/// Chama Example1::has_an_odd_number.
+/// Calls Example1::has_an_odd_number.
 pub fn example_1_has_an_odd_number(&self) -> bool;
 
-/// Chama Example2User::get_name.
+/// Calls Example2User::get_name.
 pub fn example_2_get_name(&self) -> String;
 
-/// Chama Example2User::has_permission.
+/// Calls Example2User::has_permission.
 pub fn example_2_has_permission(&self, permission: String) -> bool;
 
-/// Chama Example2User::get_actions.
+/// Calls Example2User::get_actions.
 /// 
-/// Quando retornamos um Vec, o serializer tentará usar serde::json.
-/// A instrução #[result_serializer] nos permite selecionar borsh como serializador.
+/// When we return a Vec, the serialiyer will try to use serde::json.
+/// Using #[result_serializer] allows to specify borsh as the serializer.
 #[result_serializer(borsh)]
 pub fn example_2_get_actions(&self) -> Vec<String>;
 ```
 
 ---
 
-## Compilando, testando
+## Compiling and testing
 
-[topo](#lição-6---1-uso-de-enums)
+This crate belongs to the Lesson 6 workspace. You can find how to compile and test it in the [intro page for the lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
 
-Essa crate pertence ao workspace da lição 6. Instruções sobre compilação e execução de testes na pagina [anterior](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/lesson_6_1_simple/).
-
-Executar comandos como ```cargo test``` e ```cargo build``` afetará todos as crates na workspace. A não ser que uma crate seja especificada.
+:hand: **NOTE:**  All commands like `cargo test` and `cargo build` will affect all crates in the workspace, unless you provide a specific crate. 
 
 ---
 
-## Tópicos
+## Topics
 
-[topo](#lição-6---1-uso-de-enums)
-
- - [O que são enums](#o-que-são-enums)
- - [Instruções match](#instruções-match)
+ - [What are enums](#what-are-enums)
+ - [The `match` keyword](#the-match-keyword)
    - [String patterns](#string-patterns)
-   - [Match precisa aplicar a todos possiveis patterns](#match-precisa-aplicar-a-todos-possiveis-patterns)
-   - [Acessando apenas um valor de um enum](#acessando-apenas-um-valor-de-um-enum)
- - [Enums que "englobam" valores](#enums-que-"englobam"-valores)
- - [Funções devem especificar tipos](#funções-devem-especificar-tipos)
-   - [Função is_no_value](#função-is_no_value)
-   - [Função get_an_integer](#função-get_an_integer)
-   - [Função has_an_odd_number](#função-hasanoddnumber)
- - [Exemplo de uso: Usuário](#exemplo-de-uso-usuário)
-   - [Enums limitam as possibilidades](#enums-limitam-as-possibilidades)
-   - [Função get_name](#função-get_name)
-   - [Função has_permission](#função-has_permission)
-   - [Função get_actions](#função-get_actions)
-   - [Escolhendo serializador](#escolhendo-serializador)
- - [Proxima seção](#proxima-seção)
-
+   - [`match` needs to match on all patterns](#match-needs-to-match-on-all-patterns)
+   - [Using just one enum value](#using-just-one-enum-value)
+ - [Enums that "box" values](#enums-that-box-values)
+ - [Functions must specify return type](#functions-must-specify-return-type)
+   - [Function is_no_value](#function-is_no_value)
+   - [Function get_an_integer](#function-get_an_integer)
+   - [Function has_an_odd_number](#function-has_an_odd_number)
+ - [Usage scenario: user](#usage-scenario-user)
+   - [Enums limit choices](#enums-limit-choices)
+   - [Function get_name](#function-get_name)
+   - [Function has_permission](#function-has_permission)
+   - [Function get_actions](#function-get_actions)
+   - [Choosing a serializer](#choosing-a-serializer)
+ 
 ---
 
-## O que são enums
+## What are enums
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Enquanto Structs armazenam diversos valores simultaneamente. Enums armazenam um valor de cada vez. As alternativas que um enum pode representar são descritos na definição.
+While `Structs` are a type *composed* of other types, `Enums` are a type that can have only *one value at a time*. The values an enum can take are specified in its definition.
 
+Here's an example of a simple `enum`:
 ```rust
 pub enum Example0{
     First,
@@ -112,13 +104,11 @@ pub enum Example0{
     Fifth,
 }
 ```
+ - `pub` allows an enum to be used in external modules.
+ - `Example0` is the name of the `enum`.
+ - `First`, `Second`, `Third`, `Fourth` and `Fifth` are the actual values this `enum` can have. 
 
-Acima temos um exemplo de enum.
- - ```pub``` descreve que o enum está disponivel para ser usado em módulos externos.
- - ```Example0``` é o nome do enum.
- - ```First```, ```Second```, ```Third```, ```Fourth``` e ```Fifth``` são os nomes dos valores que este enum pode possuir.
-
-Acima temos a declaração do enum, mas como criamos uma instância de enum? A seguir criamos um exemplo para os 5 valores possiveis.
+So now that we have declared an `enum`, how do we create an instance? Here's an example for each possible value: 
 
 ```rust
 let a = Example0::First;
@@ -127,29 +117,31 @@ let c = Example0::Third;
 let d = Example0::Fourth;
 let e = Example0::Fifth;
 ```
-
-Para implementar ações de acordo com os valores do enum. Poderiamos usar instruções ```if|else```. Mas existe uma ferramenta muito mais potente para isso. A seguir, discutiremos sobre instruções ```match```.
+In order to check for a value, we could use `if | else` but Rust provide a much powerful tool. Let's learn about the `match` keywork next. 
 
 ---
 
-## Instruções match
+## The `match` keyword
 
-[topo](#lição-6---1-uso-de-enums)
-
-Instruções match comparam um valor com diversos possiveis valores.
+[top](#topics)
+The `match` keyword allows to compare a value with all possible values for an enum.
 
 ```rust
 // /src/model.rs
 impl Example0{
 
-    /// Observa o valor de si mesmo e retorna um número entre 1 e 5.
+    /// Check its assigned value and returns a number between 1 and 5.
     /// 
-    /// Note o &self, significando que a função acessa o valor, mas não altera.
+    /// Note the &self reference, meaning this function access its value 
+    /// but it doesnt modify it (mutate)
     /// 
     pub fn get_number(&self) -> u32 {
         log("Calling Example0::get_number");
 
-        // Instruções match são semelhantes a uma 
+        // Here we match all possible enum values and 
+        // return something, based on the enum value
+        // remember: since this is the last statement of the function,
+        // a return is implicit, you don't have to use the return keyword
         match self {
             Example0::First => {1},
             Example0::Second => {2},
@@ -159,39 +151,35 @@ impl Example0{
         }
     }
 ```
+The example above simply matches an enum value to a number, and returns the matching number (an integer in this case)
 
-O exemplo acima simplesmente compara o valor do enum e retorna um inteiro.
- - ```Example0::First``` retorna 1;
- - ```Example0::Second``` retorna 2;
- - ```Example0::Third``` retorna 3;
- - ```Example0::Fourth``` retorna 4;
- - ```Example0::Fifth``` retorna 5;
+ - `Example0::First` returns 1;
+ - `Example0::Second` returns 2;
+ - `Example0::Third` returns 3;
+ - `Example0::Fourth` returns 4;
+ - `Example0::Fifth` returns 5;
 
-É semelhante a uma instrução switch em linguagens como c, python, java e javascript. Porém, instruções ```switch``` comparavam ```booleans```, instruções ```match``` de rust comparam patterns.
+`match` is similar a `switch` in other languages like C, Python, Java and Javascript, however, while `switch` compares for booleans, Rust's `match` compares against patterns.
 
 ---
 
 ### String patterns
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Podemos usar instruções match para ```String``` e ```&str```:
+We can use `match` on `String` and `&str`: 
 
 ```rust
 // /src/lib.rs
 
 impl Contract{
-    /// Podemos usar instruções match para Strings e &str.
-    /// 
-    /// Esta função é um exemplo. 
-    /// 
-    /// Retorna 1, 2, 3, 4, 5, se o argumento for o número.
-    /// 
-    /// Causa panic se for outro valor.
+    /// We can use this function to match Strings and string slices &str
+    /// return 1, 2, 3, 4, 5, if the parameter given is one of those values
+    /// otherwise, panic!
     pub fn string_match_example(&self, arg: String) -> u32 {
 
-        // Trata a referencia &String como &str
-        return match &arg as &str {
+        // treat &String as &str
+        match &arg as &str {
             "1" => 1,
             "2" => 2,
             "3" => 3,
@@ -201,24 +189,23 @@ impl Contract{
         }
     }
 ```
-
-No exemplo acima, a instrução match compara os padrões de cima para baixo.
- - &arg é "1"? Não.
- - &arg é "2"? Não.
- - &arg é "3"? Não.
- - &arg é "4"? Não.
- - &arg é "5"? Não.
- - ```value``` é um nome de variável. Este pattern é sempre verdadeiro. Patterns serão explicados em detalhes na próxima lição.
-
-Qualquer String que não seja "1", "2", "3", "4" ou "5", alcançará o ultimo branch. Ou seja, resultará em panic com o valor da String.
+In the example above, `match` goes over each pattern in order.
+ - &arg is "1"? No.
+ - &arg is "2"? No.
+ - &arg is "3"? No.
+ - &arg is "4"? No.
+ - &arg is "5"? No.
+ - `value` is a variable whose value will be any other value not matching the above cases.
+ You can think of it as the last case in the match, which actually will match anything.
+ Any string that isn't "1", "2", "3", "4" or "5", will be `value`, and so the function will panic.
 
 ---
 
-### match precisa aplicar a todos possiveis patterns
+### `match` needs to match on all patterns
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-No [primeiro exemplo](#instruções-match), o enum possui 5 possiveis valores. Apague um dos branches e o compilador resultará em erro.
+On our first example, our enaum had 5 possible values. If you comment out one, the compiler will complain! (throw an error)
 
 ```rust
 match self {
@@ -226,78 +213,76 @@ match self {
     Example0::Second => {2},
     Example0::Third => {3},
     Example0::Fourth => {4},
-    // Branch apagada, resultará em erro.
-    // Instruções match precisam considerar todos possiveis valores.
+    // if we comment the last possible value for the Example0 enum, 
+    // the compiler will error out!
+    // match needs to account for ALL possible values for the enum
     // Example0::Fifth => {5},
 }
 ```
 
-
-O [segundo exemplo](#string-patterns) compara um String. Strings podem possuir infinitos valores. Por isso, a ultima branch é:
+Our second examples compares a String. As a String can have basically any value, we need to have a 'last resort' case which matches 'any other value given', like so: 
 
 ```rust
 value => panic!("Received {}. Must be 1, 2, 3, 4 or 5.", value),
 ```
 
-O pattern ```value``` pode ser qualquer nome de variável. Este pattern é o mais simples possivel. Portanto, este aplica para qualquer valor possivel. Muitas vezes este pattern é demonstrado com "underline" "_", iniciar o nome de uma variável com "underline" descreve ao compilador que não temos intenção de utiliza-la.
+You can have any variable name, it doesn't have to be `value`. It is also the case that sometimes you don't care for the actual value of the varibale but you **do** have to account for this 'whatever else' case when using `match`. In Rust, you'll see the underscore `_` being used as a variable name in those cases. Also, any variable that starts with an underscore `_` tells the compiler that we might not even use that variable later on (so the compiler will ignore its non-usage and not give you a *not used warning*, which is how it behaves by default). 
 
-Um exemplo. Digamos que escrevamos o match de Strings da seguinte forma:
+Let's say we write our `match` like this:
 
 ```rust
 // /src/model.rs
 pub fn string_match_example(&self, arg: String) -> u32 {
 
-    // Mesmo que o exemplo anterior. Mas não utiliza value.
-    return match &arg as &str {
+    match &arg as &str {
         "1" => 1,
         "2" => 2,
         "3" => 3,
         "4" => 4,
         "5" => 5,
         value => {
-            // Compilador irá enviar um aviso acima: "Variável não usada"
+            // We are not using our value in panic! below
+            // so the compiler will warn you that value is not being used
             panic!("Invalid value. Must be 1, 2, 3, 4 or 5.");
         },
     }
 }
 ```
-
-Para corrigir o aviso em "value". Basta fazer a modificação:
+To avoid the warning, we just need to modify things a bit... by adding an underscore: 
 
 ```rust
 // /src/model.rs
 pub fn string_match_example(&self, arg: String) -> u32 {
 
-    // Mesmo que o exemplo anterior. Mas não utiliza _value.
-    return match &arg as &str {
+    match &arg as &str {
         "1" => 1,
         "2" => 2,
         "3" => 3,
         "4" => 4,
         "5" => 5,
         _value => {
-            // Aviso corrigido.
+            // see? we added a _ , making it _value and not just value
+            // we are STILL not using it in our panic! below
             panic!("Invalid value. Must be 1, 2, 3, 4 or 5.");
         },
     }
 }
 ```
 
-Como convenção, simplesmente usamos "_" como o nome de patterns irrelevantes:
+Do bear in mind that convention is imnportant, so we use "_" for patterns where we truly don't care about the 'whatever else' value: 
 
 ```rust
 // /src/model.rs
 pub fn string_match_example(&self, arg: String) -> u32 {
 
-    // Mesmo que o exemplo anterior. Mas não utiliza _.
-    return match &arg as &str {
+    match &arg as &str {
         "1" => 1,
         "2" => 2,
         "3" => 3,
         "4" => 4,
         "5" => 5,
         _ => {
-            // Aviso corrigido.
+            // see? we used the _ for anything
             panic!("Invalid value. Must be 1, 2, 3, 4 or 5.");
         },
     }
@@ -306,15 +291,17 @@ pub fn string_match_example(&self, arg: String) -> u32 {
 
 ---
 
-### Acessando apenas um valor de um enum
+### Using just one enum value
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Digamos que tenhamos uma função que só precisa aplicar a um enum. Instruções match podem ser usadas também. A função abaixo retorna verdadeiro apenas se o valor do enum for ```Example::Third```:
+Sometimes we have a function that only needs to do something based on just one case or value of our `enum`. We can also use `match`! 
+
+In the following example, we only match `true` when our enum is `Example0::Third`. 
 
 ```rust
 // /src/model.rs
-/// true se o valor for Exemplo0::THIRD
+/// true but checking only for Example0::Third
 pub fn is_third(&self) -> bool {
     log("Calling Example0::is_third");
 
@@ -327,11 +314,11 @@ pub fn is_third(&self) -> bool {
 
 ---
 
-## Enums que "englobam" valores
+## Enums that "box" values
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Enums podem armazenar valores:
+This is a powerful fact you need to keep in mind... in Rust, `enum` can also have different underlying types; all possible enum values don't have to be same type!
 
 ```rust
 // /src/model.rs
@@ -344,63 +331,56 @@ pub enum Example1{
     ACLikeStruct{first: u32, second: String},
 }
 ```
-
-No exemplo acima. A primeira alternativa não tem valor, as 4 seguintes são tuplas com os respectivos tipos. A ultima alternativa é semelhante a um "struct da linguagem C".
+:hand: **NOTE:** Read the above carefully. We have primitive types (i32, f32, String) as `enum` choices, as well as tuples, **and** we can also have a C-like `struct`. All of these are part of one `enum`, `Example1`.
 
 ---
 
-## Funções devem especificar tipos
+## Functions must specify return type
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Funções para enums podem ser dificeis de implementar, devido a uma regra de linguagens de programação de tipo estático "statically typed":
+Functions that use enums can sometimes be difficult to implement, due to static typing. 
 
- - Os tipos de argumentos devem ser especificados.
- - Os tipos de retorno devem ser especificados.
+- Argument types must be specified.
+- Return type must be specified.
+ 
+That also includes generic functions. The compiler **must** know the argument types as well as the return type. Generic function are but a way to create function that also follow those rules.
 
-Isso inclui funções genéricas. Que serão explicados adiante. O compilador **deve** saber qual o tipo do argumento que recebe e qual tipo de valor irá retornar. Funções genéricas são apenas uma forma de gerar funções que seguem essas regras.
+For our enum, a developer might run into trouble with the compiler, since we have different underlying types for our enum choices (an integer, a string, a struct).
+However, we can certainly implement functions! We just need to focus on thing: what type should we choose for our return value? 
 
-Ao implementar uma simples função get ou set, um desenvolvedor pode ter dificuldades lidando com o compilador. A segunda alternativa é um inteiro, a terceira é um número real, a quarta é um string...
-
-Porém, é possivel implementar estas funções. A pergunta que precisamos fazer é: Como usar o mesmo tipo para o argumento e retorno?
-
-Explicaremos implementação de genéricos na lição sobre traits. No caso de uso adiante, podemos simplesmente retornar um String:
+In our case, let's choose a String:
 
 ```rust
 // /src/model.rs
 
-// O método a seguir retorna apenas um tipo, isso é aceitável para o compilador.
+// Our method returns a String
 pub fn get(&self) -> String {
     log("Calling Example1::get");
 
     match self{
         Example1::NoValue => String::from(""),
-        Example1::AnInteger(valor) => format!("{}", valor),
-        Example1::AFloat(valor) => format!("{}", valor),
-        Example1::AString(valor) => format!("{}", valor),
-        Example1::ATuple(valor0, valor1) => format!("({}, {})", valor0, valor1),
+        Example1::AnInteger(value) => format!("{}", value),
+        Example1::AFloat(value) => format!("{}", value),
+        Example1::AString(value) => format!("{}", value),
+        Example1::ATuple(value0, value1) => format!("({}, {})", value0, value1),
         Example1::ACLikeStruct { first, second } => format!("{{\nfirst: {},\nsecond: \"{}\",\n}}\n", first, second),
     }
 }
 ```
 
-```format!``` é um macro que formata uma String. Macros são explicados na lição 5. Como a intenção é simplesmente imprimir o valor na tela. Retornar um String é aceitável, neste caso de uso.
+`format!` is a macro that creates a String. We went over macros in [Lesson #5](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage/), so feel free to go back if you need a recap. Anyway, since we only want to print a value on screen, we can simply return a String.
 
-A lição sobre traits explicará como usar as traits borsh e serde. Podemos usar essas ferramentas para converter um struct para uma fatia (slice) de bytes. Podemos também converter uma fatia de bytes ou String para um struct (se compativel).
-
-A lição sobre traits também explicará sobre como usar genéricos. Que é uma forma de implementar a mesma função para diversos tipos simultaneamente.
+In our lesson about Traits, we wil go over how to use borsh and serde. We use these to convert a struct into bytes, as well as convert from bytes or a string, into a struct (if they are compatible). In that lesson, we wil also cover how to use Generics, which allows to write functions that work for multiple types.
 
 ---
 
-### Função is_no_value
-
-[topo](#lição-6---1-uso-de-enums)
-
-As vezes, precisamos checar apenas um valor. Retorna verdadeiro se o valor interno for ```NoValue```.
-
+### Function is_no_value
+[top](#topics)
+Sometimes, we need to only check for one value. This function returns true if the enum value is `NoValue`.
 ```rust
 // /src/model.rs
-/// true se o enum for Example1::NoValue.
+/// true if enum is Example1::NoValue.
 pub fn is_no_value(&self) -> bool{
     log("Calling Example1::is_no_value");
 
@@ -410,16 +390,11 @@ pub fn is_no_value(&self) -> bool{
     }
 }
 ```
-
 ---
 
-### Função get_an_integer
-
-[topo](#lição-6---1-uso-de-enums)
-
-Retorna um inteiro, se a alternativa for ```Example1::AnInteger```.
-
-Retorna um ```Option```, será explicado em detalhes na proxima seção. Simplificando, é um enum que representa um valor que pode existir ou não. Se o valor existir, é ```Option::Some(valor)``` ou simplesmente ```Some(valor)```. Se o valor não existir, é então ```Option::None``` ou simplesmente ```None```.
+### Function get_an_integer
+[top](#topics)
+Returns an integer if the enum's value is `Example1::AnInteger`.
 
 ```rust
 // /src/model.rs
@@ -432,24 +407,25 @@ pub fn get_an_integer(&self) -> Option<i32>{
     }
 }
 ```
+:hand: **NOTE:** if you looked at the code above you'll see the return value is actually something called an `Option`. We'll learn more about `Option` later on, but you can think of right now as an enum that *can* have a value, *or not*. If there is a value, you can retrieve it using `Some(value)` (where `value` is just a variable name), and if there is no value, then Option would be set to `None` (`Option::None`).
+There is no **NULL** in Rust. 
 
-Considere a instrução:
+By the way, take a look at this code:
 
 ```rust
-match self{
+match self {
 ```
 
-Esta instrução deveria estar coletando ```ownership``` de si mesmo, porque não está fazendo isso?
+Shouldn't this code be taking ownership of itself, and if not, why is that?
 
-Isso é devido ao argumento:
+Well, that's because of how this argument is being passed:
 
 ```rust
 pub fn get_an_integer(&self) -> Option<i32>{
 ```
+As `&self` is being used, the compiler knows this value is just a reference (or borrow).
 
-Como apenas ```&self``` está sendo usado, o compilador entende que este valor é apenas uma referência.
-
-Finalizando:
+So, in summary:
 
 ```rust
 match self{
@@ -457,22 +433,19 @@ match self{
     _ => None
 }
 ```
-
-A função retorna ```Option<i32>```. Portanto, esta instrução ```match``` rust retorna ```Some(valor)``` ou ```None```. Representando se o valor foi encontrado ou não.
+The functions returns `Option<i32>` and therefore, our `match` must provide a return of either `Some(value)` or `None`. 
 
 ---
 
-### Função has_an_odd_number
+### Function has_an_odd_number
 
-[topo](#lição-6---1-uso-de-enums)
-
-Retorna verdadeiro se possui um inteiro impar.
-
-O propósito desta função é demonstrar um uso mais detalhado de instruções match.
+[top](#topics)
+Returns true only if the argument is an odd integer.
+Take a closer look at the code, since this is a more detailed usage scenario for `match`.
 
 ```rust
 // /src/model.rs
-/// Retorna true se possui algum numero inteiro impar,
+/// Returns true only if the argument is an odd integer.
 pub fn has_an_odd_number(&self) -> bool {
     log("Calling Example1::has_an_odd_number");
 
@@ -491,29 +464,27 @@ pub fn has_an_odd_number(&self) -> bool {
             return (valor0%2 == 1) || (valor1%2 == 1);
         },
         Example1::ACLikeStruct { first, second: _ } => {
-            // Não temos interesse no segundo valor que é String
+            // we don't care about 'second' since it is a string
             first%2 == 1
         },
     }
 }
 ```
+So, the only alternatives that have integers are `Example1::AnInteger`, `Example1::ATuple` and `Example1::ACLikeStruct`. All other return false.
 
-As únicas alternativas que possuem inteiros são ```Example1::AnInteger```, ```Example1::ATuple``` e ```Example1::ACLikeStruct```. Todas as outras alternativas retornam falso.
-
-Note que variáveis com nome ```_valor``` e ```_``` são valores que não pretendemos usar. A convenção é simplesmente usar underline ```_```. Usando outro nome apenas para demonstrar que todas as variáveis que começam com o caractere underline ```_``` são variáveis que consideramos "irrelevantes". O compilador ignora avisos de "variável não utilizada" nestes casos.
+:warning: Variables starting with an underscore `_`, such as `_value` and `_`, hold **values** we don't really care about. The convention is to just an underscore `_`, but any variable names starting with an underscore will be ignored by the compiler when checking and raising any 'unused variable' warnings.
 
 ---
 
-## Exemplo de uso: Usuário
+## Usage scenario: User
 
-[topo](#lição-6---1-uso-de-enums)
-
-O próximo exemplo descreve um exemplo de aplicação para um enum.
+[top](#topics)
+Let's see how we could use an enum in an application.
 
 ```rust
 // /src/model.rs
-pub enum Example2User{
-    Admin{ name: String, id: u32, pass: String, actions: Vec<String> },
+pub enum Example2User {
+    Admin { name: String, id: u32, pass: String, actions: Vec<String> },
     Client{ name: String, id: u32, orders: Vec<String> },
     Employee( Employee ),
 }
@@ -526,31 +497,29 @@ pub struct Employee{
     pub actions: Vec<String>,
 }
 ```
+We have three types of people who can access our system:
+ - Employees: they can access the system and make limited modifications to data but can't alter business or system rules.
+ - Admins: they have permissions to alter any business or system rules (basically do anything).
+ - Clients: they can't change any system data, but are allowed to change their own data.
+ 
+Employees, Admins and Clients are different types, and have different functions and data. But in the context of a User, they can be thought of in a similar manner.
 
-Neste caso, existem 3 tipos de pessoas que podem acessar o nosso sistema:
- - Funcionários que podem acessar o sistema, podem fazer algumas alterações limitadas, mas não podem alterar regras críticas.
- - Administradores que tem permissões para alterar regras críticas.
- - Clientes que não tem permissões para alterar dados do sistema. Mas podem alterar os próprios dados, além de acessar os serviços do sistema.
-
-Como descrito acima, funcionarios, administradores e clientes são tipos/objetos diferentes. Possuem finalidades e estados diferentes. Mas, no contexto de usuário, são usados da mesma forma.
-
-Traits também são usados para agrupamento. Também devem ser considerados no planejamento de projeto. Aqui está a diferença entre agrupamento com enums e agrupamento com traits:
- - Enums nos permitem agrupar diversos tipos diferentes para uma única funcionalidade.
- - Traits nos permitem agrupar uma funcionalidade para diversos tipos diferentes.
+You can group types using Enums but also Traits; however, consider that:
+ - You use enums for grouping different types as a single concept or entity that will be used by a function.
+ - You use traits for applying a single set of behaviors to different types. 
 
 ---
 
-### Enums limitam as possibilidades
+### Enums limit choices
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
+Restricting choices can be good or bad depending on the case, so let's consider a few examples in order to get a grasp of the concepts.
 
-Isso é bom em alguns casos, ruim em outros. Importante entender essa característica. 
-
-Por exemplo, digamos que tenhamos um jogo de xadrez. Existem diversas peças diferentes no tabuleiro. Eu implementei o meu projeto de xadrez da seguinte forma:
+Think about Chess. There are different pieces on the board, and so we made an enum for all the piece names:
 
 ```rust
 // https://github.com/On0n0k1/NCD.L1--Chess/blob/main/src/pieces/piece.rs
-pub enum Piece{
+pub enum Piece {
     BISHOP( Bishop ),
     EMPTY(  Empty  ),
     KING(   King   ),
@@ -560,12 +529,11 @@ pub enum Piece{
     ROOK(   Rook   ),
 }
 ```
+Each piece has its own behavior, but the board itself doesn't care about it. However, the board does need to know each piece's possible movement in order to know if there's a check-mate. 
 
-Cada peça tem sua funcionalidade, mas o tabuleiro não tem interesse por isso. O tabuleiro precisa de receber uma lista de possiveis movimentos para calcular cheque-mate. Independente de qual peça esteja naquela posição.
+In this case, the restriction imposed by using enums is useful, since there are only so many piece types, plus one for empty space, and this will never change (so there won't be a need to add to the enum).
 
-Neste caso, a limitação de enums é util, porque sabemos que existem 6 peças de xadrez diferentes (mais um para espaço vazio), e nunca será necessário expandir este enum.
-
-Enums também são úteis para erros. Consideremos, como exemplo, um app de uma biblioteca. Uma função para coletar informação sobre um livro retorna os seguintes erros:
+Enums are also useful for error handling. Let's think about an application used in a library. A function that retrieves information about a book could also return the following errors:
 
 ```rust
 pub enum MessageError{
@@ -573,31 +541,26 @@ pub enum MessageError{
     InvalidArg(String),
     MissingArg(String),
     NoPermission,
-
 }
 ```
+The errors are: 
+ - `BookNotFound`: book not found, with the string being the name of the book that was not found.
+ - `InvalidArg`: an argument was not recognized, with the string being the argument. 
+ - `MissingArg`: a mandatory argument is needed but wasn't provided. The string is the required argument.
+ - `NoPermission`: You don't have permission to access this book. Maybe the user is underage, and this book has adult content.
 
-Os erros são:
- - ```BookNotFound```: Livro não encontrado. O String é o nome do livro procurado.
- - ```InvalidArg```: Algum dos argumentos recebidos não pode ser reconhecido. O String é o argumento referido.
- - ```MissingArg```: Para o pedido especificado, um argumento necessário estava ausente. String é o argumento.
- - ```NoPermission```: Não possui permissão para acessar o livro. Talvez seja um caso do usuário ser menor de idade, e o livro possuir conteúdo adulto.
-
-Isso é outra vantagem da "limitação" de enums. Um desenvolvedor sabe exatamente todos os erros possíveis que podem ocorrer com esse chamado de função.
+It becomes apparent that an advantage of restrictions imposed by enums is that a developer can well know all of the errors that can or should occur when calling a function.
 
 ---
 
-### Função get_name
+### Function get_name
 
-[topo](#lição-6---1-uso-de-enums)
-
-A função get_name do ```Example2User``` simplesmente retorna o ```String``` "name" armazenado. As variáveis com nome "_" são variáveis que iremos ignorar.
+[top](#topics)
+The function get_name of `Example2User` simply returns the 'name' of the user (which is a String). Remember, the underscores are values we choose to ignore. 
 
 ```rust
 // /src/model.rs
-/// Retorna nome do usuário.
-/// 
-/// O bloco que chama o método não precisa de saber o que o usuário é.
+/// returns the name of the user
 pub fn get_name(&self) -> String {
     log("Calling Example2User::get_name");
 
@@ -608,25 +571,33 @@ pub fn get_name(&self) -> String {
     }
 }
 ```
+Also, when there are multiple fields that have values you don't care about, you can simply use '`..`', like so: 
+```rust
+pub fn get_name(&self) -> String {
+    log("Calling Example2User::get_name");
 
+    match self {
+        Example2User::Admin { name, .. } => { name.clone() },
+        Example2User::Client { name, .. } => { name.clone() },
+        Example2User::Employee( employee ) => { employee.name.clone() },
+    }
+}
+```
 ---
+### Function has_permission
 
-### Função has_permission
+[top](#topics)
+Returns true if a user has permissions for an action in the application.
+ - Admins always have all permissions granted.
+ - Clients never have them.
+ - Employees are granted permissions. Granted permissions are stored in a list.
 
-[topo](#lição-6---1-uso-de-enums)
-
-Esta função retorna se o usuário possui permissão ou não para uma dada ação no sistema.
- - Administradores sempre possuem permissão.
- - Clientes nunca possuem permissão.
- - Funcionários possuem uma lista alterável de permissões.
-
-Usar Strings não é uma boa idéia para permissões. Enums seriam melhores, mas o exemplo já está complexo o suficiente.
+:warning: Using String is never a good idea for permissions. This would be an ideal use case for enums, but we are doing it this way to keep complexity low.
 
 
 ```rust
 // /src/model.rs
 pub fn has_permission(&self, permission: String) -> bool{
-    // imprime na tela que a função foi chamada
     log("Calling Example2User::has_permission");
 
     match self{
@@ -634,10 +605,9 @@ pub fn has_permission(&self, permission: String) -> bool{
         Example2User::Admin { name: _, id: _, pass: _, actions: _ } => { true },
         Example2User::Employee(employee) => {
 
-            // Vec implementa a trait Iterator.
-            // Isso disponibiliza o método .iter ao vetor.
-            // Este método nos permite iterar referencias de String.
-            // Nenhuma cópia de String é feita.
+            // Vec implements the Iterator trait, which means we have 
+            // the .iter() function available to go over all 
+            // value in the Vec, without needing to copy them
             for employee_permission in employee.permissions.iter(){
                 if permission == *employee_permission {
                     return true;
@@ -649,125 +619,109 @@ pub fn has_permission(&self, permission: String) -> bool{
     }
 }
 ```
+Employees have a `Vec` (vector) of strings where permissions are stored. We'll get to `Vec` when learn more about collections, but think of Vec (vector) as a modifiable list.
 
-Funcionário possui um ```Vec``` de Strings representando suas permissões. ```Vec``` será explicado em detalhes na lição sobre coleções. É uma lista alterável de valores.
+We already learned about `Clone` and `Copy`, so it is time to introduce [iterators](https://doc.rust-lang.org/std/iter/trait.Iterator.html) and iter(). This trait allows us to go over each value in a vector using `for`.
 
-Já explicamos sobre as traits ```Clone``` e ```Copy```. Agora explicaremos sobre a trait ```Iterator``` ([detalhes oficiais](https://doc.rust-lang.org/std/iter/trait.Iterator.html)). Esta trait nos permite usar o vetor em uma instrução ```for```.
+The `iter()` function generates a reference iterator. That means, that each `employee_permission` is a reference to an element contained in `Vec`. We **can't alter or modify** the values, but we also don't waste computing resources generating any copies of these values. 
 
-O método ```iter()```, disponilizado pela trait ```Iterator```, gera um iterador de referências. Ou seja, cada ```employee_permission``` é uma referência a um elemento pertencente ao ```Vec```. Não podemos alterar os valores, mas não gastamos computação gerando cópias.
-
-A instrução:
-
+Take a look at this code, and keep an eye out for the * operator:
 ```rust
 if permission == *employee_permission {
     return true;
 }
 ```
+`employee_permission` is a &String (remember, iter() provides references) but we need to access the **actual** value of the string, not its reference. So, we use the * operator to *de-reference* the variable to get the actual value. 
 
-Note o operador "*". ```employee_permission``` é do tipo ```&String```. Precisamos acessar o valor do String, não da referência. Se fosse ```&&String```, acessariamos o valor com ```**employee_permission```.
-
-Ou seja, se o argumento da função ```permission``` for igual à String acessada, retorna verdadeiro. Senão, continua iterando.
+Going back to the function, the argument `permission` will be compared to the permissions found in vec and if there's a match, the function returns true immediately. 
 
 ---
 
-### Função get_actions
+### Function get_actions
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topic)
+The function `get_actions` return a list of actions recently performed by the user. 
 
-A função ```get_actions``` retorna a lista de ações mais recentes realizadas pelo usuário.
+We'll use this function to introduce the `Result` enum, which we'll go in-depth in the next lesson, but for now think of `Result` as an action outcome that may have also caused an error. 
 
-Essa função da uma breve introdução ao enum ```Result``` que será explicado em detalhes na proxima sub-lição. Simplificando, é um enum que representa uma ação que pode causar um erro.
-
-Neste exemplo, decidimos que a função deve retornar um erro se o usuário for cliente.
+In our example, let's make this function return an error if the user is of type Client.
 
 ```rust
 // /src/model.rs
 pub fn get_actions(&self) -> Result<Vec<String>, String> {
     log("Calling Example2User::get_actions");
     
-    // Se for client, retorna um erro (Como exemplo).
-    // Se for admin ou employee, retorna referencia para o Vec.
-    let actions = match self{
-        Example2User::Client { name: _, id: _, orders: _ } => { return Err(format!("User is Client")); },
+    // If Client, return an error.
+    // If admin or employee, we can return a reference to the vec actions
+    let actions = match self {
+        Example2User::Client { name: _, id: _, orders: _ } => { 
+                return Err(format!("User is Client")); 
+        },
         Example2User::Admin { name: _, id: _, pass: _, actions, } => { actions },
         Example2User::Employee( employee ) => { &employee.actions },
     };
 
+    // create an empty, but mutable vector
     let mut result: Vec<String> = Vec::new();
-    // Usa a referência para criar uma cópia do Vec.
-    for action in actions{
+    // let's create a copy of Vec with the actions from our last match
+    for action in actions {
         result.push(action.clone());
     }
 
     Ok(result)
 }
 ```
+:hand:**NOTE:** The function returns `Result<Vec<String>, String>`. The first type `Vec<String>` is what we choose to be the return of a sucessful outcome. The second type, `String`, is what we choose to return if there was an error (note we say error, not panic, they are very different). 
 
-Note que a função retorna ```Result<Vec<String>, String>```. O primeiro dos tipos ```Vec<String>``` é o que consideramos uma operação de sucesso. O segundo dos tipos ```String``` é o tipo que será retornado se a operação resultar em erro.
-
-Note o bloco em que este erro é chamado:
-
+There's code to return an error, as a String (the second type): 
 ```rust
 return Err(format!("User is Client"));
 ```
 
-E o bloco em que a operação é um sucesso:
+And there's code to return a `Vec<String>` if everything went OK:
 
 ```rust
 Ok(result)
 ```
-
-```Result::Ok(value)``` ou simplesmente ```Ok(value)``` é uma operação de sucesso. ```Result::Err(err)``` ou simplesmente ```Err(err)``` é uma operação de falha. 
-
----
-
-**Detalhe**: o valor entre parènteses não precisa de ser ```value``` ou ```err```. 
-
-```err``` é apenas convenção para erros em ```Result```.
+:warning: **REMEMBER:** `Result::Ok(value)` or simply `Ok(value)` is for a succesful outcome, and `Result::Err(err)` or just `Err(err)` is used when an error occurred. 
+Also note that the variable names for these don't have to be `value` or `err`, that's just a convention when using `Result`.
 
 ---
 
-**Outro detalhe**:
+:hand:**NOTE:** in our example we can't just return the found vec, as it is owned by the enum. So, we have to create a copy: 
 
 ```rust
 let mut result: Vec<String> = Vec::new();
-// Usa a referência para criar uma cópia do Vec.
+
 for action in actions{
     result.push(action.clone());
 }
 ```
 
-Não podemos simplesmente retornar o vetor encontrado. Este pertence ao enum. Neste caso, precisamos criar uma cópia. 
- - Criamos um ```Vec<String>``` vazio. 
- - Iteramos cada um dos valores.
- - Em cada iteração, cria uma cópia ```action.clone()``` de um elemento, e inclui este valor ao fim do vetor ```result.push(action.clone());```
+ - Create an empty `Vec<String>`. 
+ - We iterate over the elements in the `actions` vec.
+ - In each iteration, we create a copy of the element using `action.clone()`, and we append this to our new vec using `result.push();`.
 
 ---
 
-### Escolhendo serializador
+### Choosing a serializer
 
-[topo](#lição-6---1-uso-de-enums)
+[top](#topics)
 
-Uma instrução diferente pode ser notada na implementação de ```example_2_get_actions``` do contrato:
-
+Our `example_2_get_actions` function has something different about it, can you see it? 
 ```rust
 // /src/lib.rs
 #[result_serializer(borsh)]
 pub fn example_2_get_actions(&self) -> Vec<String>{
 ```
+I hope you spotted `#[result_serializer(borsh)]`. By using it, we're being explicit that we want to use `borsh` as our serializer for our function return. 
 
-Isso é para evitar um erro que irá confundir muitos desenvolvedores começando na plataforma. A instrução ```#[result_serializer(borsh)]``` diz ao near_sdk para usar o serializador borsh na saida dessa função.
+There are two options available for the near_sdk when it comes to serialization/deserialization: `serde` and `borsh`. If you want to use `serde`, then you need to implement the traits `Serialize` and `Deserialize` in your Smart Contract. However, if choosing `borsh`, you don't have to, and `borsh` has higher performance. 
 
-Existem duas ferramentas de serialização/deserialização disponiveis para ```near_sdk```: serde e borsh. Como padrão, ```near_sdk``` usa serde para deserializar o coleções como Vec. Mas o problema é que, para isso não causar erros, precisamos implementar as traits ```Serialize``` e ```Deserialize``` ao nosso contrato.
-
-Simplesmente selecionando borsh como serializador de resultado da função, evitamos diversos erros. ```borsh``` é mais rápido que ```serde```. Tente evitar usar ```serde``` o máximo possivel.
+Why not take a small detour from the lessons, and learn more about them? The best way is to read about [serialization protocols](https://www.near-sdk.io/contract-interface/serialization-interface) in the NEAR docs. 
 
 ---
 
-## Proxima Seção
+Lesson 6 - Using Enums :white_check_mark: ... **Done! Congratulations!**
 
-[topo](#lição-6---1-uso-de-enums)
-
-A [próxima seção](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/PT-BR/lesson_6_enums/lesson_6_2_thermometer) será um exemplo prático utilizando Todos os conceitos discutidos anteriormente, mais alguns extras.
-
-A próxima lição será sobre Traits.
+Let's put everything we've learned into developing an app on our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_2_thermometer/).
