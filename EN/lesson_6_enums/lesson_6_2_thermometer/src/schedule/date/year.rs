@@ -38,10 +38,10 @@ impl Year{
         }
 
         let text: &str = match is_negative{
-            false => {
+            true => {
                 "BC"
             },
-            true => {
+            false => {
                 "AD"
             }
         };

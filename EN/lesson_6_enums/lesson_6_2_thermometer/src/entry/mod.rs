@@ -14,10 +14,10 @@ use near_sdk::{
 
 
 use crate::{
-    schedule::Schedule,
+    schedule::Timestamp,
     temperature::{
         Temperature,
-        temp_format::TempFormat,
+        temp_format::TemperatureUnit,
     }
 };
 
@@ -25,13 +25,13 @@ use crate::{
 /// Representa um momento de temperatura e tempo.
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Entry{
-    schedule: Schedule,
-    temperature: Temperature,
+pub struct TemperatureReading {
+    timestamp: Timestamp,
+    measurement: Temperature,
 }
 
 
-impl Entry{
+impl TemperatureReading {
     /// Constroi uma instância de Entry.
     /// 
     ///  - Se time (horario) for omitido. O valor será o momento da chamada da mensagem.
@@ -47,23 +47,20 @@ impl Entry{
     pub fn new(
             time: Option<(u8, u8, f32)>,
             date: Option<(i32, String, u8)>,
-            temp_format: &TempFormat, 
-            value: f32, 
+            temperature_unit: &TemperatureUnit, 
+            temperature_value: f32, 
             arg_temp: Option<String>,
         ) -> Self {
         
-        let schedule: Schedule = Schedule::new(date, time);
-        let temperature: Temperature = Temperature::new(value, temp_format, arg_temp);
-
-        Entry { 
-            schedule, 
-            temperature,
+        TemperatureReading { 
+            timestamp: Timestamp::new(date, time), 
+            measurement: Temperature::new(temperature_value, temperature_unit, arg_temp),
         }
     }
 
     /// Se new_format for um formato de temperatura diferente do atual. Atualiza e realiza a conversão de valores.
-    pub fn update_temp_format(&mut self, new_format: &TempFormat) -> bool{
-        self.temperature.update_temp_format(new_format)
+    pub fn update_temp_format(&mut self, new_format: &TemperatureUnit) -> bool{
+        self.measurement.update_temp_format(new_format)
     }
 }
 

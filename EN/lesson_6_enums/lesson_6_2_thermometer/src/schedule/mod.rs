@@ -28,13 +28,13 @@ use crate::utils::log;
 /// Representa o momento de recebimento da temperatura.
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Schedule{
+pub struct Timestamp {
     date: Date,
     time: Time,
 }
 
 
-impl Schedule{
+impl Timestamp {
     
     fn remainder_from_value(mut value: u64, max: u64) -> (u64, u64) {
         let remainder: u64 = value % max;
@@ -105,7 +105,7 @@ impl Schedule{
         let date: Date = Date::new(day, &month, year);
         let time: Time = Time::new(hour, minute, second);
 
-        Schedule { 
+        Timestamp { 
             date,
             time,
         }

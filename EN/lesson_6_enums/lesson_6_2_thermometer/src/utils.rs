@@ -8,7 +8,7 @@ use near_sdk::serde::{
     Deserialize, Serialize,
 };
 
-use crate::entry::Entry;
+use crate::entry::TemperatureReading;
 
 
 #[allow(unused_imports)]
@@ -42,6 +42,6 @@ pub fn log(msg: &str) {
 #[serde(crate = "near_sdk::serde")]
 #[serde(untagged)]
 pub enum ViewGet{
-    Single(Entry),
-    Multiple(Vec<Entry>),
+    Single(TemperatureReading),
+    Multiple(Vec<TemperatureReading>),
 }

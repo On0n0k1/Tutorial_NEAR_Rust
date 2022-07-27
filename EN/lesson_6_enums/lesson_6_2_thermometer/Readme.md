@@ -1,388 +1,361 @@
-# Lição 6 - 2 Termômetro
+# Lesson 6 - Thermometer
 
-[voltar](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/lesson_6_enums/)
+[back](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/)
 
-Neste exemplo, será visto uma aplicação prática para os conceitos descritos nas lições anteriores. Além dos conceitos anteriores, serão demonstrados tópicos como:
+Time to build a Rust application with all of the concepts we have covered! We will also learn about: 
 
- - Documentação de projetos;
- - Controle de acesso de usuários;
- - Acesso cross-contract;
- - Controle de input;
- - Controle de output;
- - Traits para conversão de tipos;
+ - Project Documentation.
+ - User Access Control.
+ - Cross-Contract Calls.
+ - Input Control.
+ - Output Control.
+ - Using Traits to convert types.
 
 ---
 
-## Indice
+## Topics
 
-[topo](#lição-6---2-termômetro)
-
- - [Idéia](#idéia)
- - [Instalação](#instalação)
-   - [Visual Studio Code](#visual-studio-code)
+ - [Overview](#overview)
+ - [Pre-requisites](#pre-requisites)
    - [Rust](#rust)
-   - [Near-CLI](#near-cli)
- - [Comandos Bash: Compilação](#comandos-bash-compilação)
-   - [Documentação](#documentação)
-   - [Testes](#testes)
-   - [Criação de Sub-contas para Smart Contracts](#criação-de-sub-contas-para-smart-contracts)
-   - [Criação de Sub-contas para Sensores](#criação-de-sub-conta-para-sensores)
-   - [Deletar Sub-conta](#deletar-sub-conta)
- - [Contrato](#contrato)
-   - [Inicialização](#inicialização)
+   - [Visual Studio Code](#visual-studio-code)
+   - [near-cli](#near-cli)
+ - [Bash commands: compiling](#bash-commands-compiling)
+   - [Documentation](#documentation)
+   - [Tests](#tests)
+   - [Creating a sub-account for the Smart Contract](#creating-a-sub-account-for-the-smart-contract)
+   - [Creating sub-accounts for Sensors](#creating-sub-accounts-for-sensors)
+   - [Deleting sub-accounts](#deleting-sub-accounts)
+ - [Smart Contract](#smart-contract)
+   - [Initialization](#initialization)
+   - [Deployment](#deployment)
    - [allow_user](#allow_user)
    - [remove_user](#remove_user)
    - [set_format](#set_format)
    - [new_entry](#new_entry)
-     - [Exemplos](#exemplos-new_entry)
-     - [Pânico](#pânico-new_entry)
+     - [Examples](#examples-new_entry)
+     - [Panic](#panic-new_entry)
    - [list_update_entries](#list_update_entries)
-     - [Exemplos](#exemplos-list_update_entries)
-     - [Pânico](#pânico-list_update_entries)
+     - [Examples](#examples-list_update_entries)
+     - [Panic](#panic-list_update_entries)
    - [clear_entries](#clear_entries)
-     - [Argumentos](#argumentos-clear_entries)
-     - [Exemplo](#exemplo-clear_entries)
-     - [Pânico](#pânico-clear_entries)
+     - [Arguments](#arguments-clear_entries)
+     - [Examples](#examples-clear_entries)
+     - [Panic](#panic-clear_entries)
    - [view_get_format](#view_get_format)
    - [view_get](#view_get)
-     - [Argumentos](#argumentos-view_get)
-     - [Exemplo](#exemplo-view_get)
- - [Implementação](#implementação)
-   - [Documentação de Projetos](#documentação-de-projetos)
+     - [Arguments](#arguments-view_get)
+     - [Examples](#examples-view_get)
+ - [Implementation](#implementation)
+   - [Project Documentation](#project-documentation)
      - [Comentários sobre Arquivo](#comentários-sobre-arquivo)
      - [Comentários e Documentação](#comentários-e-documentação)
      - [Exemplos/Testes em Documentação](#exemplostestes-em-documentação)
    - [Organização de Módulos](#organização-de-módulos)
    - [Controle de Acesso de Usuários](#controle-de-acesso-de-usuários)
    - [Acesso Cross-Contract](#acesso-cross-contract)
-   - [Controle de Output](#controle-de-output)
-   - [Controle de Input](#controle-de-input)
-   - [Implementação de Traits](#implementação-de-traits)
- - [Fim](#fim)
+   - [Handling Output](#controle-de-output)
+   - [Handling Input](#controle-de-input)
+   - [Implementing Traits](#implementação-de-traits)
 
 ---
 
-## Idéia
+## Overview
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
+In our previous lesson, we learned about `enum` and how to use the `match` keyword. We can also use enums to handle I/O (input/output) of data.
 
-Na seção anterior, foram descritos enums e como utilizar instruções match. Além das funcionalidades descritas, também podemos utilizar enums para controlar a entrada/saida de dados. 
+Let's image we are an embedded developer working on a device that monitors temperature, and so we need input from several thermometers at the same time. We realized the following constraints: 
 
-Digamos que um desenvolvedor de aplicativos embarcados (embedded) quer monitorar os dados de diversos termômetros simultaneamente. Logo de início, foram notadas as seguintes restrições:
+ - **Connecting** all devices to a single computer is impractical.  
+ - **Keeping** a server up 24x7 receiving sensor data is also impractical.
+ - **Have** a server up in the cloud is also impractical, because the developer doesn't want to pay a centralized entity (and give even **more** money to a billionarie).
 
- - **Conectar** todos os dispositivos a um computador é inviável.
- - **Manter** a máquina como servidor 24 horas recebendo input dos sensores também é inviável.
- - **Criar** um servidor nuvem como aws também é inviável porque o desenvolvedor não quer patrocinar o foguete de algum bilhonário.
+So, the developer decides to create a smart contract to store the data. Some clear advantages are:
 
-Portanto, o desenvolvedor decide criar um smart contract para armazenar os dados. A vantagem de uma alternativa dessas são:
+ - **Easy to implement**. The user only requires an account to store a smart contract, and so an account-per-sensor seems a good solution.
+ - **Easy to automate**. The only thing that changes is the smart contract's name (per sensor). With a few scripts, a developer can have a fully working system in minutes.
+ - **Easy to extend**. In this example we only focus on temperature readings but the smart contract can be easily changed to receive and save other data.
 
- - **Fácil de implementar**. O usuário só precisa de uma conta para armazenar o smart contract. Uma conta para cada sensor utilizado.
- - **Fácil de automatizar**. A única coisa que muda entre cada aplicação é o nome dos contratos. Com bons scripts, desenvolvedores podem implementar o sistema em minutos.
- - **Fácil de expandir**. Este exemplo utiliza valores de temperatura. Mas o contrato pode ser facilmente alterado para receber qualquer tipo de dados.
+Now, does the contract only store data? There's no computation on the data received? Actually, computing could be made locally in the device, and there's no need to waste [gas](https://docs.near.org/concepts/basics/transactions/gas) on computing that can be done off-chain. Plus, there's a lot of libraries out there for data-science, no need to re-invent the wheel. 
 
-Mas o contrato apenas coleta dados? Não executa nenhuma computação sobre os dados? A computação de dados pode ser executada localmente pelo desenvolvedor. Não há necessidade de desperdiçar gás em operações que podem ser facilmente executadas localmente.
+:warning: **Always "think in gas" (gas usage) when it comes to on-chain data or computation**.
 
-O contrato resolve o problema de implantação e comunicação entre os dispositivos. Já existem bibliotecas eficientes para ciência de dados. Não há necessidade de reinventar a roda. 
-
-Resumindo. Sensores enviam dados para o smart contract. O Smart Contract armazena os dados de acordo com o nome do sensor, formato de temperatura, data e tempo de recebimento. A máquina do usuário acessa o contrato e coleta os dados armazenados para processamento.
-
----
-
-## Instalação
-
-[topo](#lição-6---2-termômetro)
-
- - Visual Studio Code;
- - Rust;
- - Near-cli;
-
-### Visual Studio Code
-
- - Link para instalação: https://code.visualstudio.com/ ;
- - Instale a extensão para rust: https://marketplace.visualstudio.com/items?itemName=Zerotaskx.rust-extension-pack ;
-
-
-**Opcional**: O pacote de extensão acima instala uma extensão para a linguagem rust chamada ```Rust```. Esta extensão pode causar bugs de linting, principalmente quando analizando bibliotecas webassembly. Eu, pessoalmente, costumo desativar está extensão e ativar outra chamada ```rust-analyzer```.
-
-**Extra**: Não tenha ```rust``` e ```rust-analyzer``` ativos simultaneamente. ```crates``` e ```Better Toml``` podem ser mantidos com ```rust-analyzer```, porém.
+In summary, sensors send data to the smart contract, who stores on-chain the sensor name, temperature and date/time of the measurement. Then, any consumer (e.g. our own computer) can later on access on-demand this data from all contracts and do further processing and analysis. 
 
 ---
+
+## Pre-requisites
+
+[top](#topics)
+ - Install Rust.
+ - Download and Install Visual Studio Code.
+ - Install near-cli.
+
 
 ### Rust
+The easiest way to install Rust is to follow the steps in https://www.rust-lang.org/tools/install, where you'll find instructions for all major operating systems (even Windows Subsytem for Linux). There's also [other installation methods](https://forge.rust-lang.org/infra/other-installation-methods.html) available.
 
-Um script para instalação existe em: https://www.rust-lang.org/tools/install.
-
-Após executar o script em um terminal, execute a seguinte instrução para permitir compilação para webassembly:
+Once you have Rust installed, you'll need to add a target so you can compile to webassembly (WASM). Run the following command in your shell:
 
 ```bash
 rustup target add wasm32-unknown-unknown
 ```
-
-Para desinstalar rust e todas as ferramentas associadas:
-
+If you ever need to uninstall Rust, that's pretty easy too:
 ```bash
 rustup self uninstall
 ```
 
----
+### Visual Studio Code
+ - Download and install from https://code.visualstudio.com
+ - Once you have installed Visual Studio, add this extension to have additional tooling that will help you with Rust programming  https://marketplace.visualstudio.com/items?itemName=Zerotaskx.rust-extension-pack
 
-### Near-cli
+:hand: **NOTE:** an old version of the extension mentioned above added a dependency (extension) called `rust` which has been deprecated in favor of `rust-analyzer`. You should always use `rust-analyzer` as it is kept up-to-date (and be sure **not** to have both `rust` and `rust-analyzer` installed and running!)
 
-[topo](#lição-6---2-termômetro)
 
-[(Mais detalhes)](https://docs.near.org/docs/tools/near-cli)
+### near-cli
+An npm-installable tool for interacting with the NEAR backend (RPC server). For near-cli to work, you need [node.js](https://nodejs.org/) and npm installed (npm is installed with node.js). If you need to learn more about node.js, be sure to visit their [guides](https://nodejs.org/en/docs/guides/), but in short, node.js is a javascript runtime environment (which lets you develop applications using javascript and run them outside of the browser as regular app). 
 
-É uma ferramenta npm. **Instale npm e node**. É recomendado instalar através da ferramenta **npx**, para manter controle sobre diversas versões no mesmo sistema. Existem diversos tutoriais para windows e linux. Não explicarei em mais detalhes.
-
-Com **npm** e **node** instalado, instale **near-cli** globalmente com o seguinte comando:
+Once you have node (and npm) installed, you can install near-cli using npm: 
 
 ```bash
 npm install -g near-cli
 ```
+The `-g` option will install near-cli globally (for all users).
+
+There's quite a lot of options that you **need** to learn in order to use near-cli, so be sure to [read the docs](https://docs.near.org/docs/tools/near-cli).
 
 ---
 
-## Comandos Bash: Compilação
+## Bash commands: compiling
+[top](#topics)
 
-[topo](#lição-6---2-termômetro)
-
-Compile o projeto com o comando:
+You can compile the project using: 
 
 ```bash
 cargo build --target wasm32-unknown-unknown --release -p lesson_6_2_thermometer
 ```
- - ```--target wasm32-unknown-unknown```: Compila para webassembly;
- - ```--release```: Otimizado para produção;
- - ```-p```: Esta crate pertence ao workspace lesson_6_enums. Este comando especifica apenas lesson_6_2_thermometer para ser compilado;
+ - `--target wasm32-unknown-unknown`: Compile to webassembly.
+ - `--release`: Output production-ready code; compile using most compiler optimizations.
+ - `-p`: Remember this crate is part of the workspace defined as `lesson_6_enums`. Using the flag `-p` tells the compiler that only `lesson_6_2_thermometer` should be compiled.
 
 ---
 
-### Documentação
-
-[topo](#lição-6---2-termômetro)
-
-Documentação sobre contrato implementada. Gere um website com todos os módulos executando o comando:
+### Documentation
+[top](#topics)
+Did you know you can generate documentation using cargo? This command will generate documentation (as a webiste) for all modules on this crate:
 
 ```bash
 cargo doc --open -p lesson_6_2_thermometer
 ```
-
- - p: Como o projeto está incluido como componente de workspace da lição "lesson_6_enums". é necessário especificar a crate.
+ - `-p`: Remember, you need to specify that only `lesson_6_2_thermometer` is the crate we want to generate documentation for.
 
 ---
 
-### Testes
+### Tests
 
-[topo](#lição-6---2-termômetro)
-
-Execute testes de unidade com a instrução:
+[top](#topics)
+Execute tests (including those found in documentation) by running:
 
 ```bash
 cargo test -p lesson_6_2_thermometer
 ```
-
-Isso irá testar os exemplos na documentação também.
+Rust has a tool called `rustdoc` that extracts code samples from documentation comments and executes them. Learn more about [rustdoc](https://doc.rust-lang.org/rustdoc/) for more information on writing doc tests.
 
 ---
 
-### Criação de Sub-contas para Smart Contracts
+### Creating a sub-account for the Smart Contract
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
+This is the account where the smart contract will be deployed. 
 
-Onde o contrato será implantado. Substitua ```your-main-account.testnet``` pelo nome de sua conta NEAR. Substitua ```your-account-name``` pelo nome da conta que quiser para armazenamento do seu contrato.
+Let's use near-cli to create sub-accounts. Using the `near` command, you need to specify two options:
+- your **existing** NEAR testnet account. So, replace `your-main-account.testnet` with **your testnet account name**.
+- the name you want for the **new** sub-account where the smart contract will be deployed. So, replace `smart-contract-account-name` with the name you want.
 
 ```bash
-near create-account your-account-name.your-main-account.testnet --masterAccount your-main-account.testnet --initialBalance 90
+near create-account smart-contract-account-name.your-main-account.testnet --masterAccount your-main-account.testnet --initialBalance 90
 ```
+`--masterAccount`: master account, able to create sub-accounts. 
+`--initialBalance`: amount of NEAR to be transferred to the sub-account from the master account. If you don't specify an amount, 100 NEAR will be sent from the master account. 
 
- - ```--masterAccount```: Conta "mestre", que tem permissões administrativas sobre a sub-conta.
- - ```--initialBalance```: Quantidade de NEAR transferido pela conta "mestre" na criação desta sub-conta.
+If you need a refresher about accounts on NEAR, be sure to [read the docs](https://docs.near.org/concepts/basics/account) once more.
 
 ---
 
-### Criação de sub-conta para Sensores
+### Creating sub-accounts for Sensors
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
+We won't deploy any contracts to these sub-accounts but they will be used to sync with the master account.
 
-Não haverão contratos nessas sub-contas. Mas serão usadas pelos dispositivos para comunicar com a conta mestre. Substitua:
+You need to replace:
 
- - ```your-sub-account```: nome da conta do sensor;
- - ```your-account-name```: nome da sub-conta que possuirá o contrato;
- - ```your-main-account```: nome da sua conta mestre;
+ - `sensor-sub-account`: account name for the sensor.
+ - `smart-contract-account-name`: account name where the smart contract will be deployed.
+ - `your-main-account`: master account name.
 
 ```bash
-near create-account your-sub-account.your-account-name.your-main-account.testnet --masterAccount your-account-name.your-main-account.testnet --initialBalance 10
+near create-account sensor-sub-account.smart-contract-account-name.your-main-account.testnet --masterAccount smart-contract-account-name.your-main-account.testnet --initialBalance 10
 ```
-
- - ```--masterAccount```: Conta "mestre", que tem permissões administrativas sobre a sub-conta.
- - ```--initialBalance```: Quantidade de NEAR transferido pela conta "mestre" na criação desta sub-conta.
-
-**Recomendação**: Como exercício de prática, aprimore este contrato fazendo com que o contrato crie/delete as sub-contas automaticamente ao executar as funções ```allow_user```/```remove_user```. Não existe documentação sobre isso na versão "3.1.0". Terá que clonar manualmente o repositório, gerar documentação com o comando ```cargo doc --open``` e encontrar a seção do módulo ```env``` com detalhes sobre a instrução de criação de conta. Boa sorte!
+`--masterAccount`: master account, able to create sub-accounts. 
+`--initialBalance`: amount of NEAR to be transferred to the sub-account from the master account. If you don't specify an amount, 100 NEAR will be sent from the master account. 
 
 ---
 
-### Deletar sub-conta
+### Deleting sub-accounts
 
-[topo](#lição-6---2-termômetro)
-
-É recomendado deletar as sub-contas dos sensores antes do smart contract. O primeiro argumento é a conta a deletar, o segundo argumento é a conta que irá receber todo o NEAR armazenado.
+[top](#topics)
+You need to delete sensor sub-accounts prior to deleting the smart contract account. You specify the account to delete, and also the account that will receive any NEAR found on the account to be deleted.
 
 ```bash
-near delete sub-conta-a-deletar.testnet conta-a-receber.testnet
+near delete sub-account-to-delete.testnet receiver-beneficiary.testnet
 ```
 
- - ```sub-conta-a-deletar.testnet```: nome da sub-conta que pretende deletar;
- - ```conta-a-receber.testnet```: nome da sub-conta que irá receber os fundos. Se o nome for inválido, todos os fundos armazenados serão perdidos permanentemente;
+ - `sub-account-to-delete.testnet`: account name to delete
+ - `receiver-beneficiary.testnet`: account name to receive any funds from the deleted account. If you specify an invalid name, any funds from the deleted account will be distributed among validators.
 
 ---
 
-## Contrato
+## Smart Contract
+[top](#topics)
 
-[topo](#lição-6---2-termômetro)
+Before reviewing the code, keep in mind that just after being deployed, the only user than can "call" functions in the smart contract is its **owner** (the account where you deployed it). So, you need to specify that account for the first calls. 
 
-Antes de observar o funcionamento das funções. Vale saber que após implantação, o contrato apenas permite execução de chamadas "call" para o dono (owner). Portanto, as chamadas call administrativas devem ser assinadas com o mesmo nome de conta do Smart Contract.
-
-Outros usuários (os sensores) podem ser incluídos na lista de usuários permitidos. Cada usuário possuirá a própria lista de armazenamento de dados.
-
----
-
-### Inicialização
-
-[topo](#lição-6---2-termômetro)
-
-O contrato inicializa automaticamente com o formato de temperatura Kelvin. O único usuário incluido na lista de permissões é o dono (owner).
+Other users (sensors) can, and will, later be included on a list of allowed users, so that each user (sensor) will have their own data storage. 
 
 ---
 
-### allow_user:
+### Initialization
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
+
+The contract initializes using Kelvin (as temperature unit) and only a single user (the owner).
+
+---
+
+### Deployment
+[top](#topics)
+
+Deploy your contract to NEAR's testnet by running: 
+```bash
+near deploy --accountId smart-contract-account-name.your-main-account.testnet --wasmFile .\target\wasm32-unknown-unknown\release\lesson_6_2_thermometer.wasm
+```
+:hand: **NOTE:** depending on how you built your project, the path to the _.wasm_ file might be different on your machine. 
+
+:warning: Remember that the account where you'll deploy your contract to has to have enough NEAR for storage. Read about [storage staking](https://docs.near.org/concepts/storage/storage-staking).
+
+---
+
+### add_user
+
+[top](#topics)
 
 ```bash
-near call my-contract allow_user '{"account_id": "sensor-account-id.testnet"}' --accountId my-contract
+near call my-contract add_user '{"account_id": "sensor-account-id.testnet"}' --accountId my-contract
+
 ```
+Adds the specified user to the list of allowed users. Only the owner can call this function, and it cannot be used cross-contract.
 
 
-Função call. Apenas owner tem permissão de executar esta função. Não pode ser cross-contract.
+Parameters:
+ - account_id: String. Account name to add to the allowed user list.
 
-Inclui o id de conta informado na lista de usuários permitidos.
-
-Argumentos:
-
- - account_id: String. Nome de usuário para incluir na lista de permissões.
-
-Pânico:
-
- - Se for uma chamada cross-contract;
- - Se não for owner;
- - Se id de conta for um id inválido.
- - Se usuário ja estiver incluido.
+Panics:
+ - If cross-contract call.
+ - If caller is not the owner.
+ - If account name is invalid.
+ - If account name already exists.
 
 ---
 
-### remove_user:
+### remove_user
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
 ```bash
 near call my-contract remove_user '{"account_id": "sensor-account-id.testnet"}' --accountId my-contract
 ```
+Remove the specified user from the list of allowed users, all data stored for this user will be lost. You can't remove the owner. Only the owner can call this function, and it cannot be used cross-contract.
 
-Função call. Apenas owner tem permissão de executar esta função. Não pode ser cross-contract.
+Parameters:
+ - account_id: String. Account name to remove from the allowed user list.
 
-Exclui o id de conta informado da lista de usuários permitidos. Todos os dados armazenados relacionados a este usuário são perdidos.
-
-Owner não pode ser removido.
-
-Argumentos:
-
- - account_id: String. Nome de usuário para excluir da lista de permissões.
-
-Pânico:
- 
- - Se for uma chamada cross-contract;
- - Se o usuário chamando a função não for owner;
- - Se o nome de usuário for inválido;
- - Se o usuário informado não existir na lista de permissões;
- - Se o nome de usuário informado for o owner;
+Panics: 
+ - If cross-contract call.
+ - If the caller is not the owner.
+ - If account name is invalid.
+ - If account name doesn't exist.
+ - If acount name to remove is the owner.
 
 ---
 
-### set_format
+### set_default_temperature_unit
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
 ```bash
-near call my-contract set_format '{"temp_format": "Fahrenheit}' --accountId my-contract
+near call my-contract set_default_temperature_unit '{"unit_name": "Fahrenheit}' --accountId my-contract
 ```
 
 ```bash
-near call my-contract set_format '{"temp_format": "Kelvin}' --accountId my-contract
+near call my-contract set_default_temperature_unit '{"unit_name": "Kelvin}' --accountId my-contract
 ```
 
 ```bash
-near call my-contract set_format '{"temp_format": "Celsius}' --accountId my-contract
+near call my-contract set_default_temperature_unit '{"unit_name": "Celsius}' --accountId my-contract
 ```
+Changes the default temperature unit (Fahrenheit, Kelvin, Celius), but it will not update/convert any values previously stored.
 
-Função call. Apenas owner pode executar esta função. Não pode ser cross-contract.
+All temperature readings are converted into an internal system unit (the default). That allows sensors with different temperature units to simply send their measurements. Only the owner can call this function, and it cannot be used cross-contract.
 
-Altera o formato de temperatura do sistema para o formado. 
+ - The **call** function `list_update_entries` converts all stored values to the new default temperature unit.
+ - The **view** function `view_get` returns all stored values.
 
-Todo input de temperatura é convertido para o formato do sistema. Isso permite que diversos sensores diferentes podem ser usados simultaneamente.
-
-Alterar o formato de temperatura não irá alterar os valores armazenados anteriormente.
-
- - A função call ```list_update_entries``` converte os valores armazenados antes de retornar.
- - A função de coleta view ```view_get``` retorna os valores armazenados sem conversão de valores.
-
-Pânico:
- - Se o nome de usuário for inválido;
- - Se o usuário informado não existir na lista de permissões;
- - Se o nome de usuário informado for o owner;
+Panics:
+ - If account name is invalid.
+ - If cross-contract call.
+ - If the caller is not the owner.
 
 ---
 
 ### new_entry
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Função call. Todos usuários permitidos podem executar esta função. Pode ser cross-contract. Adiciona um input de temperatura associado ao usuário que executou a função.
+This **call** function stored a new temperature measurement from any allowed user (can be cross-contract call too). 
 
-Argumentos:
- - **time**: Opcional. Tupla com estrutura ```(u8, u8, f32)``` com os valores para hora minuto e segundo, respectivamente. Se omitido, o contrato utilizará o valor do momento em que a função foi executada (UTC).
- - **date**: Opcional. Tupla com estrutura ```(i32, String, u8)``` com os valores para ano, mês e dia, respectivamente. Se omitido, o contrato utilizará o dia em que a função foi executada.
- - **temp_value**: f32, o valor de temperatura coletado. Não pode ser menor do que zero absoluto.
- - **temp_format**: Opcional, String. Se omitido, o contrato utilizará o formato de temperatura do sistema. Se o formato for diferente do formato do sistema, realizará conversão da temperatura antes de armazenar.
+Parameters:
+ - **time**: optional. A tuple `(u8, u8, f32)` representing hour, minute and second. If ommited, the default value will be the current time (UTC) when the function was called.
+ - **date**: optional. A tuple `(i32, String, u8)` representing year, month and day. If ommited, the default value will be the current date when the function was called.
+ - **temp_value**: A `f32`, which is the measured temperature value, which cannot be less than absolute zero. 
+ - **temp_format**: Optional. A `String`, representing the temperature unit. If ommited, the default system unit will be used. If the unit is different to the default system unit, a conversion will be made to the default system unit prior to storing.
 
-#### Exemplos new_entry
+#### Examples new_entry
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-O comando abaixo armazena uma temperatura de 100.0 utilizando o formato de temperatura do sistema, no dia do sistema, no horário do sistema.
-
+Store a new measurement of 100 using the default system temperature unit, and current date and time:
 ```bash
 near call my-contract new_entry '{"temp_value": 100 }' --accountID my-sensor-id
 ```
 
-O comando abaixo armazena uma temperatura de 100 Celsius. Utiliza o dia do recebimento da mensagem. Utiliza o horário do recebimento da mensagem.
-
+Store a new measurement of 100 degrees Celsius, using the current date and time:
 ```bash
 near call my-contract new_entry '{"temp_value": 100, "temp_format": "Celsius"}' --accountID my-sensor-id
 ```
 
-O comando abaixo armazena uma temperatura de 50.5 Fahrenheit. Dia 11 de fevereiro, 2022. Horário do recebimento da mensagem. **Não causará panic se a data for diferente da atual**.
-
+Store a new measurement of 50.5 degrees Fahrenheit, using the provided date and the current time:
 ```bash
 near call my-contract new_entry '{"temp_value": 50.5, "temp_format": "Fahrenheit", "date: [2022, "feb", 11]"}' --accountID my-sensor-id
 ```
 
-O comando abaixo armazena uma temperatura de 11.5 Fahrenheit. Data 27 de março, 2018. Horário 10:50:9.3453.
+Store a new measurement of 11.5 degrees Fahrenheit, using the provided date and the provided time:
 
 ```bash
 near call my-contract new_entry '{"temp_value": 11.5, "temp_format": "f", "date": [2018, "mar", 27], "time": [10, 50, 9.3453]}' --accountID my-sensor-id
 ```
 
-O comando abaixo armazena uma temperatura de -45.4 Celsius. Horário 23:41:4.443. Data do recebimento da mensagem.
+Store a new measurement of -45.4 degrees Celsius, using the current date and the provided time:
 
 ```bash
 near call my-contract new_entry '{"temp_value": -45.4, "temp_format": "c", "time": [23, 41, 4.443]}' --accountID my-sensor-id
@@ -394,37 +367,22 @@ O comando abaixo armazena uma temperatura de 44.13 Kelvin. Horário do recebimen
 near call my-contract new_entry '{"temp_value": 44.13, "temp_format": "kelvin"}' --accountID my-sensor-id
 ```
 
-#### Pânico new_entry
-
-[topo](#lição-6---2-termômetro)
-
- - Se o **usuário** não tem permissão de acesso;
- - Se **hora** (time) não for um valor negativo ou maior do que 23;
- - Se **minuto** (time) não for um valor negativo ou maior do que 59;
- - Se **segundo** (time) for um valor negativo ou maior do que 59.9999...;
- - Se **dia** (date) for um valor inválido para o mês e ano;
- - Se **mês** (date) for um String inválido para mês;
- - Se **temp_format** for um String inválido;
-
----
-
 ### list_update_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Função call. Pode ser cross-contract. Retorna todas as entries associadas a um id de conta.
+This **call** fuction returns all temperature readings (measurements) for a specified account, converting to the default temperature unit, if needed.
 
+All allowed users can access their own data, but only the owner can access other user's data. This restriction is in place to keep in check gas usage. Any user or account can still take advantage of **view** functions to gather all data. 
 
-Todos os usuários permitidos podem acessar os próprios dados. Mas apenas owner tem permissão de acessar dados de outros usuários. Essa restrição existe para manter controle sobre consumo de gás no contrato. Outros usuários ainda podem coletar os dados utilizando a função view.
-
-Argumentos:
- - account_id: Opcional. String. ID de usuário a ser coletado. Se omitido, retornará os dados do usuário que executou a função.
+Parameters:
+ - account_id: Optional. A `String` representing the account to retrieve data for. If not specified, it will return data for the caller account.
 
 **Retorna**: Vec com todas as entries associadas ao id de conta.
 
-#### Exemplos list_update_entries
+#### Examples list_update_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
 O exemplo abaixo retorna todas as entries associadas ao usuário "my-sensor-id".
 
@@ -1085,12 +1043,7 @@ A trait ```std::fmt::Display``` parece complicado, mas simplesmente permite o us
 
 ---
 
-## Fim
+Lesson 6 - Thermometer :white_check_mark: ... **Done! Congratulations!**
 
-[topo](#lição-6---2-termômetro)
-
-A próxima seção mostrará aplicações úteis para Result.
-
-A próxima lição será sobre traits.
-
+Let's learn next all we can about `Result` on our [next lesson](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_3_game_score/).
 
