@@ -121,5 +121,4 @@ You need to install the following before starting the lessons:
  - [Lesson 4: Modules](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_4_modules)
  - [Lesson 5: Using Macros](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_5_macro_usage)
  - [Lesson 6: Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums)
- - Lesson 7: Traits
- - Lesson 8: Collections
+
