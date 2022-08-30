@@ -376,7 +376,9 @@ impl Contract{
 
         assert!(self.users.contains(&account_id), "Account {} not found.", &account_id);
         
-        let entries: Vector<TemperatureReading> = match self.entries.remove(&account_id){
+        // entries.remove: 
+        // Removes a key from the map, returning the value at the key if the key was previously in the map
+        let entries: Vector<TemperatureReading> = match self.entries.remove(&account_id) {
             None => panic!("Couldn't find entries for user {}.", account_id),
             Some(mut value) => {
                 value.clear();

@@ -34,29 +34,23 @@ Time to build a Rust application with all of the concepts we have covered! We wi
    - [set_format](#set_format)
    - [new_entry](#new_entry)
      - [Examples](#examples-new_entry)
-     - [Panic](#panic-new_entry)
    - [list_update_entries](#list_update_entries)
      - [Examples](#examples-list_update_entries)
-     - [Panic](#panic-list_update_entries)
    - [clear_entries](#clear_entries)
-     - [Arguments](#arguments-clear_entries)
      - [Examples](#examples-clear_entries)
-     - [Panic](#panic-clear_entries)
    - [view_get_format](#view_get_format)
    - [view_get](#view_get)
-     - [Arguments](#arguments-view_get)
      - [Examples](#examples-view_get)
- - [Implementation](#implementation)
+ - [Project Development](#project-development)
    - [Project Documentation](#project-documentation)
-     - [Comentários sobre Arquivo](#comentários-sobre-arquivo)
-     - [Comentários e Documentação](#comentários-e-documentação)
-     - [Exemplos/Testes em Documentação](#exemplostestes-em-documentação)
-   - [Organização de Módulos](#organização-de-módulos)
-   - [Controle de Acesso de Usuários](#controle-de-acesso-de-usuários)
-   - [Acesso Cross-Contract](#acesso-cross-contract)
-   - [Handling Output](#controle-de-output)
-   - [Handling Input](#controle-de-input)
-   - [Implementing Traits](#implementação-de-traits)
+     - [File comments](#file-comments)
+     - [Comments in code](#comments-in-code)
+   - [Modules](#modules)
+   - [User access control](#user-access-control)
+   - [Cross-Contract calls](#cross-contract-calls)
+   - [Handling Output](#handling-output)
+   - [Handling Input](#handling-input)
+   - [Implementing Traits](#implementing-traits)
 
 ---
 
@@ -378,75 +372,74 @@ All allowed users can access their own data, but only the owner can access other
 Parameters:
  - account_id: Optional. A `String` representing the account to retrieve data for. If not specified, it will return data for the caller account.
 
-**Retorna**: Vec com todas as entries associadas ao id de conta.
+**Returns**: A `Vec` with all temperature readings (measurements) associated with a user.
 
 #### Examples list_update_entries
 
 [top](#topics)
 
-O exemplo abaixo retorna todas as entries associadas ao usuário "my-sensor-id".
+This will return all temperature readings associated with the user (account) "my-sensor-id":
 
 ```bash
 near call my-contract list_update_entries '{}' --accountID my-sensor-id
 ```
 
-O exemplo abaixo retorna todas as entries associadas a outro usuário. Apenas owner tem permissão para isso.
+This will return all temperature readings associated with another user (specified with account_id). Only the owner can call retrieve data for another user:
 
 ```bash
 near call my-contract list_update_entries '{"account_id": "my-sensor-id.testnet"}' --accountID my-contract
 ```
 
-#### Pânico list_update_entries
+#### Panic list_update_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
- - Se usuário não tiver permissão de acesso;
- - Se usuário não for owner e estiver tentando atualizar as entries de outro usuário.
- - Se usuário não for encontrado;
-
+ - If the user is not on the allowed user list.
+ - If the user is not owner and is trying to update other user's data.
+ - If the user is not found.
 
 ---
 
 ### clear_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Função call. Apenas owner pode chamar esta função. Pode ser cross-contract. Apaga todas as entries associadas a um usuário.
+This **call** function clears all user data (temperature readings) for a user. Can be cross-contract call and only the owner can call this function.
 
-O motivo da função permitir cross-contract é para facilitar automação de contrato. Contratos externos não podem incluir ou remover usuários permitidos. Mas podem adicionar entries, podem coletar dados e remover dados.
+The reason this function can be cross-contract is to make it easier for automation. Other contracts can't add or remove users, but they can add temperature readings and collect user data.
 
-Usuários não tem permissão de utilizar essa função para evitar ações suspeitas. Caso um dos sensores for acessado por um terceiro, este terá o acesso mais limitado possivel ao sistema. Sensores deste projeto existem apenas para incluir entries. Nada mais.
+Users don't have permissions to use this function in order to increase security. If one sensor was hacked, the hacker would only have the most limited functionality. Sensors only exist to provide temperature readings. 
 
-#### Argumentos clear_entries
+#### Parameters clear_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
- - **account_id**: Opcional. String. ID de usuário para remover todas as entries. Se omitido, remove todas as entries do owner.
+ - **account_id**: Optional. A `String`, representing the account to remove data from. If ommited, **all data for the owner** will be removed.
 
-#### Exemplo clear_entries
+#### Examples clear_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-O exemplo abaixo remove todas as entries associadas ao id "my-sensor-id".
+This will remove all temperature readings (measurements) associated with the user "my-sensor-id".
 
 ```rust
 near call my-contract clear_entries '{"account_id": "my-sensor-id.testnet"}' --accountID my-contract
 ```
 
-#### Pânico clear_entries
+#### Panic clear_entries
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
- - Se o usuário não for owner;
- - Se id de conta não for encontrado;
+ - If user is not the owner.
+ - If account is not found.
 
 ---
 
 ### view_get_format
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Função view. Retorna o formato de temperatura armazenado como String.
+A **view** function. Returns a `String` representing the default temperature unit.
 
 ```bash
 near view my-contract view_get_format '{}'
@@ -456,51 +449,49 @@ near view my-contract view_get_format '{}'
 
 ### view_get
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Função view. Retorna um ou mais valores associados a um id de conta.
+A **view** function. Returns temperature readings (measurements) associated with an account.
 
-Note que esta função é uma função view. Não realiza computação. E ainda assim retorna dois tipos de resultado possiveis.
+:hand: **NOTE:** this is a **view** function and so there's not gas involved. However, it can still return two different result types. Take a look at `ViewGet` in `./src/utils.rs`.
 
-O tipo ```ViewGet``` é declarado em './src/utils.rs'.
 
 ```rust
 #[derive(Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[serde(untagged)]
 pub enum ViewGet{
-    Single(Entry),
-    Multiple(Vec<Entry>),
+    Single(TemperatureReading),
+    Multiple(Vec<TemperatureReading>),
 }
 ```
+Let's take a closer look at the declaration:
+ - serde is used for JSON serialization and deserialization.
+ - `#[serde(untagged)]` allows not using an explicit JSON tag for a type, and so we can have any type of variant in the enum. In our enum `ViewGet`, we can then have two variants:`Single(TemperatureReading)` and `Multiple(Vec<TemperatureReading>)`. 
+ 
+ Learn about serde's [enum representations](https://serde.rs/enum-representations.html), or specifically more about [untagged](https://serde.rs/enum-representations.html#untagged).
 
-Com esta declaração, percebe-se:
+This is a way to allow the developer to take advantage of enums to simply focus on getting a result.
 
- - serde é usado para serializar e deserializar o tipo para json;
- - ```#[serde(untagged)]``` faz a serialização mostrar os valores contidos nas tuplas no json. Neste caso ```Entry``` ou ```Vec<Entry>```.
+:hand: **NOTE:**: this example was just made this way to show the possibility of returning different variants as a result. It could lead to increasing system complexity!
 
-Dessa forma, o desenvolvedor pode usar as vantagens de um enum sem afetar a experiência do usuário. Que apenas vê o resultado.
+#### Parameters view_get
 
-**Aviso**: Este exemplo existe apenas para demonstrar a possibilidade de retornar diversos tipos. Implementar isso em outras linguagens pode aumentar a complexidade de código desnecessariamente. Tome cuidado com as necessidades do sistema.
+[top](#topics)
 
-#### Argumentos view_get
+ - index: u64. Optional. The index for the temperature reading to return. If omitted, return all temperature readings. 
+ - account_id: A `String` representing the account that has associated temperature readings to return.
 
-[topo](#lição-6---2-termômetro)
+#### Examples view_get
 
- - index: u64. Opcional. Index da entry a ser retornada. Se omitida, retorna todas as entries.
- - account_id: String. ID de usuário para retornar entries.
+[top](#topics)
 
-#### Exemplo view_get
-
-[topo](#lição-6---2-termômetro)
-
-A instrução abaixo retorna o primeiro elemento (se existir) associado a conta de usuário "sensor-id".
+This will return the first (with an index of 0) temperature reading, if found, associated with the account "sensor-id":
 
 ```bash
 near view my-contract view_get '{"index": 0, "account_id": "sensor-id.testnet"}'
 ```
-
-A instrução abaixo retorna todas as entries associadas ao id de conta "sensor-id".
+This will return all temperature readings associated with the account "sensor-id":
 
 ```bash
 near view my-contract view_get '{"account_id": "sensor-id.testnet"}'
@@ -508,82 +499,63 @@ near view my-contract view_get '{"account_id": "sensor-id.testnet"}'
 
 ---
 
-## Implementação
+## Project Development
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Esta seção explicará como as funcionalidades descritas acimas foram alcançadas.
+In this section, let's explain how we developed this project by going over a checklist:
 
- - Documentação de projetos;
- - Organização de módulos;
- - Controle de acesso de usuários;
- - Acesso cross-contract;
- - Controle de input;
- - Controle de output;
- - Implementação de traits;
+ - Project documentation.
+ - Module organization.
+ - Access control for users.
+ - Cross-contract calls.
+ - Handling input;
+ - Handling output;
+ - Implemmenting Traits.
 
 ---
 
-### Documentação de projetos
+### Project documentation
 
-[topo](#lição-6---2-termômetro)
-
-Como descrito [acima](#documentação) o comando:
+[top](#topics)
+In order to create documentation, we can take advantage of `cargo` by running: 
 
 ```bash
 cargo doc --open --lesson_6_2_thermometer
 ```
+This will create a website with all documentation for our project.
 
-Gera um website com a toda a documentação do nosso projeto. A seguir serão descritos alguns detalhes sobre documentação:
+However, there are some rules we need to follow. Let's go over them next:
 
+#### File comments
+Use `//!` at the beginning of files for module-level documentation.
 
----
-
-#### Comentários sobre arquivo
-
-[topo](#lição-6---2-termômetro)
-
-Se o comentário é iniciado com ```//! ```, a documentação descreve sobre todo o arquivo ```.rs```, ou seja, o módulo.
-
-Abaixo vemos um fragmento do inicio do módulo ```Day```, localizado no caminho ```./src/entry/schedule/date/day.rs```.
+Here's an example from our `Day` module, found in `./src/schedule/date/day.rs`.
 
 ```rust
-//! Módulo com todas as funcionalidades necessárias para a 
-//! representação de dia no contrato.
+//! Module with all functions related to a day
 //! 
-//! Usamos um inteiro u8 para representar um dia. Mas 
-//! precisamos garantir que este valor é válido.
+//! We use an u8 for the day, but we also need to 
+//! check the day is valid. So, we'll need to make
+//! day a struct Day(u8).
 //! 
-//! Devido a isso, o tipo Day é representado por um struct 
-//! tupla Day(u8).
-//! 
-//! Quando serializado para json, o valor é visto como um 
-//! número u8. Ou seja, o usuário não perceberá essa 
-//! complexidade.
-//! 
+//! When serialized to JSON, the value would just be
+//! an u8, so there won't be any additional complexity
+//! for the user.
 ```
+These comments should be a summary of module functionality and features.
 
-Comentários como este devem existir no início do arquivo.
+#### Comments in code
+Comments in code `//` are not included in the generated documentation. 
+Comments using `///` are used to describe types following them.
 
-Recomenda-se que estes comentários tenha um resumo sobre toda funcionalidade disponivel no módulo.
-
----
-
-#### Comentários e Documentação
-
-[topo](#lição-6---2-termômetro)
-
-Comentários com "// " não são incluidos na documentação. Comentários com "/// " descrevem o tipo abaixo.
-
-Como exemplo, abaixo está a implementação da função ```Day::assert_valid```, que é uma função privada.
-
+As an example, here's the code for the function `Day::assert_valid` which is a private function:
 ```rust
 /// # Panics
-/// Se dia for invalido.
+/// - if day is invalid
 fn assert_valid(&self, current_month: &Month, current_year: &Year) {
     let &Day(day) = self;
 
-    // Coleta o valor do ano.
     let mut current_year: i32 = current_year.get();
 
     // Se for negativo, converte para positivo
@@ -591,10 +563,9 @@ fn assert_valid(&self, current_month: &Month, current_year: &Year) {
         current_year = -current_year;
     }
 
-    // A cada 4 anos, o mês de janeiro possui 29 dias, ao invez de 28.
-    // true se for um "leap year".
+    // true if "leap year".
     let leap_year: bool = (current_year % 4) == 0;
-    // converte true para 1, false para 0.
+    // convert true = 1, false = 0.
     let leap_year: u8 = leap_year as u8;
 
     // source: https://www.rapidtables.com/calc/time/months-of-year.html
@@ -613,7 +584,7 @@ fn assert_valid(&self, current_month: &Month, current_year: &Year) {
         &Month::December(_) => 31,
     };
 
-    // panic se o valor do dia for maior que o valor referente ao mês.
+    // check if day is within valid range
     assert!(day <= max_day,
         "Invalid values for day. Day: {}, Month: {}, Year: {}. Day for given month and year can not be higher than {}.",
             day,
@@ -623,25 +594,18 @@ fn assert_valid(&self, current_month: &Month, current_year: &Year) {
     )
 }
 ```
+Comments using `//` provide insight into how the code is implemented, and they will not be included in the generated documentation.
 
-A função acima impede que um usuário escolha um dia incorreto.
-
- - Se for informado o dia 31 para outubro, não ocorrerá erro;
- - Se for informado o dia 31 setembro, haverá erro. Pois não existe o dia 31 de setembro;
- - Se for informado o dia 29 de fevereiro em 2024, não haverá erro por ser ano bissexto (leap year);
- - Se for informado o dia 29 de fevereiro em 2025, haverá erro por não ser ano bissexto (leap year);
-
-Note que os comentários escritos com "//" descrevem a implementação do código e não aparecem na documentação.
-
-Note como os comentários escritos com "///" descrevem o elemento abaixo (neste caso, a função ```assert_valid```). Este exemplo apenas descreve que a função entra em pânico caso o dia seja inválido. Funções privadas não serão usadas por outros, então não há necessidade de documentar com extremo detalhe.
+Comments using `///` provide more information on the function's behavior. Here, we see the function can panic if the 
+day is invalid. 
 
 A seguir há um exemplo da função ```Month::new``` no caminho ```./src/entry/schedule/month/Month.rs```.
 
 ```rust
-/// Constroi uma instância de Mês:
+/// Create a month instance.
 /// 
-/// Os possiveis valores de String na esquerda são 
-/// convertidos para os seguintes valores na direita:
+/// All possible values on the left are converted
+/// to an enum value on the right:
 /// 
 ///  - "january", "jan", "janeiro", "enero", "ene" => Month::January("January")
 ///  - "february", "feb", "fevereiro", "fev", "febrero" => Month::February("February")
@@ -657,12 +621,12 @@ A seguir há um exemplo da função ```Month::new``` no caminho ```./src/entry/s
 ///  - "december", "dec", "dezembro", "dez", "diciembro", "dic" => Month::December("December")
 /// 
 /// # Panics
-/// Se o argumento não for nenhum dos possiveis acima.
+/// - if an invalid argument is provided. Month name is not valid.
 /// 
 pub fn new(month: &str) -> Self {
     let lower_case: String = month.to_ascii_lowercase();
     
-    match &lower_case[..]{
+    match &lower_case[..] {
         "january" | "jan" | "janeiro" | "enero" | "ene" => Month::January(String::from("January")),
         "february" | "feb" | "fevereiro" | "fev" | "febrero" => Month::February(String::from("February")),
         "march" | "mar" | "março" | "marzo" => Month::March(String::from("March")),
@@ -679,95 +643,48 @@ pub fn new(month: &str) -> Self {
     }
 }
 ```
-
-A documentação da função acima é detalhado. Isso porque, não apenas os usuários necessitam de informação sobre como mês é reconhecido como argumento, assim como é essencial que desenvolvedores tenham acesso ao máximo de informação possivel caso queiram modificar/adaptar este projeto para outros casos de uso.
-
-Resumidamente, mês é convertido de uma String. Vários Strings são válidos para cada possivel valor. Por exemplo: "january", "jan", "JAN", "Janeiro", "enero" e "ene" são todos possiveis Strings que convertem para um ```Month::January(String::from("January"))```. Não é case-sensitive.
+The documentation above the function has a lot of details; the reason being that not only users need information about what the function does and the arguments it needs, but also to inform developers how they can change or modify the function to extend to other use cases.
 
 ---
 
-#### Exemplos/Testes em Documentação
+### Modules
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Exemplos existentes em documentação são incluidos nos testes. Segue adiante um fragmento da documentação para o módulo no caminho "./src/entry/schedule/date/day.rs"
+Modules in Rust can be a bit confusing... some directories have a `mod.rs` file while others do not. That's just because there is more than one way to declare a module in Rust. 
 
-```rust
+You declare a Rust module by either:
+ - A rust file with a matching directory name on the level.
+ - Having a `mod.rs` file inside a directory.
 
-//! ## Examples
-//! 
-//! ```rust
-//! # use lesson_6_2_thermometer::schedule::date::day::Day;
-//! # use lesson_6_2_thermometer::schedule::date::month::Month;
-//! # use lesson_6_2_thermometer::schedule::date::year::Year;
-//! 
-//! // not leap year
-//! let month = Month::new("feb");
-//! let year = Year::new(1971);
-//! 
-//! let day = Day::new(28, &month, &year);
-//! assert_eq!(u8::from(&day), 28);
-//! assert_eq!(format!("{}", day), "28");
-//! assert_eq!(String::from(&day), "28");
-//! 
-//! // leap year
-//! let month = Month::new("feb");
-//! let year = Year::new(1972);
-//! 
-//! let day = Day::new(29, &month, &year);
-//! assert_eq!(u8::from(&day), 29);
-//! assert_eq!(format!("{}", day), "29");
-//! assert_eq!(String::from(&day), "29");
-//! 
-//! ```
-```
+Examples:
 
-O bloco acima é testado sempre que testes de unidade são executados. 
+ - Module `entry` is located in ```./src/entry/mod.rs```
+ - Module `temperature` is defined by ```./src/temperature/mod.rs```
+ - Module `date` is located in ```./src/schedule/date.rs```, inside a directory on the path ```./src/schedule/```
+ - Module `time` is located in ```./src/schedule/time.rs```, inside a directory on the path ```./src/schedule/```
 
-O objetivo deste exemplo é demonstrar as implementações de traits implementadas ao tipo Day.
-
-Linhas com "#" não aparecem na documentação. Existem para permitir o funcionamento correto dos testes. Assim como reduzem a complexidade do exemplo.
+Learn more about [module organization](https://aloso.github.io/2021/03/28/module-system.html).
 
 ---
 
-### Organização de Módulos
+### User access control
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
-Ao analizar a organização dos arquivos. Um desenvolvedor pode ficar confuso sobre como os módulos foram organizados. Alguns diretórios possuem um arquivo de nome "mod.rs" e outros não. Isso é porque duas formas diferentes de declarar módulos foram usadas.
+Function calls needs to be mde from a NEAR account. We can control access by checking for the account's name who made the call. When the contract is initialized, only the owner can make calls. Additional accounts can be included using the function `Contract::add_user`. 
 
-A pergunta a ser feita é "Como um diretório pode ser considerado um módulo?". Existem duas respostas:
+Each account we add does not have admin permissions, but they do have some storage space for data. It will also have the permission to add new entries, as well as the permission to update their values. 
 
- - Um arquivo rust com o nome do diretório existindo no mesmo caminho que o diretório.
- - O arquivo rust com nome "mod.rs" dentro do diretório.
+A reason for limiting access by account is due to the possibility of a bad actor gaining acesss to a device and using them to also access the smart contract. If this happens, with the security put in place, that bad actor could only include new entries or update the values, which are very limited actions due to the amount of gas they spend for an account related to a sensor. 
 
-Como exemplo:
-
- - O módulo "entry" se encontra no caminho ```./src/entry/mod.rs```;
- - O módulo "date" se encontra no caminho ```./src/schedule/date.rs```. O diretório se encontra no mesmo caminho ```./src/schedule/```;
- - O módulo "temperature" se encontra no caminho ```./src/temperature/mod.rs```;
- - O módulo "time" se encontra no caminho ```./src/schedule/time.rs```. O diretório se encontra no mesmo caminho;
-
----
-
-### Controle de Acesso de Usuários
-
-[topo](#lição-6---2-termômetro)
-
-Funções call precisam ser assinadas por uma conta NEAR. Podemos controlar o acesso checando o nome da conta que fez a chamada. Quando o contrato é inicializado, apenas o owner tem permissão de acessar o contrato. Outras contas podem ser incluidas através da função ```Contract::allow_user```.
-
-Cada conta adicionada não terá permissões administrativas. Mas terão o próprio espaço de armazenamento de dados. Terão permissão para incluir entries. E terão permissão para atualizar os valores armazenados em uma conta.
-
-O motivo da limitação de acesso de outras contas é devido a possibilidade de terceiros conseguirem acesso aos dispositivos sem permissão e usá-los para acessar o smart contract. Caso isso aconteça, a unica ação que um dispositivo infringido pode fazer é incluir e listar entries. Uma ação que é limitada pela quantidade de gás disponível na conta do usuário sensor.
-
-As funções que controlam acesso ao contrato são as funções privadas:
-
- - ```Contract::assert_owner_only```: Entra em pânico se o caller não for o owner. Owner é a mesma conta em que o contrato foi implantado (deployed).
- - ```Contract::assert_user_allowed```: Entra em pânico se o caller não for um usuário incluido na lista de permitidos. Owner se encontra na lista de permitidos.
+Functions that control access are private functions: 
+ - ```Contract::assert_owner_only```: panics if the caller is not the owner; the owner is the account that was used to deploy the smart contract.
+ - ```Contract::assert_user_allowed```: panics if the caller is not a user in the allowed user list. Owner is, of course, on the allowed user list.
 
 
 ```rust
-// Garante que apenas owner está chamando a função.
+// assert the owner is the caller
 fn assert_owner_only(&self){
     let predecessor: AccountId = env::predecessor_account_id();
     let owner_id: AccountId = AccountId::from(env::current_account_id());
@@ -775,56 +692,61 @@ fn assert_owner_only(&self){
     assert_eq!(predecessor, owner_id, "Only owner's account is allowed to make this function call.");
 }
 
-// Garante que apenas usuários permitidos podem chamar funções.
+// check user permissions
 fn assert_user_allowed(&self) {
     let predecessor_id: AccountId = env::predecessor_account_id();
     let owner_id: AccountId = env::current_account_id();
 
-    // Se a conta dono do contrato está chamando a função.
+    // is the caller the owner? call assert_owner_only
     if owner_id == predecessor_id {
         return;
     }
 
-    // Se não for a conta dono, e não estiver incluido na lista de permitidos, causa panic.
+    // check if user is in the allowed list
     assert!(self.users.contains(&predecessor_id), "User not allowed to make this call.");
 }
 ```
 
-Através do módulo ```near_sdk::env```, temos acesso a informações relacionadas ao ambiente da máquina virtual, e informações sobre a mensagem recebida. Segue a descrição de alguns dados disponibilizados pelo módulo:
+The module `near_sdk::env` provides all the information related to the virtual machine's environment as well as all the message details. Here's a quick glance at some of the information available: 
 
- - ```env::predecessor_account_id```: ID da ultima conta que assinou a chamada call;
- - ```env::signer_account_id```: ID da primeira conta que assinou a chamada call;
- - ```env::current_account_id```: ID da conta atual. A conta que possui o contrato;
+ - `env::predecessor_account_id`: Id of the account who is _currently_ calling the function.
+ - `env::signer_account_id`: Id of the account who _first signed_ the transaction that initiated the call(s).
+ - `env::current_account_id`: Id of the current account, who is the owner of the _currently executing_ smart contract.
 
-Nas situações mais comuns, "**predecessor_account_id**" e "**signer_account_id**" são a mesma conta. Mas contratos podem chamar outros contratos (chamadas "cross-contract"), cada conta assina a chamada seguinte. Por exemplo, digamos que uma conta **A** chame um contrato **B**, que chama um contrato **C**, que chama um contrato **D**:
+In the most simple scenarios, `predecessor_account_id` and `signer_account_id` are the same. However, do keep in mind that smart contracts can call other contract's functions (in a chain like manner); when this happens, we call them _cross contract calls_. 
+
+Let's say account **A** calls contract **B**, and contract **B** calls contract **C**, who in turn, calls yet another contract **D**:
 
 ```
 A -> B -> C -> D
 ```
 
-Na situação acima. Para todas as chamadas, o "**signer_account_id**" é a conta A. 
-O "**predecessor_account_id**" é:
+In the scenario above, the `signer_account_id` will always be **Account A**. 
+Let's find out who is the `predecessor_account_id`: 
  
- - Para o ambiente **B**, o "**predecessor_account_id**" é **A**;
- - Para o ambiente **C**, o "**predecessor_account_id**" é **B**;
- - Para o ambiente **D**, o "**predecessor_account_id**" é **C**;
+ - For **B**, the `predecessor_account_id` is **A**.
+ - For **C**, the `predecessor_account_id` is **B**.
+ - For **D**, the `predecessor_account_id` is **C**.
 
-Para ambos exemplos acimas. Coletamos "**owner_account_id**" e "**predecessor_account_id**". Se ambos são iguais, o **chamador** é o "**owner**". Se "**predecessor_account_id**" estiver incluido na lista de permitidos, então é um usuário permitido.
+In our contract, we check if the `owner_account_id` and `predecessor_account_id` are the same. If they are, then the function caller is the **owner**; otherwise, we check if `predecessor_account_id` is included in the allowed user list. 
 
-Poderiamos ter usado "**signer_account_id**". Mas isso anularia a possibilidade de chamadas cross-contract. Um desenvolvedor pode decidir adicionar mais funcionalidades a este contrato. Esta decisão manterá a oportunidade de integração com a funcionalidade de outros contratos.
+We could have used the `signer_account_id` but that will rule out any possibility of cross contract calls. A developer could add more features to this contract, so we have to keep our smart contract flexible (yet secure). 
+
+[Learn more](https://docs.near.org/tutorials/crosswords/beginner/actions#predecessor-signer-and-current-account) about predecessor, signer, and current account. 
+
 
 ---
 
-### Acesso Cross-Contract
+### Cross-Contract calls
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
+A "cross contract call" is when a smart contract calls another smart contract's function. Sometimes, you want to prevent cross contract calls, such as when having function that make critical changes to the system. 
 
-Como descrito acima. Chamada "cross-contract" é quando um contrato faz uma chamada "call" para um outro contrato. Cada conta assina a chamada seguinte. Em alguns casos isso não é desejado. Como funções que fazem alterações críticas ou caras no sistema. Funções em que o desenvolvedor não deseja que sejam chamadas automaticamente.
+For our smart contract, we have implemented a function called `Contract::no_cross_contract`: 
 
-Isso é implementado através da função ```Contract::no_cross_contract```. Descrito a seguir:
 
 ```rust
-// Garante que o chamado é direto. Não pode ser um contrato chamando outro contrato.
+// don't allow cross-contract calls
 fn assert_no_cross_contract(&self){
     let signer_id: AccountId = env::signer_account_id();
     let predecessor_id: AccountId = env::predecessor_account_id();
@@ -832,21 +754,20 @@ fn assert_no_cross_contract(&self){
 }
 ```
 
-Basta garantir que o "signer_account_id" é o mesmo que o "predecessor_account_id".
+Our check simply compaers if the `signer_account_id` is the same as `predecessor_account_id`.
 
-Isto é usado nas funções ```Contract::allow_user```, ```Contract::remove_user``` e ```Contract::set_format```. Usado na função ```Contract::set_format``` . As outras funções porque são operações administrativas que podem incluir usuários indesejados, ou remover usuários e grande quantidade de dados do sistema.
+We prevent cross contract calls in some of our functions, such as `Contract::add_user`, `Contract::remove_user` and `Contract::set_default_temperature_unit` since these are admin operations that could add or remove users, as well as affect our system's data.
  
- - ```Contract::set_format```: pode resultar em altos consumos de gás para uma grande quantidade de dados;
- - ```Contract::allow_user```: pode incluir usuários indesejados ao sistema. É uma função pouco usada, mas essencial;
- - ```Contract::remove_user```: pode remover usuários e todos os dados associados a um respectivo usuário. Mal uso dessa função pode causar danos irreversiveis aos dados;
+ - `Contract::set_default_temperature_unit`: could result in high gas use due to changing a lot of data.
+ - `Contract::add_user`: could include unneeded users to the system.
+ - `Contract::remove_user`: could remove users as well as their data. Unproper usage of this function could bring the whole system down.
 
 ---
 
-### Controle de Output
+### Handling Output
 
-[topo](#lição-6---2-termômetro)
-
-Uma mesma função pode retornar tipos diferentes através do uso de enums. Para isso, primeiro criamos o enum que representa todos os possiveis tipos que podem ser retornados:
+[top](#topics)
+The same function can return diferent data types if we handle them using `enums`. We first need to create an enum that has all the variants:
 
 ```rust
 // ./src/utils.rs
@@ -865,13 +786,14 @@ pub enum ViewGet{
 }
 ```
 
- - ```#[derive(Deserialize, Serialize)]``` aplica as traits ```near_sdk::serde::Deserialize``` e ```near_sdk::serde::Serialize``` ao enum. São necessárias para converter um json para o tipo (deserializar), e converter um tipo para json (serializar).
- - ```#[serde(crate) = "near_sdk::serde"]``` irá informar o compilador que a crate "serde" se encontra em "near_sdk::serde". Sem essa instrução, o compilador tentará encontrar "serde" em uma crate única.
- - ```#[serde(untagged)]``` é um atributo da crate "serde" que informa à crate para não usar tags para este enum. Sem este atributo, o valor é descrito como ```{ Single: valor }``` ou ```{ Multiple: [valor1, valor2, ...] }```. Com este atributo o valor é descrito como ```valor```, ou ```[valor1, valor2, ...]```, respectivamente.
+ - `#[derive(Deserialize, Serialize)]` implements the traits `near_sdk::serde::Deserialize` and `near_sdk::serde::Serialize` on our enum. These are needed to serialize and deserialize to and from JSON.
+ - `#[serde(crate) = "near_sdk::serde"]` hints to the compiler to use the serde crate found in the NEAR SDK.
+ - `#[serde(untagged)]` is an attribute that hints serde  **not** to use JSON tags such as `{ Single: value }` or `{ Multiple: [value1, value2, ...] }`, but just use the actual values like so: `value`, and `[value1, value2, ...]`.
 
-Mais detalhes sobre serde e configurações no [site oficial](https://serde.rs/enum-representations.html) da crate.
+[Learn more](https://serde.rs/enum-representations.html) about using Serde and enums. 
 
 Com o enum declarado e configurado. Basta retornar o tipo em uma função de contrato:
+Since we declared and decorated our enum with the proper attributes, we can simply return it from our functions:
 
 ```rust
 pub fn view_get(
@@ -909,9 +831,9 @@ Uso do tipo Option para argumentos é descrito logo a seguir.
 
 ---
 
-### Controle de Input
+### Handling Input
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
 Note a função abaixo. Existem vários argumentos da função do tipo ```Option```.
 
@@ -995,9 +917,9 @@ Basta alterar os valores internos do enum de acordo com suas necessidades, e usa
 
 ---
 
-### Implementação de Traits
+### Implementing Traits
 
-[topo](#lição-6---2-termômetro)
+[top](#topics)
 
 O "dia", contido em "data", contido em "schedule" é representado da seguinte forma.
 

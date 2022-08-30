@@ -1,13 +1,10 @@
-//! Módulo com todas as funcionalidades necessárias para a 
-//! representação de mês no contrato.
+//! Module with all functions related to a month
 //! 
-//! Para uma fácil implementação rust, utilizamos um enum 
-//! com todos os possiveis valores de mês.
-//! Mas para representação json, a melhor opção é utilizar 
-//! um String, ou número.
+//! We'll use an enum with all possible month value
+//! For JSON, it is better to use a string or a number.
 //! 
-//! Configurando serde, podemos utilizar o melhor de ambos 
-//! os casos. Primeiro, declaramos o enum da seguinte forma:
+//! Using serde, we can choose the best option. 
+//! Let's first declare our enum.
 //! 
 //! ```
 //!use near_sdk::{
@@ -33,13 +30,11 @@
 //! }
 //! ```
 //! 
-//! Se o valor de Month for 
-//! Month::December(String::from("December")), 
-//! por exemplo, o valor de estado aparecerá 
-//! como month: {December: "December"}.
+//! If month is Month::December(String::from("December")), 
+//! then our value JSON will be {December: "December"}.
 //! 
-//! Mas, se incluirmos o atributo macro 
-//! serde(untagged), da seguinte forma:
+//! But, if we use untagged, 
+//! serde(untagged), 
 //! 
 //! ```
 //!use near_sdk::{
@@ -66,25 +61,11 @@
 //! }
 //! ```
 //! 
-//! Um valor de mês 
+//! Then no tag will be used and so 
 //! Month::december(String::from("December")), 
-//! irá aparecer simplesmente como month: "December". 
-//! O que é muito mais user-friendly.
+//! will be represented as month: "December". 
+//! which is more user-friendly.
 //! 
-//!  - u8::from(&month) converte um mês para um inteiro 
-//! de 0 a 11. Não consome o mês;
-//!  - Month::from(a_u8_var) converte um valor u8 
-//! informado para Month. Panic se não for um valor 
-//! entre 0 a 11.
-//!  - String::from(&month) constroi uma String com 
-//! o mesmo valor de Month.
-//!  - String::from(month) consome o Month, convertendo-o 
-//! para um String.
-//!  - std::fmt::Display é implementado para Month. 
-//! Podendo ser utilizado em macros como println!, 
-//! format! e panic!;
-//! 
-
 
 use near_sdk::{
     borsh::{ self, BorshDeserialize, BorshSerialize },
@@ -92,12 +73,10 @@ use near_sdk::{
 };
 
 
-/// Representa um mês.
+/// Represents a month
 /// 
-/// Devido a instrução "serde(untagged)" o valor deste 
-/// enum é representado por um String.
-/// 
-/// Pode ser convertido de/para um String.
+/// Using serde(untagged) this enum will
+/// be represented as string (no tag)
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -119,10 +98,10 @@ pub enum Month{
 
 
 impl Month{
-    /// Constroi uma instância de Mês:
+    /// Create a month instance.
     /// 
-    /// Os possiveis valores de String na esquerda são 
-    /// convertidos para os seguintes valores na direita:
+    /// All possible values on the left are converted
+    /// to an enum value on the right:
     /// 
     ///  - "january", "jan", "janeiro", "enero", "ene" => Month::January("January")
     ///  - "february", "feb", "fevereiro", "fev", "febrero" => Month::February("February")
@@ -138,7 +117,7 @@ impl Month{
     ///  - "december", "dec", "dezembro", "dez", "diciembro", "dic" => Month::December("December")
     /// 
     /// # Panics
-    /// Se o argumento não for nenhum dos possiveis acima.
+    /// - if an invalid argument is provided. Month not valid.
     /// 
     pub fn new(month: &str) -> Self {
         let lower_case: String = month.to_ascii_lowercase();
@@ -173,11 +152,10 @@ impl Month{
     // nov 334
     // dec 365
 
-    /// Recebe um valor entre 0 e 365. Retorna o mês e 
-    /// dia do ano, baseado no dia do ano.
+    /// Value in range 0 and 365. 
+    /// Return month and day, based on year
     /// 
-    /// Se is_leap_year é true. Aceita uma valor entre 
-    /// 0 e 366. 29 fev é uma possibilidade de data.
+    /// if is_leap_year then the range can be 0 to 366.
     /// 
     pub fn new_from_days(mut days: u64, is_leap_year: bool) -> (String, u8) {
         // 0 false 1 true
@@ -190,7 +168,7 @@ impl Month{
             return (String::from("jan"), days as u8);
         }
         if days <= 59 + leap_year {
-            // inclui feb 29 se for leap year
+            // include feb 29 for leap year
             return (String::from("feb"), days as u8 - 31);
         }
         if days <= 90 + leap_year {
@@ -224,7 +202,7 @@ impl Month{
         (String::from("dec"), (days - 334 - leap_year) as u8)  
     }
 
-    /// Retorna uma representação String deste Mês.
+    /// Returns month name as a String
     pub fn get(&self) -> String {
         match self {
             Month::January(value) => value.clone(),
@@ -243,8 +221,7 @@ impl Month{
     }
 }
 
-/// Nos permite utilizar u8::from(&nossoMonth) para 
-/// conver um mês para u8.
+/// Convert to u8 from month
 impl From<&Month> for u8 {
     fn from(month: &Month) -> u8 {
         match month {
@@ -264,8 +241,7 @@ impl From<&Month> for u8 {
     }
 }
 
-/// Nos permite utilizar Month::from(nossou8) para 
-/// converter um valor u8 para Month.
+/// Convert to Month from u8
 impl From<u8> for Month {
     fn from(month: u8) -> Month {
         match month{
@@ -286,7 +262,7 @@ impl From<u8> for Month {
     }
 }
 
-/// Nos permite usar String::from(nossoMonth)
+/// Convert to String from &Month
 impl From<&Month> for String{
     fn from(month: &Month) -> String {
         month.get()
@@ -294,16 +270,14 @@ impl From<&Month> for String{
 }
 
 
-/// Nos permite usar String::from(nossoMonth)
+/// Convert to String from Month
 impl From<Month> for String{
     fn from(month: Month) -> String {
         String::from(&month)
     }
 }
 
-/// Usado para converter o struct para String. Se 
-/// usarmos instruções como format!, println! ou panic!, 
-/// esta trait é usada.
+/// String representation, useful for using format!, println! and panic!
 impl std::fmt::Display for Month {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", String::from(self))
@@ -320,18 +294,15 @@ mod tests{
 
 
     #[test]
-    /// Testa a função Month::new_from_days para todos 
-    /// os dias do ano, leap year e não leap year.
+    /// Test Month::new_from_days 
+    /// for all days of year and leap year 
     fn new_from_days(){
 
-        /// usado por testing year. Argumentos:
-        ///  - days: valor entre 0 e 365. 0 e 366 se 
-        /// is_leap_year = true.
-        ///  - is_leap_year: true se for leap year
-        ///  - expected_month: mes esperado, valor entre 
-        /// 0 e 12.
-        ///  - expected_day: dia esperado, valor entre 
-        /// 0 e 31, depende do mês e leap year.
+        /// testing year. parameters:
+        ///  - days: range 0 to 365. 0 to 366 if is_leap_year = true.
+        ///  - is_leap_year: true if leap year
+        ///  - expected_month: range 0 to 12.
+        ///  - expected_day: range 0 to 31, depending on month and if leap year
         /// 
         fn util_day_constructor(days: u64, is_leap_year: bool, expected_month: u8, expected_day: u8) {
             let (month_str, day) = Month::new_from_days(days, is_leap_year);
@@ -355,8 +326,7 @@ mod tests{
             );
         }
 
-        /// Usa util_day_constructor para testar todos 
-        /// os dias do ano.
+        /// Use util_day_constructor to test all days of the year
         fn testing_year(is_leap_year: bool){
             let leap_year = is_leap_year as u64;
 
@@ -404,16 +374,14 @@ mod tests{
                     month_number = 11; 
                 }
 
-                // Primeiro dia do mês é 1. 
+                // first day of month is 1
                 util_day_constructor(day, is_leap_year, month_number, day_number as u8 + 1)
              }
         }
 
-        // Testa a construção de day para todos os dias do ano. Não é leap year.
         log("Testing for non leap year.");
         testing_year(false);
 
-        // Testa a construção de day para todos os dias do ano. É leap year.
         log("Testing for leap year.");
         testing_year(true);
     }
