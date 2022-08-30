@@ -298,7 +298,7 @@ impl Contract{
         self.assert_user_allowed();
 
         // let account_id: AccountId = env::predecessor_account_id();
-        let account_id = match account_id{
+        let account_id = match account_id {
             None => {
                 env::predecessor_account_id()
             },

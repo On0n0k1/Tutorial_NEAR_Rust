@@ -1,4 +1,4 @@
-//! Entry representa um único input de um dos usuários.
+//! Entry represents a single input value from a user
 //! 
 //! Periodicamente cada sensor enviará o valor de temperatura coletado. O contrato armazenará cada entry associada ao tempo recebido.
 //! 

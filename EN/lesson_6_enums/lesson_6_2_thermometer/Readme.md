@@ -803,16 +803,14 @@ pub fn view_get(
 ) -> ViewGet {
     match index{
         None => {
-            let result = self.entries
-                .get(&account_id)
+            let result = self.entries.get(&account_id)
                 .unwrap()
                 .to_vec();
 
             ViewGet::Multiple(result)
         },
         Some(index) => {
-            let result = self.entries
-                .get(&account_id)
+            let result = self.entries.get(&account_id)
                 .unwrap()
                 .get(index)
                 .unwrap();
@@ -822,12 +820,9 @@ pub fn view_get(
     }
 }
 ```
+:warning: **NOTE:** The function above is a **view** function which is free to call (doesn't use gas).
 
-Note que a função acima é uma função view. Conversão de estado para json é preparado durante compilação. Ou seja, não consome gás.
-
-A função simplesmente retorna o enum ```ViewGet``` declarado anteriormente. Se o argumento "index" existe no json, retorna ```ViewGet::Single(valor)``` com o "valor" encontrado. Se argumento "index" foi omitido, retorna ```ViewGet::Multiple(valores)``` com os "valores" encontrados.
-
-Uso do tipo Option para argumentos é descrito logo a seguir.
+The function just returns a `ViewGet` variant. If the `index` argument is found we will return a `ViewGet::Single(result)` with the value found. If no `index` was specified, then we'll return a list of values found as a `ViewGet::Multiple(result)`.
 
 ---
 
@@ -835,7 +830,7 @@ Uso do tipo Option para argumentos é descrito logo a seguir.
 
 [top](#topics)
 
-Note a função abaixo. Existem vários argumentos da função do tipo ```Option```.
+Let's see how we can use the `Option` type. Let's review the following function:
 
 ```rust
 pub fn new_entry(
@@ -844,14 +839,14 @@ pub fn new_entry(
     date: Option<(i32, String, u8)>,
     temp_value: f32, 
     temp_format: Option<String>,
-){
+) {
     self.assert_user_allowed();
     let user: AccountId = env::predecessor_account_id();
 
     log("Called new_entry.");
 
     log("Creating Entry.");
-    let entry: Entry = Entry::new(time, date, &self.temp_format, temp_value, temp_format);
+    let entry: TemperatureReading = TemperatureReading::new(time, date, &self.temp_format, temp_value, temp_format);
 
     log("Acquiring entries for this user.");
     let mut entries = match self.entries.get(&user){
@@ -867,75 +862,64 @@ pub fn new_entry(
 }
 ```
 
-Option é um tipo da biblioteca standard que pode ter duas alternativas, ```Some(valor)``` ou ```None```. Se usarmos este tipo nos argumentos das nossas funções, o usuário não precisa incluir este argumento na chamada de função.
+`Option` is a type that allows having optional values or alternatives, such as `Some(value)` or `None`. 
+ - If there is a value, we can wrap it as `Some(value)`.
+ - If there is none, then we can just `None`.
 
- - Se incluir, o valor do argumento é ```Some(valor)```;
- - Se não incluir, o valor do argumento é ```None```;
+:hand: There are no **nulls** in Rust. [Here's](https://www.kirillvasiltsov.com/writing/optional-arguments-in-rust/) an interesting and quick read about optional arguments in Rust. 
 
-Usamos instruções match para considerar as duas possibilidades. Por exemplo, o ``` account_id``` é opcional para a maioria das funções de contrato.
+In order to check our option, we use the `match` keyword, which forces us to consider all possibilities. 
 
 ```rust
-// ./src/contract.rs
-
 pub fn list_update_entries(
     &mut self, 
     account_id: Option<String>,
-) -> Vec<Entry> {
+) -> Vec<TemperatureReading> {
     self.assert_user_allowed();
 
     // let account_id: AccountId = env::predecessor_account_id();
-    let account_id = match account_id{
+    let account_id = match account_id {
         None => {
             env::predecessor_account_id()
         },
         Some(value) => {
             let predecessor = env::predecessor_account_id();
+
+            if predecessor != value {
+                let signer_id: AccountId = env::signer_account_id();
+                let owner_id: AccountId = env::current_account_id();
+
+                assert_eq!(signer_id, owner_id, "Only owner's account is allowed to check entries of others.");
+            }
+
+            value
+        }
+    };    
 ```
 
-O fragmento da função ```Contract::list_update_entries``` acima possui o argumento ```account_id``` que é um Option. Se o valor para ```account_id``` existir na mensagem, usa-o. Senão usa o ```account_id``` da conta que chamou o contrato. Essa operação é repetida em diversos outras funções.
+You can see above how we specify our `account_id` as `Option<String>`. 
 
-No tópico sobre [controle de output](#controle-de-output) acima. Foi descrito como usar um enum para possuir diversos tipos diferentes para o mesmo retorno de função. Podemos usar um enum com as mesmas configurações para aceitar diversos tipos de input também. Não é necessário incluir nenhuma configuração serde adicional.
+If an `account_id` is indeed provided, we do some checking and if everything is ok, we assign its value to `account_id` But, if we didn't specify it (we specified `None` as the argument) then we just assign `account_id` to whoever called this function (by know you should read that `predecessor_account_id` as second nature!).
 
-```rust
-// ./src/utils.rs
-use near_sdk::serde::{
-    Deserialize, Serialize,
-};
-
-use crate::entry::Entry;
-
-#[derive(Deserialize, Serialize)]
-#[serde(crate = "near_sdk::serde")]
-#[serde(untagged)]
-pub enum ViewGet{
-    Single(Entry),
-    Multiple(Vec<Entry>),
-}
-```
-
-Basta alterar os valores internos do enum de acordo com suas necessidades, e usar o tipo como argumento da função de contrato.
 
 ---
 
 ### Implementing Traits
 
 [top](#topics)
-
-O "dia", contido em "data", contido em "schedule" é representado da seguinte forma.
+A `Day`, which is part of a `Date`, belongs to a `Timestamp`. Here's how we implemented them:
 
 ```rust
-// ./src/schedule/date/day.rs
-
 #[derive(BorshDeserialize, BorshSerialize, Clone, Copy, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Day(u8);
 ```
 
-É apenas um ```u8``` contido em um tipo próprio. Embora esse tipo tenha sido criado para aplicarmos as limitações que o valor de dia pode possuir. Queremos utilizar este valor como um número nos outros casos. Para isso, aplicamos as seguintes traits:
+So `Day` is just an `u8`. However, we do want to put in place some additional behavior that has to do with a `Day`, so let's implement some traits:
 
 ```rust
-/// Nos permite usar u8::from(nossoDay)
-impl From<&Day> for u8{
+/// Convert to u8 from Day
+impl From<&Day> for u8 {
     fn from(day: &Day) -> u8 {
         let &Day(result) = day;
 
@@ -943,15 +927,14 @@ impl From<&Day> for u8{
     }
 }
 
-/// Nos permite usar u8::from(nossoDay)
+/// Convert to String from Day
 impl From<&Day> for String{
     fn from(day: &Day) -> String {
         u8::from(day).to_string()
     }
 }
 
-
-// Usado para converter o struct para String. Se usarmos instruções como format!, println! ou panic!, esta trait é usada.
+// Convert struct to String. Implementing this trait allows using Day in format!, println! and panic!
 impl std::fmt::Display for Day {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", String::from(self))
@@ -959,9 +942,9 @@ impl std::fmt::Display for Day {
 }
 ```
 
-A trait ```From``` permite a conversão de um tipo para outro. Devido a essas implementações, para uma variável Day com nome day, é possivel converter para u8 e String, respectivamente, com ```u8::from(&day)``` e ```String::from(&day)```.
+The `From` trait allows converting from one type to another. Having implemented the traits above, we can now convert to and from `u8` as well as `String`, by using `u8::from(&day)` and `String::from(&day)`. 
 
-A trait ```std::fmt::Display``` parece complicado, mas simplesmente permite o uso do tipo em macros como ```panic```, ```format``` e ```println```. Sem esta implementação, uma instrução como ```println!("O valor de day é {}", day)``` resultaria em pânico.
+The trait `Display` seems complex, but it simply allows that macros such as `panic!`, `format!` and `println!` can be used with the type implementing the trait. If you don't implement `Display`, then something simple like `println!("The day is {}", day)` would panic. 
 
 ---
 

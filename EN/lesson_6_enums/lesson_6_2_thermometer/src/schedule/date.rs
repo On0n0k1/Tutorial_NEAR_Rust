@@ -22,7 +22,7 @@ use year::Year;
 /// Representa uma data (Dia, Mês, Ano).
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Date{
+pub struct Date {
     day: Day,
     month: Month,
     year: Year,
