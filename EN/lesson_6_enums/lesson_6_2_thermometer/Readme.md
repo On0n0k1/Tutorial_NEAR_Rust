@@ -907,6 +907,7 @@ If an `account_id` is indeed provided, we do some checking and if everything is 
 ### Implementing Traits
 
 [top](#topics)
+
 A `Day`, which is part of a `Date`, belongs to a `Timestamp`. Here's how we implemented them:
 
 ```rust
