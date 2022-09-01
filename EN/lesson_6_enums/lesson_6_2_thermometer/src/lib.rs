@@ -1,4 +1,4 @@
-// Não queremos que este módulo apareça na documentação. Módulo é público apenas internamente.
+// We don't want this module on the docs, so we make it public to our crate only.
 pub(crate) mod contract;
 pub mod entry;
 pub mod schedule;

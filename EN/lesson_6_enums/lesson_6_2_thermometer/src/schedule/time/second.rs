@@ -1,10 +1,10 @@
-//! Módulo para segundo.
+//! Second module
 //! 
-//! O formato json desse tipo é apenas um f32.
+//! This type is only an f32
 //! 
-//!  - f32::from(&second) converte essa referência para um f32;
-//!  - f32::from(second) converte este Minute para um f32;
-//!  - Minute::from(estef32) converte um valor f32 para Second;
+//!  - f32::from(&second) converts minute reference to f32.
+//!  - f32::from(second) converts minute to f32.
+//!  - Minute::from(value f32) converts f32 to Second
 //! 
 
 use near_sdk::{
@@ -12,14 +12,10 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-/// Representa um valor de segundo.
-/// 
-/// Serializado, este tipo é apenas um f32.
-/// 
+/// Represents a second
 /// # Panics
-/// 
-///  - Se valor for maior ou igual a 60;
-///  - Se o valor for negativo;
+///  - If value is higher than 60.
+///  - If value is negative.
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -35,8 +31,8 @@ impl Second {
 }
 
 
-/// Nos permite usar f32::from(&nossoSecond)
-impl From<&Second> for f32{
+/// Convert to f32 from &Second
+impl From<&Second> for f32 {
     fn from(second: &Second) -> f32 {
         let &Second(result) = second;
 
@@ -45,7 +41,7 @@ impl From<&Second> for f32{
 }
 
 
-/// Nos permite usar f32::from(nossoSecond)
+/// Convert to f32 from Second
 impl From<Second> for f32{
     fn from(second: Second) -> f32 {
         f32::from(&second)
@@ -53,7 +49,7 @@ impl From<Second> for f32{
 }
 
 
-/// Nos permite usar Second::from(nossof32)
+/// Convert to Second from f32
 impl From<f32> for Second{
     fn from(second: f32) -> Second {
         Second::new(second)

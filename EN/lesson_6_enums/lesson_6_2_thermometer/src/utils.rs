@@ -1,7 +1,7 @@
-//! Módulo com ferramentas de suporte.
+//! Utilities module
 //! 
-//!  - log: Imprime a mesma mensagem em ambientes de teste e em produção.
-//!  - ViewGet: Um tipo de saida para a função de contrato view_get. Permite retorno de dois tipos diferentes na mesma função.
+//!  - log: print a message on testing or production environments (different target output)
+//!  - ViewGet: allows having different return typs for the same function.
 //! 
 
 use near_sdk::serde::{
@@ -14,29 +14,29 @@ use crate::entry::TemperatureReading;
 #[allow(unused_imports)]
 use near_sdk::env;
 
-/// Imprime com env::log em produção. Imprime com println em testes.
+/// Prints using println when in a test environment. 
 #[cfg(test)]
 pub fn log(msg: &str){
     println!("{}", msg);
 }
 
-/// Imprime com env::log em produção. Imprime com println em testes.
+/// Prints using env::log when in a production environment. 
 #[cfg(not(test))]
 pub fn log(msg: &str) {
     env::log(msg.as_bytes());
 }
 
 
-/// Usado para saida da função de contrato view_get.
+/// Used as return type for view_get function
 /// 
-///  - Se argumento possuir um index. Retorna um Entry.
-///  - Se index for omitido. Retorna um Vec com todas as Entries para aquele usuário.
+///  - If using an index returns a single temperature reading.
+///  - If not using an index, then return a list of all temperature readings.
 /// 
-/// Não é eficiente quando o contrato possuir muitas entries para cada usuário. 
+/// Not efficient when a contract has a lot of readings for a user/sensor, 
+/// but best practice would be for the user to collect values locally and remove old ones
+/// to save on both storage and computing fees
 /// 
-/// Mas esperasse que o usuário colete localmente e remova valores antigos para evitar custos desnecessários de computação e armazenamento.
-/// 
-/// A instrução #[serde(untagged)] faz com que o enum não apareça no json de saida.
+/// Using #[serde(untagged)] will keep our JSON very lean.
 /// 
 #[derive(Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]

@@ -1,19 +1,17 @@
-//! Módulo que representa formato de temperatura.
+//! Temperature Unit module
 //! 
-//! Pode ser Kelvin, Celsius ou Fahrenheit.
+//! Unit can be Kelvin, Celsius or Fahrenheit.
+//! The default is to use Kelvin.
 //! 
-//! O contrato é inicializado com formato Kelvin.
-//! 
-//! A instrução #[serde(untagged)] faz com que o enum seja serializado como String em json.
-//! 
-//!  - Default é implementado. Valor inicial é Celsius::Kelvin;
-//!  - PartialEq e Eq implementados. Permitindo comparações entre TempFormats a == b;
-//!  - String::from(&formato) converte uma referência &TempFormat para String;
-//!  - String::from(formato) converte um TempFormat para String;
-//!  - TempFormat::from("a str") para converter um &str para TempFormat;
-//!  - TempFormat::from(aString) para converter um String para TempFormat;
-//!  - TempFormat::from(&aString) para converter uma referência &String para TempFormat;
-//!  - std::fmt::Display implementado. Permitindo o uso desses tipos em macros como println!, format! e panic!;
+//! Implemented TraitsÖ
+//!  - Default. Default unit is Celsius::Kelvin.
+//!  - PartialEq and Eq. Allows comparing between Units.
+//!  - String::from(&temperature_unit) converts a &temperature_unit reference to String;
+//!  - String::from(temperature_unit) converts temperature_unit to String;
+//!  - TemperatureUnit::from("a str") converts an &str to TemperatureUnit;
+//!  - TemperatureUnit::from(aString) converts a String to TemperatureUnit;
+//!  - TemperatureUnit::from(&aString) converts a &String reference to TemperatureUnit;
+//!  - std::fmt::Display. Allows display of value using macros like println!, format! e panic!;
 //! 
 
 use near_sdk::{
@@ -22,13 +20,12 @@ use near_sdk::{
 };
 
 
-/// Representa formato de temperatura (Kelvin, Celsius ou Fahrenheit).
+/// Represents a TemperatureUnit (Kelvin, Celsius and Fahrenheit).
 /// 
-/// Usado para controle de formato. Podemos ter diversos sensores com diferentes formatos.
+/// Temperature unit management, as we can have multiple sensors using different temperature units.
+/// This guarantees all possibilities are in sync and correct.
 /// 
-/// Isso garante que todas as possibilidades são aceitas.
-/// 
-/// Este enum é visto como uma String no formato json.
+/// This enum is seen a String when ser/deserialzing JSON.
 /// 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -41,17 +38,16 @@ pub enum TemperatureUnit {
 
 
 impl TemperatureUnit {
-    /// Constroi uma instância de TempFormat. 
+    /// Creates a TemperatureUnit
     /// 
-    /// Não é case-sensitive. Os valores de String (esquerda) resultam em (direita):
+    /// Not case-sensitive. You can specify temperature units like:
     /// 
     ///  - "celsius", "c" => TempFormat::Celsius("Celsius")
     ///  - "fahrenheit", "f" => TempFormat::Fahrenheit("Fahrenheit")
     ///  - "kelvin", "k" => TempFormat::Kelvin("Kelvin")
     /// 
     /// # Panics
-    /// 
-    /// Se argumento for inválido.
+    /// - If unit name is invalid.
     /// 
     pub fn new(unit_name: &str) -> Self{
         // This conversion for &str to TemperatureUnit is possible due to From<&str> being implemented
@@ -68,21 +64,19 @@ impl TemperatureUnit {
 }
 
 
-/// O formato padrão de contrato é inicializado como Kelvin. 
+/// The default unit will set to Kelvin, but 
+/// this can later be changed after contract initialization
 /// 
-/// Pode ser alterado depois da inicialização de contrato.
-/// 
-impl Default for TemperatureUnit{
+impl Default for TemperatureUnit {
     fn default() -> Self {
         TemperatureUnit::new("k")
     }
 }
 
-// Permite comparação parcial entre os tipos TempFormat.
+// Allows partial comparison between temperate units
 //
-// A = B não Garante B = A
-//
-// A = B e A = C não garante B = C
+// A = B doesn't mean B = A
+// A = B and A = C doesn't mean B = C
 //
 impl PartialEq for TemperatureUnit {
     fn eq(&self, other: &Self) -> bool {
@@ -95,11 +89,11 @@ impl PartialEq for TemperatureUnit {
     }
 }
 
-// Após implementação acima, esta trait permite comparação total entre os tipos TempFormat.
+// This trait allows total comparison between temperature units
 //
-// A = B garante B = A
+// A = B guarantees B = A
 //
-// A = B e A = C garante B = C
+// A = B and A = C guarantees B = C
 //
 impl Eq for TemperatureUnit {}
 
@@ -147,7 +141,7 @@ impl From<String> for TemperatureUnit{
 }
 
 
-/// Usado para converter o enum para String. Se usarmos macros como format!, println! ou panic!, esta trait é usada.
+/// Allos displaying the enum as a String and is used by macros such as format!, println! and panic!.
 impl std::fmt::Display for TemperatureUnit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", String::from(self))

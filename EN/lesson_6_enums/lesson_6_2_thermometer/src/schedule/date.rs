@@ -1,8 +1,7 @@
-//! Módulo que representa data.
+//! Date module
 //! 
-//! Usado por Schedule.
-//! 
-//! Composto por Day, Month e Year.
+//! Used by timestamp
+//! contains day, month and year
 //! 
 
 use near_sdk::{
@@ -19,7 +18,7 @@ use month::Month;
 use year::Year;
 
 
-/// Representa uma data (Dia, Mês, Ano).
+/// Represents a Date (day, month, year).
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Date {
@@ -30,19 +29,19 @@ pub struct Date {
 
 
 impl Date{
-    /// Constrói uma instância de data.
+    /// Creates a Date 
     /// 
     /// # Panics
-    ///  - Se Day for negativo;
-    ///  - Se Day maior do que o limite para o mês e ano;
-    ///  - Se Month for um String inválido;
+    ///  - If day is negative.
+    ///  - If day is higher than the max allowed for a particular month.
+    ///  - If month is an invalid String.
     /// 
     pub fn new(day: u8, month: &str, year: i32) -> Date {
-        // Cria uma instância de tipo representando ano.
+        // Creates a year 
         let year: Year = Year::new(year);
-        // Cria uma instância de tipo representando mês.
+        // Creates a month
         let month: Month = Month::new(month);
-        // Cria uma instância de tipo representando dia.
+        // Creates a day
         let day: Day = Day::new(day, &month, &year);
 
         Date{

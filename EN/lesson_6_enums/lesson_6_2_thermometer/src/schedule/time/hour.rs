@@ -1,10 +1,10 @@
-//! Módulo para hora.
+//! Hour module
 //! 
-//! O formato json desse tipo é apenas um u8.
+//! This type is only an u8
 //! 
-//!  - u8::from(&hour) converte essa referência para um u8;
-//!  - u8::from(hour) converte este Hour para um u8;
-//!  - Hour::from(esteu8) converte um valor u8 para  Hour;
+//!  - u8::from(&hour) converts hour reference to u8 
+//!  - u8::from(hour) converts hour value to u8
+//!  - Hour::from(value u8) converts u8 value to Hour
 //! 
 
 use near_sdk::{
@@ -12,7 +12,7 @@ use near_sdk::{
     serde::{ Deserialize, Serialize },
 };
 
-/// Tipo que representa hora.
+/// A type represening an Hour
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Hour(u8);
@@ -25,7 +25,7 @@ impl Hour{
     }
 }
 
-/// Nos permite usar u8::from(&nossoHour)
+/// Convert to u8 from &Hour
 impl From<&Hour> for u8{
     fn from(hour: &Hour) -> u8 {
         let &Hour(result) = hour;
@@ -34,14 +34,14 @@ impl From<&Hour> for u8{
     }
 }
 
-/// Nos permite usar u8::from(nossoHour)
+/// Convert to u8 from Hour
 impl From<Hour> for u8{
     fn from(hour: Hour) -> u8 {
         u8::from(&hour)
     }
 }
 
-/// Nos permite usar Hour::from(nossou8)
+/// Convert to Hour from u8
 impl From<u8> for Hour{
     fn from(hour: u8) -> Hour {
         Hour::new(hour)

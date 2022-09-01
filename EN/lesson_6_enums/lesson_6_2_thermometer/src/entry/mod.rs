@@ -1,10 +1,10 @@
 //! Entry represents a single input value from a user
 //! 
-//! Periodicamente cada sensor enviará o valor de temperatura coletado. O contrato armazenará cada entry associada ao tempo recebido.
+//! Periodically each sensor will send temperature readings. The Smart Contract will save these as it receives them.
 //! 
-//! Cada Entry possui os seguintes atributos:
-//!  - temperature: Um valor de temperatura (f32), associado a um formato de temperatura (Kelvin, Celsius, Fahrenheit);
-//!  - schedule: Momento de recebimento do input. Formato de tempo é UTC. Que tal implementar suporte a diversos fuso-horarios depois?
+//! Each temperature reading has the following attributes: 
+//!  - temperature: a temperature value (f32) with a temperature unit (Kelvin, Celsius, Fahrenheit).
+//!  - schedule: a timestamp when the the measurement was taken. UTC.
 //! 
 
 use near_sdk::{
@@ -22,7 +22,7 @@ use crate::{
 };
 
 
-/// Representa um momento de temperatura e tempo.
+/// Represents a temperature reading 
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct TemperatureReading {
@@ -32,17 +32,17 @@ pub struct TemperatureReading {
 
 
 impl TemperatureReading {
-    /// Constroi uma instância de Entry.
+    /// Creates a temperature reading
     /// 
-    ///  - Se time (horario) for omitido. O valor será o momento da chamada da mensagem.
-    ///  - Se date (data) for omitida. O valor será o dia da chamada da mensagem.
-    ///  - Se o formato de temperatura for omitido, utilizará o formato de temperatura do sistema.
-    ///  - value representa o valor de temperatura.
+    ///  - If time is omitted, the call time will be used as default.
+    ///  - Id date is omitted, the call date will be used as default.
+    ///  - If temperature unit is ommited, the system's default will be used as default.
+    ///  - Value represents the actual temperature value/measurement.
     /// 
     ///  # Panics
-    ///  - se temperatura for menor que zero absoluto;
-    ///  - se dia for inválido;
-    ///  - se mês for inválido;
+    ///  - if temperature below absolute zero.
+    ///  - On invalid day.
+    ///  - On invalid month.
     /// 
     pub fn new(
             time: Option<(u8, u8, f32)>,
@@ -58,8 +58,8 @@ impl TemperatureReading {
         }
     }
 
-    /// Se new_format for um formato de temperatura diferente do atual. Atualiza e realiza a conversão de valores.
-    pub fn update_temp_format(&mut self, new_format: &TemperatureUnit) -> bool{
+    /// If there's a new temperature unit given, perform conversion
+    pub fn update_temp_format(&mut self, new_format: &TemperatureUnit) -> bool {
         self.measurement.update_temp_format(new_format)
     }
 }

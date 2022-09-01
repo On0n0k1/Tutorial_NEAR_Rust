@@ -1,10 +1,10 @@
-//! Módulo para minuto.
+//! Minute module
 //! 
-//! O formato json desse tipo é apenas um u8.
+//! This type is only an u8
 //! 
-//!  - u8::from(&minute) converte essa referência para um u8;
-//!  - u8::from(minute) converte este Minute para um u8;
-//!  - Minute::from(esteu8) converte um valor u8 para Minute;
+//!  - u8::from(&minute) converts minute reference to u8 
+//!  - u8::from(minute) converts minute to u8 
+//!  - Minute::from(esteu8) converts u8 to Minute
 //! 
 
 use near_sdk::{
@@ -13,18 +13,17 @@ use near_sdk::{
 };
 
 
-/// Representa um valor de minuto.
+/// Represents a minute
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Minute(u8);
 
 
 impl Minute {
-    /// Constrói uma instância de minuto.
+    /// Builds an instance of Minute
     /// 
     /// # Panics
-    /// 
-    /// Se valor é menor do que 60.
+    /// If value is less than 60
     /// 
     pub fn new(minute: u8) -> Minute{
         assert!(minute < 60, "Invalid value for minute. Must be lower than 60. Current: {}.", minute);
@@ -34,8 +33,8 @@ impl Minute {
 }
 
 
-/// Nos permite usar u8::from(&nossoMinute)
-impl From<&Minute> for u8{
+/// Convert to u8 from &minute
+impl From<&Minute> for u8 {
     fn from(minute: &Minute) -> u8 {
         let &Minute(result) = minute;
 
@@ -44,7 +43,7 @@ impl From<&Minute> for u8{
 }
 
 
-/// Nos permite usar u8::from(nossoMinute)
+/// Convert to u8 from minute
 impl From<Minute> for u8{
     fn from(minute: Minute) -> u8 {
         u8::from(&minute)
@@ -52,7 +51,7 @@ impl From<Minute> for u8{
 }
 
 
-/// Nos permite usar Minute::from(nossou8)
+/// Convert to minute from u8
 impl From<u8> for Minute{
     fn from(minute: u8) -> Minute {
         Minute::new(minute)

@@ -155,9 +155,9 @@ impl Contract{
         self.users.insert(&account_id);
     }
 
-    /// Remove usuário da lista de permissões.
+    /// Removes user from allowed list.
     /// 
-    /// Apenas owner tem permissão de chamar esta função.
+    /// Only the owner can call this function.
     /// 
     /// # Panics
     ///  - If cross-contract call.

@@ -51,12 +51,12 @@ impl Temperature {
 
     /// Creates an instance of Temperature using the system temperature unit
     /// 
-    /// "arg_temp" é o formato de temperatura da mensagem recebida.
+    /// "arg_temp" is a temperature unit
     /// 
-    /// Se arg_temp for diferente de temp_format. Seguirá estes passos:
-    ///  - Cria uma instância de temperatura no formato de arg_temp;
-    ///  - Converte seu formato para temp_format;
-    ///  - Retorna a temperatura;
+    /// if arg_temp is different from temp_format:
+    ///  - Creates a temperature instance in arg_temp unit.
+    ///  - Converts to temp_format.
+    ///  - Returns temperature.
     /// 
     pub fn new(temperature_value: f32, temperature_unit: &TemperatureUnit, arg_temp: Option<String>) -> Self {
         match arg_temp {
@@ -74,9 +74,9 @@ impl Temperature {
 
     }
 
-    /// Atualiza temperatura se o formato for diferente. 
+    /// Udpate temperature if different unit.
     /// 
-    /// Retorna true se houver mudança.
+    /// Returns true if conversion was needed.
     /// 
     pub fn update_temp_format(&mut self, temperature_unit: &TemperatureUnit) -> bool {
         let comparison = self.unit == *temperature_unit;
@@ -127,8 +127,7 @@ impl Temperature {
                 self.unit = TemperatureUnit::new("c");
             },
             (_, _) => {
-                // Todas alternativas diferentes foram consideradas. Isso considera todas as situações em que os tipos são iguais.
-                // Portanto, não fazemos nada.
+                // all alternatives considered, therefore nothing to do
                 return;
             }
         }

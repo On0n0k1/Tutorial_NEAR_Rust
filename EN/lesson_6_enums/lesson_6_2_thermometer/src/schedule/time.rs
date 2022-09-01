@@ -1,8 +1,7 @@
-//! Módulo que representa tempo.
+//! Time module
 //! 
-//! Usado por Schedule.
-//! 
-//! Composto por por Hour, Minute, Second.
+//! Used by timestamp
+//! Contains Hour, Minute, Second
 //! 
 
 
@@ -21,7 +20,7 @@ use hour::Hour;
 use minute::Minute;
 use second::Second;
 
-/// Representa tempo (hora, minuto, segundo).
+/// Represents Time (hour, minute, second)
 #[derive(BorshDeserialize, BorshSerialize, Clone, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Time{
@@ -32,13 +31,13 @@ pub struct Time{
 
 
 impl Time {
-    /// Constroi uma instância de Time.
+    /// Creates a time instance
     /// 
     /// # Panics
-    ///  - se hora >= 24;
-    ///  - se minute >= 60;
-    ///  - se second >= 60. ;
-    ///  - se second < 0. ;
+    ///  - if hour >= 24;
+    ///  - if minute >= 60;
+    ///  - if second >= 60. ;
+    ///  - if second < 0. ;
     /// 
     pub fn new(hour: u8, minute: u8, second: f32) -> Time{
         let hour: Hour = Hour::new(hour);
