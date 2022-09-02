@@ -91,7 +91,3 @@ All documentation will be located in './target/doc/lesson_6_1_simple/index.html'
 Lesson 6 - Intro :white_check_mark: ... **Done! Congratulations!**
 
 Let's move on to the next section to learn more about [declaring and using Enums](https://github.com/On0n0k1/Tutorial_NEAR_Rust/tree/main/EN/lesson_6_enums/lesson_6_1_simple/).
-
-
-Or you can move even further and jump to Lesson 7, which will be about Traits.
-

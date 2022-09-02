@@ -44,8 +44,7 @@ pub struct Contract {
 
 
 
-// Na inicialização de contrato,
-// inclui dono na lista de usuários permitidos.
+// initialize colletions
 impl Default for Contract {
     fn default() -> Self {
         let players: LookupMap<AccountId, Player> = LookupMap::new(StorageKey::Players);
